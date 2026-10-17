@@ -7865,6 +7865,60 @@ AREAS.forEach(function(a){ var i;
 var _pagPerm5=pagPermitida;
 pagPermitida=function(id){ if(id==='calendario') return !EU.pronto||EU.total||!EU.sem; return _pagPerm5(id); };
 
+/* ===================== v31 · leads que chegam pelo site (página de orçamento) ===================== */
+if(ORIGENS.indexOf('Site')<0) ORIGENS.push('Site');
+if(LISTAS_PAD&&LISTAS_PAD.origens&&LISTAS_PAD.origens.indexOf('Site')<0) LISTAS_PAD.origens.push('Site');
+var LINK_ORCAMENTO='https://eduardocoutinho2546-cell.github.io/CAPISOL/orcamento/';
+function leadSite(l){ return l&&l.origem==='Site'; }
+function leadsSiteNovos(){ return S.leads.filter(function(l){ return leadSite(l)&&l.novoSite&&!l.vendedor; }); }
+function msgLeadVendedor(l){
+  return 'Novo pedido do site CAPISOL\n'+
+    'Nome: '+(l.nome||'')+'\nWhatsApp: '+foneBonito(l.fone)+(l.email?'\nE-mail: '+l.email:'')+
+    '\nPedido: '+(l.interesse||'—')+(l.imovel?' · '+l.imovel:'')+(l.cidade?' · '+l.cidade:'')+
+    (l.contaLuz?'\nConta média: R$ '+l.contaLuz+' (consumo estimado ~'+l.consumo+' kWh/mês — confirmar na conta)':'')+
+    (l.ligacao?'\nLigação: '+l.ligacao:'')+(l.telhado?'\nTelhado: '+l.telhado:'')+(l.horario?'\nMelhor horário: '+l.horario:'')+
+    (l.mensagem?'\nMensagem: '+l.mensagem:'')+
+    '\nAceita receber novidades: '+(l.aceitaInfo?'Sim':'Não')+
+    '\nResponda em até 1 hora e registre o contato no Funil.';
+}
+function encaminharLead(l){
+  var vs=vendedores();
+  var nomes=vs.map(function(p){ return p.nome; });
+  if(!nomes.length){ aviso('Cadastre um vendedor em Empresa → Equipe (perfil Vendedor) para encaminhar.'); return; }
+  abrirForm('Encaminhar para vendedor',l.nome||'',[{k:'vendedor',rot:'Vendedor',tipo:'select',opts:nomes}],{vendedor:l.vendedor||nomes[0]},function(d){
+    var p=vs.filter(function(x){ return x.nome===d.vendedor; })[0];
+    alterar('leads',l.id,{vendedor:d.vendedor,novoSite:false,encaminhadoEm:hoje(),encaminhadoPor:euNome()},'Encaminhado para '+d.vendedor+'.');
+    if(p&&p.whats) window.open(waLink(p.whats,msgLeadVendedor(l)),'_blank');
+    else aviso(d.vendedor+' não tem WhatsApp no cadastro da Equipe — avise por outro meio.');
+  });
+}
+var _verLead6=verLead;
+verLead=function(l){
+  _verLead6(l);
+  if(!leadSite(l)) { if(l.vendedor) extraLead(l,[['Vendedor',esc(l.vendedor)]]); return; }
+  var pares=[['Pedido',esc((l.interesse||'—')+(l.imovel?' · '+l.imovel:''))],['Cidade',esc(l.cidade||'—')],
+    ['E-mail',esc(l.email||'—')],['Conta média',l.contaLuz?brl(l.contaLuz)+' <span class="sub">(consumo estimado — confirmar na conta)</span>':'—'],
+    ['Ligação',esc(l.ligacao||'—')],['Telhado',esc(l.telhado||'—')],['Melhor horário',esc(l.horario||'—')],
+    ['Mensagem',esc(l.mensagem||'—')],['Vendedor',esc(l.vendedor||'— ainda não encaminhado')],
+    ['Autorizações',(l.autContato?'Contato ✔':'')+' · Novidades: '+(l.aceitaInfo?'<b>Sim</b>':'Não')+(l.consentEm?' <span class="sub">('+dmy(String(l.consentEm).slice(0,10))+')</span>':'')]];
+  extraLead(l,pares,true);
+};
+function extraLead(l,pares,site){
+  var corpo=$('dw-b'); if(!corpo) return;
+  var box=document.createElement('div'); box.style.marginTop='14px';
+  box.innerHTML=(site?'<div class="sub" style="font-weight:700;margin-bottom:6px">Pedido feito pelo site</div>':'')+kv(pares)+
+    (site?'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button type="button" class="b b-pri" data-x="enc">Encaminhar para vendedor</button>'+
+      (l.fone?'<a class="b b-sec" style="text-decoration:none" target="_blank" rel="noopener" href="'+esc(waLink(l.fone,'Olá, '+String(l.nome||'').split(' ')[0]+'! Aqui é da CAPISOL Energia Solar. Recebemos seu pedido pelo site sobre '+String(l.interesse||'energia solar').toLowerCase()+'. Podemos conversar?'))+'">Chamar no WhatsApp</a>':'')+'</div>':'');
+  corpo.appendChild(box);
+  var b=box.querySelector('[data-x="enc"]'); if(b) b.onclick=function(){ fecharGaveta(); encaminharLead(l); };
+  if(site&&l.novoSite&&l.vendedor) alterar('leads',l.id,{novoSite:false});
+}
+var _alertas6=alertasPlataforma;
+alertasPlataforma=function(){ var L=_alertas6();
+  var N=leadsSiteNovos();
+  if(N.length) L.push({k:'hot',ord:0,t:N.length+(N.length>1?' pedidos novos':' pedido novo')+' pelo site',d:N.slice(0,3).map(function(l){ return (l.nome||'')+' ('+(l.interesse||'—')+')'; }).join(' · ')+' — encaminhe para um vendedor',ir:'funil'});
+  return L; };
+
 /* ===================== navegação ===================== */
 var IC={
   painel:'<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>',

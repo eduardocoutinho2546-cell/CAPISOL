@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAPISOL · Peça seu orçamento</title>
+<meta name="description" content="Conte rapidinho o que você precisa — instalação, ampliação, manutenção ou limpeza dos painéis — e a equipe da CAPISOL entra em contato.">
+<meta name="theme-color" content="#062c53">
+<link rel="icon" href="../arquivos-capisol/f04268f0364731fa5b99bb6e060dade7.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--azul:#093566;--noite:#0e2c51;--sol:#ffc302;--ambar:#ff9e02;--laranja:#ff7702;--verde:#297d24;--verde2:#72a413;--areia:#fff6e8;--txt:#1b2533;--sub:#5a6474;--linha:#e6dccb;--card:#fff;--erro:#c62828}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--areia);color:var(--txt);font:16px/1.5 'Open Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.topo{background:var(--noite);color:#fff;padding:18px 16px 70px;position:relative;overflow:hidden}
+.topo:after{content:"";position:absolute;left:-10%;right:-10%;bottom:-40px;height:80px;background:var(--verde2);border-radius:50% 50% 0 0/100% 100% 0 0;opacity:.9}
+.topo .in{max-width:640px;margin:0 auto;position:relative;z-index:1}
+.marca{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
+.marca img{width:46px;height:46px;border-radius:50%;background:#fff;object-fit:contain}
+.marca b{font:800 18px Montserrat,sans-serif;letter-spacing:.5px}
+.marca small{display:block;font-size:11px;letter-spacing:2px;opacity:.8}
+h1{font:800 clamp(26px,6vw,34px)/1.15 Montserrat,sans-serif;margin:22px 0 8px}
+h1 em{font-style:normal;color:var(--sol)}
+.topo p{margin:0;opacity:.88;max-width:520px}
+main{max-width:640px;margin:-40px auto 40px;padding:0 16px;position:relative;z-index:2}
+.card{background:var(--card);border-radius:18px;box-shadow:0 10px 30px rgba(9,53,102,.12);padding:22px 18px}
+.passo{display:none}.passo.on{display:block;animation:ent .25s ease}
+@keyframes ent{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.prog{display:flex;gap:6px;margin-bottom:18px}.prog i{flex:1;height:5px;border-radius:9px;background:var(--linha)}.prog i.on{background:var(--sol)}
+h2{font:800 20px/1.25 Montserrat,sans-serif;color:var(--azul);margin:0 0 4px}
+.sub{color:var(--sub);font-size:14px;margin:0 0 16px}
+.q{margin:18px 0 0}.q>label,.q>.rot{display:block;font-weight:700;margin-bottom:8px;font-size:15px}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.chip{border:2px solid var(--linha);background:#fff;border-radius:12px;padding:12px 12px;font:600 15px 'Open Sans',sans-serif;color:var(--txt);text-align:left;cursor:pointer;display:flex;gap:8px;align-items:center;min-height:52px}
+.chip span{font-size:20px;line-height:1}
+.chip[aria-pressed=true]{border-color:var(--azul);background:#eef4fb;color:var(--azul)}
+.chip:focus-visible,input:focus-visible,button:focus-visible{outline:3px solid var(--sol);outline-offset:2px}
+input[type=text],input[type=tel],input[type=email],textarea{width:100%;border:2px solid var(--linha);border-radius:12px;padding:12px 14px;font:16px 'Open Sans',sans-serif;color:var(--txt);background:#fff}
+input:focus,textarea:focus{border-color:var(--azul);outline:none}
+textarea{min-height:84px;resize:vertical}
+.faixa{display:flex;align-items:center;gap:12px}.faixa input{flex:1;accent-color:var(--laranja)}
+.valor{font:800 22px Montserrat,sans-serif;color:var(--azul);min-width:110px;text-align:right}
+.dica{font-size:13px;color:var(--sub);margin-top:6px}
+.acoes{display:flex;gap:10px;margin-top:24px}
+.btn{border:0;border-radius:999px;padding:14px 22px;font:800 16px Montserrat,sans-serif;cursor:pointer}
+.btn.pri{background:var(--laranja);color:var(--azul);flex:1}
+.btn.pri:disabled{opacity:.55;cursor:default}
+.btn.sec{background:transparent;color:var(--azul);border:2px solid var(--linha)}
+.ck{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:14px;cursor:pointer}
+.ck input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--azul)}
+.erro{color:var(--erro);font-size:14px;margin-top:12px;min-height:1em}
+.ok{text-align:center;padding:10px 0}
+.ok .sol{width:76px;height:76px;margin:0 auto 12px;border-radius:50%;background:var(--sol);display:grid;place-items:center;font-size:38px}
+.wa{display:inline-flex;gap:8px;align-items:center;justify-content:center;background:#25d366;color:#0b3d1f;text-decoration:none;border-radius:999px;padding:14px 22px;font:800 15px Montserrat,sans-serif;margin-top:16px}
+.inclui{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.inclui div{background:#fff;border-radius:14px;padding:12px;font-size:13px;color:var(--sub)}
+.inclui b{display:block;color:var(--azul);font:800 14px Montserrat,sans-serif}
+footer{text-align:center;font-size:12px;color:var(--sub);padding:0 16px 30px}
+footer a{color:var(--azul)}
+.oculto{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.so-inst{}
+@media (max-width:380px){.chips{grid-template-columns:1fr 1fr}.chip{font-size:14px;padding:10px}}
+</style>
+</head>
+<body>
+<header class="topo"><div class="in">
+  <a class="marca" href="https://capisol.com.br/"><img src="../arquivos-capisol/f04268f0364731fa5b99bb6e060dade7.png" alt=""><div><b>CAPISOL</b><small>ENERGIA SOLAR</small></div></a>
+  <h1>Conte o que você precisa.<br><em>A gente cuida do resto.</em></h1>
+  <p>São 3 passos rápidos. Um especialista da CAPISOL analisa seu caso e responde pelo WhatsApp.</p>
+</div></header>
+
+<main>
+<form class="card" id="f" novalidate>
+  <div class="prog" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+
+  <!-- PASSO 1 -->
+  <section class="passo on" data-p="1">
+    <h2>Como podemos ajudar?</h2>
+    <p class="sub">Escolha a opção que mais combina com você.</p>
+    <div class="q"><div class="chips" data-campo="interesse" role="group" aria-label="Serviço">
+      <button type="button" class="chip" data-v="Instalação"><span>☀️</span>Instalar energia solar</button>
+      <button type="button" class="chip" data-v="Ampliação"><span>➕</span>Ampliar meu sistema</button>
+      <button type="button" class="chip" data-v="Manutenção"><span>🔧</span>Manutenção</button>
+      <button type="button" class="chip" data-v="Limpeza"><span>💧</span>Limpeza dos painéis</button>
+      <button type="button" class="chip" data-v="Dúvida"><span>💬</span>Tirar uma dúvida</button>
+    </div></div>
+    <div class="q"><div class="rot">Tipo de imóvel</div><div class="chips" data-campo="imovel" role="group" aria-label="Tipo de imóvel">
+      <button type="button" class="chip" data-v="Casa"><span>🏠</span>Casa</button>
+      <button type="button" class="chip" data-v="Comércio"><span>🏪</span>Comércio</button>
+      <button type="button" class="chip" data-v="Rural"><span>🌾</span>Propriedade rural</button>
+    </div></div>
+    <div class="erro" data-erro="1"></div>
+    <div class="acoes"><button type="button" class="btn pri" data-ir="2">Continuar</button></div>
+  </section>
+
+  <!-- PASSO 2 -->
+  <section class="passo" data-p="2">
+    <h2>Sobre o seu imóvel</h2>
+    <p class="sub">Se não souber alguma resposta, sem problema — a gente confere com você.</p>
+    <div class="q so-inst"><label for="conta">Quanto vem, em média, sua conta de luz?</label>
+      <div class="faixa"><input type="range" id="conta" min="100" max="3000" step="50" value="500"><div class="valor" id="contaV">R$ 500</div></div>
+      <div class="dica">Use a média dos últimos meses. Com a conta em mãos, o projeto fica mais preciso.</div></div>
+    <div class="q"><label for="cidade">Cidade</label><input type="text" id="cidade" value="Rio Branco" autocomplete="address-level2"></div>
+    <div class="q"><div class="rot">Tipo de ligação (está na conta de luz)</div><div class="chips" data-campo="ligacao" role="group" aria-label="Ligação">
+      <button type="button" class="chip" data-v="Monofásica">Monofásica</button>
+      <button type="button" class="chip" data-v="Bifásica">Bifásica</button>
+      <button type="button" class="chip" data-v="Trifásica">Trifásica</button>
+      <button type="button" class="chip" data-v="Não sei">Não sei</button>
+    </div></div>
+    <div class="q so-inst"><div class="rot">Tipo de telhado</div><div class="chips" data-campo="telhado" role="group" aria-label="Telhado">
+      <button type="button" class="chip" data-v="Cerâmica">Cerâmica</button>
+      <button type="button" class="chip" data-v="Fibrocimento">Fibrocimento</button>
+      <button type="button" class="chip" data-v="Metálico">Metálico</button>
+      <button type="button" class="chip" data-v="Laje">Laje</button>
+      <button type="button" class="chip" data-v="Não sei">Não sei</button>
+    </div></div>
+    <div class="q"><label for="mensagem">Quer contar mais alguma coisa? <span style="font-weight:400;color:var(--sub)">(opcional)</span></label>
+      <textarea id="mensagem" maxlength="600" placeholder="Ex.: os painéis estão sujos há 1 ano; quero colocar ar-condicionado novo…"></textarea></div>
+    <div class="acoes"><button type="button" class="btn sec" data-ir="1">Voltar</button><button type="button" class="btn pri" data-ir="3">Continuar</button></div>
+  </section>
+
+  <!-- PASSO 3 -->
+  <section class="passo" data-p="3">
+    <h2>Como falamos com você?</h2>
+    <p class="sub">Usamos seus dados só para responder este pedido — e para novidades, se você quiser.</p>
+    <div class="q"><label for="nome">Seu nome</label><input type="text" id="nome" autocomplete="name" maxlength="80" required></div>
+    <div class="q"><label for="fone">WhatsApp com DDD</label><input type="tel" id="fone" autocomplete="tel" inputmode="tel" placeholder="(68) 9 9999-9999" maxlength="20" required></div>
+    <div class="q"><label for="email">E-mail <span style="font-weight:400;color:var(--sub)">(opcional)</span></label><input type="email" id="email" autocomplete="email" maxlength="120"></div>
+    <div class="q"><div class="rot">Melhor horário para contato</div><div class="chips" data-campo="horario" role="group" aria-label="Horário">
+      <button type="button" class="chip" data-v="Manhã">Manhã</button>
+      <button type="button" class="chip" data-v="Tarde">Tarde</button>
+      <button type="button" class="chip" data-v="Noite">Noite</button>
+      <button type="button" class="chip" data-v="Qualquer">Qualquer horário</button>
+    </div></div>
+    <div class="oculto" aria-hidden="true"><label>Não preencha <input type="text" id="site_url" tabindex="-1" autocomplete="off"></label></div>
+    <label class="ck"><input type="checkbox" id="autContato"><span>Autorizo a CAPISOL a entrar em contato comigo pelos dados acima para responder este pedido. <b>(obrigatório)</b></span></label>
+    <label class="ck"><input type="checkbox" id="aceitaInfo"><span>Quero receber novidades, dicas e ofertas da CAPISOL por WhatsApp e e-mail. Posso cancelar quando quiser.</span></label>
+    <p class="dica" style="margin-top:12px">Veja como tratamos seus dados na <a href="https://capisol.com.br/politica-de-privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
+    <div class="erro" data-erro="3" role="alert"></div>
+    <div class="acoes"><button type="button" class="btn sec" data-ir="2">Voltar</button><button type="submit" class="btn pri" id="enviar">Enviar pedido</button></div>
+  </section>
+
+  <!-- FIM -->
+  <section class="passo" data-p="4">
+    <div class="ok">
+      <div class="sol">☀️</div>
+      <h2>Pedido recebido!</h2>
+      <p class="sub" id="okTxt">Obrigado! Um especialista da CAPISOL vai falar com você pelo WhatsApp em breve.</p>
+      <a class="wa" id="waBtn" href="https://wa.me/5568981195554" target="_blank" rel="noopener">Quero falar agora no WhatsApp</a>
+      <p class="dica" style="margin-top:18px"><a href="https://capisol.com.br/">Voltar ao site da CAPISOL</a></p>
+    </div>
+  </section>
+</form>
+
+<div class="inclui">
+  <div><b>Projeto e homologação</b>Cuidamos da papelada com a Energisa.</div>
+  <div><b>Instalação</b>No seu telhado, com 1 ano de garantia de instalação.</div>
+  <div><b>Manutenção</b>Revisão e ajustes do seu sistema.</div>
+  <div><b>Limpeza</b>Painéis limpos geram melhor.</div>
+</div>
+</main>
+<footer>CAPISOL Energia Solar · Rio Branco – AC · <a href="https://wa.me/5568981195554">(68) 98119-5554</a> · <a href="https://capisol.com.br/politica-de-privacidade">Privacidade</a></footer>
+
+<script>
+(function(){
+  var URL_RPC='https://wvgmabqecrlydsranknn.supabase.co/rest/v1/rpc/receber_lead_site',
+      CHAVE='sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv', WA='5568981195554';
+  var f=document.getElementById('f'), sel={}, atual=1;
+  function $(id){ return document.getElementById(id); }
+  /* pré-seleção pela URL: ?servico=Manutenção&imovel=Casa&conta=800 */
+  var qs=new URLSearchParams(location.search);
+  document.querySelectorAll('[data-campo]').forEach(function(g){
+    var campo=g.getAttribute('data-campo');
+    g.querySelectorAll('.chip').forEach(function(b){
+      b.setAttribute('aria-pressed','false');
+      b.addEventListener('click',function(){ g.querySelectorAll('.chip').forEach(function(x){ x.setAttribute('aria-pressed','false'); }); b.setAttribute('aria-pressed','true'); sel[campo]=b.getAttribute('data-v'); ajusta(); });
+    });
+  });
+  function marca(campo,v){ var b=document.querySelector('[data-campo="'+campo+'"] .chip[data-v="'+v+'"]'); if(b) b.click(); }
+  if(qs.get('servico')) marca('interesse',qs.get('servico'));
+  if(qs.get('imovel')) marca('imovel',qs.get('imovel'));
+  var conta=$('conta'), contaV=$('contaV');
+  function fmt(){ var v=+conta.value; contaV.textContent=(v>=3000?'R$ 3.000+':'R$ '+v.toLocaleString('pt-BR')); }
+  if(qs.get('conta')&&/^\d+$/.test(qs.get('conta'))) conta.value=Math.min(3000,Math.max(100,+qs.get('conta')));
+  conta.addEventListener('input',fmt); fmt();
+  function ehInst(){ return !sel.interesse||sel.interesse==='Instalação'||sel.interesse==='Ampliação'; }
+  function ajusta(){ document.querySelectorAll('.so-inst').forEach(function(e){ e.style.display=ehInst()?'':'none'; }); }
+  ajusta();
+  function vai(n){
+    if(n>atual&&atual===1&&!sel.interesse){ document.querySelector('[data-erro="1"]').textContent='Escolha uma opção para continuar.'; return; }
+    document.querySelector('[data-erro="1"]').textContent='';
+    atual=n;
+    document.querySelectorAll('.passo').forEach(function(p){ p.classList.toggle('on',+p.getAttribute('data-p')===n); });
+    document.querySelectorAll('.prog i').forEach(function(i,k){ i.classList.toggle('on',k<n); });
+    f.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  document.querySelectorAll('[data-ir]').forEach(function(b){ b.addEventListener('click',function(){ vai(+b.getAttribute('data-ir')); }); });
+  $('fone').addEventListener('input',function(){
+    var d=this.value.replace(/\D/g,'').slice(0,11), r=d;
+    if(d.length>2) r='('+d.slice(0,2)+') '+d.slice(2);
+    if(d.length>7) r='('+d.slice(0,2)+') '+d.slice(2,d.length-4)+'-'+d.slice(-4);
+    this.value=r;
+  });
+  $('autContato').addEventListener('change',function(){ document.querySelector('[data-erro="3"]').textContent=''; });
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var er=document.querySelector('[data-erro="3"]'); er.textContent='';
+    var nome=$('nome').value.trim(), fone=$('fone').value.replace(/\D/g,''), email=$('email').value.trim();
+    if(nome.length<2){ er.textContent='Informe seu nome.'; $('nome').focus(); return; }
+    if(fone.length<10||fone.length>11){ er.textContent='Informe o WhatsApp com DDD.'; $('fone').focus(); return; }
+    if(email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ er.textContent='Confira o e-mail.'; $('email').focus(); return; }
+    if(!$('autContato').checked){ er.textContent='Marque a autorização de contato para podermos responder.'; return; }
+    var dados={nome:nome,fone:'55'+fone,email:email,cidade:$('cidade').value.trim(),interesse:sel.interesse||'',imovel:sel.imovel||'',
+      conta:ehInst()?String(conta.value):'',ligacao:sel.ligacao||'',telhado:ehInst()?(sel.telhado||''):'',horario:sel.horario||'',
+      mensagem:$('mensagem').value.trim(),autContato:true,aceitaInfo:$('aceitaInfo').checked,site_url:$('site_url').value};
+    var b=$('enviar'); b.disabled=true; b.textContent='Enviando…';
+    fetch(URL_RPC,{method:'POST',headers:{'Content-Type':'application/json','apikey':CHAVE},body:JSON.stringify({p:dados})})
+      .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error((j&&j.message)||'Falha ao enviar'); return j; }); })
+      .then(function(){
+        var msg='Olá, CAPISOL! Acabei de pedir pelo site: '+(dados.interesse||'atendimento')+(dados.imovel?' · '+dados.imovel:'')+(dados.conta?' · conta média de R$ '+dados.conta:'')+'. Meu nome é '+nome+'.';
+        $('waBtn').href='https://wa.me/'+WA+'?text='+encodeURIComponent(msg);
+        $('okTxt').textContent='Obrigado, '+nome.split(' ')[0]+'! Um especialista da CAPISOL vai falar com você pelo WhatsApp'+(dados.horario&&dados.horario!=='Qualquer'?' no período da '+dados.horario.toLowerCase():'')+'.';
+        vai(4);
+      })
+      .catch(function(x){ er.textContent=(x&&x.message&&!/fetch/i.test(x.message))?x.message:'Não conseguimos enviar agora. Tente de novo ou fale pelo WhatsApp (68) 98119-5554.'; b.disabled=false; b.textContent='Enviar pedido'; });
+  });
+})();
+</script>
+</body>
+</html>
