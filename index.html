@@ -4,7 +4,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>/* CAPISOL Gestão — ligação com o Supabase (banco, login, arquivos). Substitui o window.claude do Claude. */
 (function(){
-  var URL_SB='https://wvgmabqecrlydsranknn.supabase.co', CHAVE='sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv', DONO='queiroz.solar68@gmail.com';
+  var URL_SB='https://wvgmabqecrlydsranknn.supabase.co', CHAVE='sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv', DONOS=['queiroz.solar68@gmail.com','eduardo.coutinho2546@gmail.com'];
   var ESTATICOS={f04268f0364731fa5b99bb6e060dade7:'arquivos-capisol/f04268f0364731fa5b99bb6e060dade7.png',b6a9b1555d1cb5e4898a8e3a5684ca4c:'arquivos-capisol/b6a9b1555d1cb5e4898a8e3a5684ca4c.pdf',
     '37986ed0089bc54d536e9cc90529cd42':'arquivos-capisol/37986ed0089bc54d536e9cc90529cd42.pdf','475906f9d5d2a135673a377b578da611':'arquivos-capisol/475906f9d5d2a135673a377b578da611.pdf','8b065c7b373d8f9b731759e61854b515':'arquivos-capisol/8b065c7b373d8f9b731759e61854b515.pdf'};
   var sb=(window.__SB_FAKE||window.supabase).createClient(URL_SB,CHAVE,{auth:{persistSession:true,autoRefreshToken:true}});
@@ -33,9 +33,9 @@
       onSnapshot:function(cb,ecb){ var k=col+'|'+id; (subsDoc[k]=subsDoc[k]||[]).push(cb); buscarCol(col).catch(function(e){ if(ecb) ecb(erro(e)); }); return function(){ subsDoc[k]=(subsDoc[k]||[]).filter(function(x){ return x!==cb; }); }; }
     }; } }; }};
   function nomeUser(u){ var m=(u&&u.user_metadata)||{}; return m.nome||((u&&u.email)||'').split('@')[0]; }
-  var user={me:function(){ return Promise.resolve({id:USER.id,isOwner:(USER.email||'').toLowerCase()===DONO,name:nomeUser(USER)}); },
+  var user={me:function(){ return Promise.resolve({id:USER.id,isOwner:DONOS.indexOf((USER.email||'').toLowerCase())>=0,name:nomeUser(USER)}); },
     profiles:function(ids){ var p=cache.perfis||{}, o={}; (ids||[]).forEach(function(i){ var x=p[i]; o[i]={id:i,name:x?(x.nome||x.email):'Pessoa sem nome'}; }); return Promise.resolve(o); },
-    can:function(){ return Promise.resolve(true); }, canEdit:function(){ return Promise.resolve((USER.email||'').toLowerCase()===DONO); }, isOwner:function(){ return Promise.resolve((USER.email||'').toLowerCase()===DONO); }};
+    can:function(){ return Promise.resolve(true); }, canEdit:function(){ return Promise.resolve(DONOS.indexOf((USER.email||'').toLowerCase())>=0); }, isOwner:function(){ return Promise.resolve(DONOS.indexOf((USER.email||'').toLowerCase())>=0); }};
   function novoId(){ var a=new Uint8Array(16); crypto.getRandomValues(a); return Array.prototype.map.call(a,function(b){ return ('0'+b.toString(16)).slice(-2); }).join(''); }
   var assets={upload:function(file,op){ var id=novoId(), tipo=(op&&op.type)||file.type||'application/octet-stream';
       return sb.storage.from('arquivos').upload(id,file,{contentType:tipo,upsert:false}).then(function(r){ if(r.error) throw erro(r.error); return {id:id,contentType:tipo,sizeBytes:file.size}; }); },
