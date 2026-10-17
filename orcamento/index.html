@@ -149,7 +149,11 @@ footer a{color:var(--azul)}
       <div class="sol">☀️</div>
       <h2>Pedido recebido!</h2>
       <p class="sub" id="okTxt">Obrigado! Um especialista da CAPISOL vai falar com você pelo WhatsApp em breve.</p>
-      <a class="wa" id="waBtn" href="https://wa.me/5568981195554" target="_blank" rel="noopener">Quero falar agora no WhatsApp</a>
+      <p class="sub" style="margin:14px 0 0">Quer adiantar? Fale agora pelo WhatsApp:</p>
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+        <a class="wa" data-wa="5568999877538" href="https://wa.me/5568999877538" target="_blank" rel="noopener">☀️ Falar com Eduardo</a>
+        <a class="wa" data-wa="5568981195554" href="https://wa.me/5568981195554" target="_blank" rel="noopener" style="margin-top:0">☀️ Falar com Wendel</a>
+      </div>
       <p class="dica" style="margin-top:18px"><a href="https://capisol.com.br/">Voltar ao site da CAPISOL</a></p>
     </div>
   </section>
@@ -162,12 +166,12 @@ footer a{color:var(--azul)}
   <div><b>Limpeza</b>Painéis limpos geram melhor.</div>
 </div>
 </main>
-<footer>CAPISOL Energia Solar · Rio Branco – AC · <a href="https://wa.me/5568981195554">(68) 98119-5554</a> · <a href="https://capisol.com.br/politica-de-privacidade">Privacidade</a></footer>
+<footer>CAPISOL Energia Solar · Rio Branco – AC · <a href="https://wa.me/5568992490347">(68) 99249-0347</a> · <a href="https://capisol.com.br/politica-de-privacidade">Privacidade</a></footer>
 
 <script>
 (function(){
   var URL_RPC='https://wvgmabqecrlydsranknn.supabase.co/rest/v1/rpc/receber_lead_site',
-      CHAVE='sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv', WA='5568981195554';
+      CHAVE='sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv';
   var f=document.getElementById('f'), sel={}, atual=1;
   function $(id){ return document.getElementById(id); }
   /* pré-seleção pela URL: ?servico=Manutenção&imovel=Casa&conta=800 */
@@ -221,11 +225,11 @@ footer a{color:var(--azul)}
       .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error((j&&j.message)||'Falha ao enviar'); return j; }); })
       .then(function(){
         var msg='Olá, CAPISOL! Acabei de pedir pelo site: '+(dados.interesse||'atendimento')+(dados.imovel?' · '+dados.imovel:'')+(dados.conta?' · conta média de R$ '+dados.conta:'')+'. Meu nome é '+nome+'.';
-        $('waBtn').href='https://wa.me/'+WA+'?text='+encodeURIComponent(msg);
+        document.querySelectorAll('[data-wa]').forEach(function(a){ a.href='https://wa.me/'+a.getAttribute('data-wa')+'?text='+encodeURIComponent(msg); });
         $('okTxt').textContent='Obrigado, '+nome.split(' ')[0]+'! Um especialista da CAPISOL vai falar com você pelo WhatsApp'+(dados.horario&&dados.horario!=='Qualquer'?' no período da '+dados.horario.toLowerCase():'')+'.';
         vai(4);
       })
-      .catch(function(x){ er.textContent=(x&&x.message&&!/fetch/i.test(x.message))?x.message:'Não conseguimos enviar agora. Tente de novo ou fale pelo WhatsApp (68) 98119-5554.'; b.disabled=false; b.textContent='Enviar pedido'; });
+      .catch(function(x){ er.textContent=(x&&x.message&&!/fetch/i.test(x.message))?x.message:'Não conseguimos enviar agora. Tente de novo ou fale pelo WhatsApp (68) 99249-0347.'; b.disabled=false; b.textContent='Enviar pedido'; });
   });
 })();
 </script>
