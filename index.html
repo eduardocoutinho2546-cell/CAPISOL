@@ -783,7 +783,7 @@ var COLS=['leads','clientes','propostas','contratos','agenda','visitas','obras',
           'recebimentos','custos','estoque','equipe','documentos','precos','arquivos','modelos',
           'localidades','assinaturas','comissoes','juridico','fechamentos','acessos','os','ajustes',
           'viagens','romaneio','movest','campanhas','mktcal','promos','concorrentes','ideias','incentivos','competencias','catalogo','compras','pagar',
-          'descontos','exclusoes','rede','posjornada'];
+          'descontos','exclusoes','rede','posjornada','agentes'];
 var S={}; COLS.forEach(function(c){ S[c]=[]; });
 var CFG={razao:'66.360.677 WENDEL MATOS DO SACRAMENTO',cidade:'Rio Branco — AC',fone:'',cnpj:'66.360.677/0001-49',
   slogan:'A energia do sol com a força da natureza.',mgCom:20,mgPro:10,descVend:12,descSocio:20,
@@ -6257,6 +6257,43 @@ function pessoaEu(){
 function desigDe(nome){ var d=desig(nome); if(d) return d; var p=pessoaPorNome(nome); if(!p) return null;
   return p.perfil==='Vendedor'?desig('Vendedor'):p.perfil==='Técnico'?desig('Técnico'):null; }
 var MINHA_VER='';
+/* ---------- PLACAR por pessoa: metas da semana/mês calculadas dos próprios registros (nada digitado à mão) ---------- */
+var META_PAD={vendasMes:102000,sistemasMes:4,respMin:5,semResposta:0,atrasados:0,obrasAtraso:0,propParadas:0};
+function metaP(k){ var m=(CFG.metasPessoas||{})[k]; return vazioN(m)?META_PAD[k]:n0(m); }
+function placarItens(nome){
+  var m=mesAtual(), aceitas=S.propostas.filter(function(p){ return p.status==='Aceita'&&mesDe(p.data)===m; }),
+    abertas=S.propostas.filter(function(p){ return p.status==='Enviada'||p.status==='Em análise'; }),
+    paradas=abertas.filter(function(p){ var d=diasAte(p.data); return d!==null&&d<=-3; }),
+    rs=respostaStats(), atr=S.recebimentos.filter(function(r){ return r.status==='Atrasado'; }),
+    pagoMes=soma(recPagosMes(m),function(r){ return r.valor; }), vendido=soma(aceitas,function(p){ return p.valor; }),
+    obA=S.obras.filter(function(o){ return !obraInstalada(o)&&situacaoObra(o).atraso; }),
+    opPend=cardsDe('operacional').filter(function(l){ return l.etapa!=='Concluído'&&(!l.resp||l.resp===nome); });
+  function it(r,v,meta,bom,fmt){ var f=fmt||function(x){ return nf(x); }; return {r:r,v:f(v),d:'meta '+(bom==='max'?'até ':'')+f(meta),alerta:bom==='max'?v>meta:v<meta}; }
+  var C={
+    vendas:it('Vendido no mês',vendido,metaP('vendasMes'),'min',brl),
+    sistemas:it('Propostas aceitas no mês',aceitas.length,metaP('sistemasMes'),'min'),
+    resp:rs.mediana===null?{r:'1ª resposta (mediana)',v:'sem dado',d:'registre a hora da resposta no Funil',alerta:true}:it('1ª resposta (mediana, min)',rs.mediana,metaP('respMin'),'max'),
+    sem:it('Leads sem resposta',rs.semResposta,metaP('semResposta'),'max'),
+    paradas:it('Propostas paradas há +3 dias',paradas.length,metaP('propParadas'),'max'),
+    caixa:{r:'Recebido no mês',v:brl(pagoMes),d:'só o que entrou de verdade'},
+    atrasados:it('Recebimentos atrasados',atr.length,metaP('atrasados'),'max'),
+    obras:it('Obras atrasadas',obA.length,metaP('obrasAtraso'),'max'),
+    oper:{r:'Cartões operacionais abertos',v:nf(opPend.length),d:'funil Operacional'}
+  };
+  var P={Eduardo:['vendas','caixa','atrasados','oper'],Wendel:['vendas','sistemas','obras','oper'],Chayara:['sem','resp','atrasados','caixa'],Fernanda:['sem','resp','paradas','sistemas'],Vendedor:['sistemas','paradas','sem','resp']};
+  return (P[nome]||P[primeiroNome(nome)]||['vendas','sem','paradas','oper']).map(function(k){ return C[k]; });
+}
+function agentesPara(nome){
+  var n=primeiroNome(nome);
+  return S.agentes.filter(function(a){ var p=a.para||'todos'; return p==='todos'||(Array.isArray(p)?p:[p]).indexOf(n)>=0; })
+    .sort(function(x,y){ return String(y.criado||'')>String(x.criado||'')?1:-1; }).slice(0,8);
+}
+function agentesHTML(nome){
+  var L=agentesPara(nome); if(!L.length) return '<div class="bl-b">'+vazio('Nenhum relatório ainda','Os agentes do escritório publicam aqui o resumo do dia e os alertas da sua área.')+'</div>';
+  return '<div class="bl-b">'+L.map(function(a){ return '<div style="padding:10px 0;border-bottom:1px solid var(--fio)">'+selo(a.nivel==='bad'?'Alerta':a.nivel==='wait'?'Atenção':'Ok',a.nivel||'ok')+
+    ' <b>'+esc(a.titulo||'Relatório')+'</b> <span class="sub">· '+esc(a.agente||'agente')+' · '+esc(dbr(String(a.criado||'').slice(0,10)))+'</span>'+
+    '<div style="white-space:pre-wrap;font-size:13px;margin-top:4px">'+esc(a.texto||'')+'</div></div>'; }).join('')+'</div>';
+}
 function pgMinha(el){
   var nome=MINHA_VER||pessoaEu(), d=desigDe(nome), al=alertasPlataforma().filter(function(a){ return pagPermitida(a.ir||'painel'); });
   var nomes=['Eduardo','Wendel','Chayara','Fernanda'].concat(S.equipe.map(function(p){ return p.nome; })); nomes=nomes.filter(function(n,i){ return n&&nomes.indexOf(n)===i; });
@@ -6265,6 +6302,7 @@ function pgMinha(el){
   if(!d) h+=bloco('Sem designação','','<div class="bl-b">'+vazio('Designação não cadastrada','Eduardo ou Wendel definem o papel em "Quem faz o quê".')+'</div>');
   else {
     h+=faixa([{r:'Papel',v:d.papel},{r:'Acesso',v:d.acesso||'—'},{r:'Substituto',v:d.sub||'—'}]);
+    h+=bloco('Seu placar',mesAtual().split('-').reverse().join('/')+' · calculado dos registros da plataforma',faixa(placarItens(nome)));
     h+='<div class="cols"><div class="bl"><div class="bl-h"><div><h3>Você é dono de</h3><div class="s">responde pelo resultado dessas áreas</div></div></div><div class="bl-b"><p style="margin:0 0 12px">'+esc(d.dono)+'</p>'+
       '<div class="lb">Indicadores que acompanham você</div><p style="margin:4px 0 0">'+esc(d.kpis)+'</p></div></div>'+
       '<div class="bl"><div class="bl-h"><div><h3>Sua rotina</h3><div class="s">o que fazer e quando</div></div></div><div class="bl-b ck">'+(d.rotina||[]).map(function(r){ return '<label><input type="checkbox"><span>'+esc(r)+'</span></label>'; }).join('')+'</div></div></div>';
@@ -6272,6 +6310,7 @@ function pgMinha(el){
     h+=bloco('Suas telas','',atalhos.length?'<div class="doc-grid">'+atalhos.map(function(id){ return '<div class="doc-c"><b>'+esc(TITULO[id])+'</b><button class="b b-sec b-xs" data-go="'+id+'" type="button">Abrir</button></div>'; }).join('')+'</div>':'<div class="bl-b sub">nenhuma tela liberada ainda</div>');
   }
   h+=bloco('Pede atenção hoje',al.length+' alerta(s) das suas áreas','<div class="bl-b">'+alertasHTML(al,12)+'</div>');
+  h+=bloco('Relatórios dos agentes','o escritório de IA prepara; você decide',agentesHTML(nome));
   el.innerHTML=h; acoes(el,[pgDesignacoes]);
   var s=$('mi-ver'); if(s) s.onchange=function(){ MINHA_VER=s.value; desenhar(); };
   el.querySelectorAll('[data-go]').forEach(function(b){ b.onclick=function(){ irPara(b.getAttribute('data-go')); }; });
