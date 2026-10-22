@@ -2725,12 +2725,23 @@ function ridsImagens(imgsDoc,imgsCab){
   var r={}; todas.forEach(function(k,i){ r[k]='rIdImg'+(i+1); }); return r;
 }
 function salvarWord(bytes,nome,ok){
-  if(!(window.claude&&window.claude.use)){ aviso('Baixar o Word só funciona na plataforma publicada.'); return; }
-  window.claude.use('downloads').then(function(d){
-    if(!d){ aviso('Baixar arquivos não está disponível nesta tela.'); return; }
-    d.save({filename:nome,data:bytes}).then(function(){ aviso('Word salvo. Abra o arquivo para conferir.'); if(ok) ok(); },
-      function(e){ if(e&&e.code==='declined') return; aviso('Não consegui salvar o Word'+(e&&e.code?' (código: '+e.code+')':'')+'.'); });
-  },function(){ aviso('Não consegui preparar o arquivo.'); });
+  if(window.claude&&window.claude.use){
+    window.claude.use('downloads').then(function(d){
+      if(!d){ aviso('Downloads indisponíveis neste aplicativo.'); return; }
+      d.save({filename:nome,data:bytes}).then(function(){ aviso('Word salvo. Abra para conferir.'); if(ok) ok(); },
+        function(e){ if(e&&e.code==='declined') return; aviso('Não consegui salvar o Word no aplicativo.'); });
+    },function(){ aviso('Não consegui preparar o download no aplicativo.'); });
+    return;
+  }
+  try{
+    if(!bytes || !(bytes instanceof Uint8Array || bytes instanceof ArrayBuffer || bytes instanceof Blob || Array.isArray(bytes))) throw Error('Formato do Word inválido.');
+    var blob=bytes instanceof Blob?bytes:new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    var href=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=href; a.download=nome||'Proposta_CAPISOL.docx'; a.style.display='none';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(href); },5000);
+    aviso('Download do Word iniciado. Confira o arquivo antes de enviar.'); if(ok) ok();
+  }catch(e){ aviso('Erro ao baixar Word: '+(e&&e.message||'não identificado')); }
 }
 
 /* ===================== CONTRATO: MODELO EDITÁVEL + GERADOR WORD ===================== */
@@ -3963,12 +3974,23 @@ function csvTexto(linhas,sep){
   return linhas.map(function(l){ return l.map(campo).join(sep); }).join('\r\n')+'\r\n';
 }
 function salvarArquivo(nome,dados,okTxt){
-  if(!(window.claude&&window.claude.use)){ aviso('Baixar arquivos só funciona na plataforma publicada.'); return; }
-  window.claude.use('downloads').then(function(d){
-    if(!d){ aviso('Baixar arquivos não está disponível nesta tela.'); return; }
-    d.save({filename:nome,data:dados}).then(function(){ aviso(okTxt||'Arquivo salvo.'); },
-      function(e){ if(e&&e.code==='declined') return; aviso('Não consegui salvar o arquivo'+(e&&e.code?' (código: '+e.code+')':'')+'.'); });
-  },function(){ aviso('Não consegui preparar o arquivo.'); });
+  if(window.claude&&window.claude.use){
+    window.claude.use('downloads').then(function(d){
+      if(!d){ aviso('Downloads indisponíveis neste aplicativo.'); return; }
+      d.save({filename:nome,data:dados}).then(function(){ aviso(okTxt||'Arquivo salvo.'); },
+        function(e){ if(e&&e.code==='declined') return; aviso('Não consegui salvar o arquivo no aplicativo.'); });
+    },function(){ aviso('Não consegui preparar o arquivo no aplicativo.'); });
+    return;
+  }
+  try{
+    var tipo=/\.csv$/i.test(nome)?'text/csv;charset=utf-8':/\.json$/i.test(nome)?'application/json':/\.ics$/i.test(nome)?'text/calendar':/\.pdf$/i.test(nome)?'application/pdf':'application/octet-stream';
+    var blob=dados instanceof Blob?dados:new Blob([dados],{type:tipo});
+    var href=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=href; a.download=nome||'Arquivo_CAPISOL'; a.style.display='none';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(href); },5000);
+    aviso(okTxt||'Download iniciado.');
+  }catch(e){ aviso('Não foi possível baixar o arquivo: '+(e&&e.message||'erro desconhecido')); }
 }
 
 /* ---------- eventos do calendário (instalação e chegada do kit) e Google Agenda ---------- */
