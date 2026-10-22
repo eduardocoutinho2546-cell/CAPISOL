@@ -8269,6 +8269,34 @@ function escAoVivo(){
   }
   return h;
 }
+/* ---------- COMISSÃO CAPISOL+ (décimo terceiro do vendedor) — regra do Eduardo, 22/10/2026 ----------
+   faixa pela quantidade de clientes ATIVOS no CAPISOL+ que o vendedor trouxe: 100 → 1% · 200 → 1,5% · 300 → 2% (abaixo de 100: 0%).
+   base = 12 × mensalidade vigente dos planos dele ativos há 12 meses ou mais (o plano só conta depois de 1 ano). Paga uma vez por ano, em dezembro. */
+var AS_COM=[[300,2],[200,1.5],[100,1]];
+function asComPct(n){ for(var i=0;i<AS_COM.length;i++) if(n>=AS_COM[i][0]) return AS_COM[i][1]; return 0; }
+function asVend(a){ if(a.vendedor) return a.vendedor; var c=(S.contratos||[]).filter(function(c){ return c.cliente===a.cliente; })[0]; return c?ctrVend(c):''; }
+function asComCalc(ano){
+  var corte=(ano-1)+'-12-31', G={};
+  (S.assinaturas||[]).filter(function(a){ return a.status==='Ativo'; }).forEach(function(a){
+    var v=asVend(a)||'(sem vendedor)', g=G[v]=G[v]||{v:v,ativos:0,eleg:0,base:0};
+    g.ativos++; if(a.inicio&&String(a.inicio)<=corte){ g.eleg++; g.base+=12*mensalVigente(a); } });
+  return Object.keys(G).map(function(k){ var g=G[k], p=asComPct(g.ativos), prox=null;
+    for(var i=AS_COM.length-1;i>=0;i--) if(g.ativos<AS_COM[i][0]){ prox={falta:AS_COM[i][0]-g.ativos,p:AS_COM[i][1]}; break; }
+    g.pct=p; g.valor=g.base*p/100; g.prox=prox; return g; }).sort(function(a,b){ return b.ativos-a.ativos; });
+}
+var _camposAsCom=camposAs;
+camposAs=function(){ var c=_camposAsCom(); if(!c.some(function(x){ return x.k==='vendedor'; })) c.splice(1,0,{k:'vendedor',rot:'Vendedor que trouxe o plano (comissão CAPISOL+)',tipo:'select',opts:[''].concat((vendedores()||[]).map(function(p){ return p.nome; }))}); return c; };
+var _pgComAs=pgComissoes;
+pgComissoes=function(el){ _pgComAs(el);
+  var ano=Number(hoje().slice(0,4)), R=asComCalc(ano);
+  var d=document.createElement('div');
+  d.innerHTML=bloco('CAPISOL+ — décimo terceiro do vendedor','faixa por clientes ativos: 100 → 1% · 200 → 1,5% · 300 → 2% · base = 12 × mensalidade dos planos ativos há 12 meses ou mais · paga em dezembro de '+ano,
+    tabela([{t:'Vendedor',v:function(g){ return '<b>'+esc(g.v)+'</b>'; }},{t:'Clientes ativos',r:1,v:function(g){ return '<span class="tn">'+g.ativos+'</span>'; }},
+      {t:'Com 1 ano ou mais',r:1,v:function(g){ return '<span class="tn">'+g.eleg+'</span>'; }},{t:'Faixa',r:1,v:function(g){ return g.pct?selo(nf(g.pct,1)+'%','ok'):selo('abaixo de 100','neu'); }},
+      {t:'Próxima faixa',v:function(g){ return g.prox?'<span class="sub">faltam '+g.prox.falta+' clientes para '+nf(g.prox.p,1)+'%</span>':'<span class="sub">faixa máxima</span>'; }},
+      {t:'Base anual',r:1,v:function(g){ return '<span class="tn">'+brl(g.base)+'</span>'; }},{t:'13º CAPISOL+',r:1,v:function(g){ return '<b class="tn">'+brl(g.valor)+'</b>'; }}],R,false)+
+    '<div class="bl-b sub">Planos sem vendedor marcado usam o vendedor do contrato do mesmo cliente. Marque o vendedor em CAPISOL+ → assinatura. Regra a confirmar pelos sócios: se a faixa conta só os clientes do vendedor (como está) ou o total da empresa.</div>');
+  el.appendChild(d.firstChild); };
 var MENU=[
   {g:'Início',it:[['mapa','Gestão completa',pgMapa],['minha','Área da equipe',pgMinha],['escritorio','Escritório IA',pgEscritorio],['painel','Painel',pgPainel],['dash','Dashboards',pgDash],['indicadores','Indicadores',pgIndicadores],['calendario','Calendário',pgCalendario]]},
   {g:'Vendas',it:[['proposta','Proposta ideal',pgProposta],['processo','Processo comercial',pgProcesso],['funil','Funil',pgFunil],['rede','Minha rede',pgRede],['atendimento','Atendimento rápido',pgAtendimento],
