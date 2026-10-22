@@ -8006,7 +8006,7 @@ pagPermitida=function(id){ if(id==='calendario') return !EU.pronto||EU.total||!E
 /* ===================== v31 · leads que chegam pelo site (página de orçamento) ===================== */
 if(ORIGENS.indexOf('Site')<0) ORIGENS.push('Site');
 if(LISTAS_PAD&&LISTAS_PAD.origens&&LISTAS_PAD.origens.indexOf('Site')<0) LISTAS_PAD.origens.push('Site');
-var LINK_ORCAMENTO='https://eduardocoutinho2546-cell.github.io/CAPISOL/orcamento/';
+var LINK_ORCAMENTO=/^https?:$/.test(location.protocol)?new URL('orcamento/',location.origin+location.pathname).href:'https://eduardocoutinho2546-cell.github.io/CAPISOL/orcamento/'; // segue o domínio em uso (ex.: gestao.capisol.com.br)
 function leadSite(l){ return l&&l.origem==='Site'; }
 function leadsSiteNovos(){ return S.leads.filter(function(l){ return leadSite(l)&&l.novoSite&&!l.vendedor; }); }
 function msgLeadVendedor(l){
