@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAPISOL | Central Comercial e Inteligência</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{--navy:#0e2c51;--blue:#093566;--gold:#ffc302;--bg:#f5f8fc;--ink:#15243b;--muted:#526077;--line:#dce5f0}
+*{box-sizing:border-box}body{font-family:system-ui,Arial,sans-serif;margin:0;color:var(--ink);background:var(--bg)}header{background:var(--navy);color:white;padding:20px 5vw;border-bottom:5px solid var(--gold)}
+header h1{font-size:1.4rem;margin:0}header small{color:#d7e5f6}main{max-width:1240px;margin:auto;padding:18px 18px 45px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 20px}
+nav a,nav button{border:1px solid #bed0e5;border-radius:8px;background:#fff;color:var(--blue);padding:10px 12px;font-weight:650;text-decoration:none;cursor:pointer}
+nav a:hover,nav button:hover{background:#edf4ff}.panel{background:white;border:1px solid var(--line);padding:20px;border-radius:14px;margin-bottom:16px;box-shadow:0 2px 7px #21344e0a}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.metric{border:1px solid var(--line);padding:15px;border-radius:12px}.metric strong{display:block;font-size:1.8rem;color:var(--navy)}
+h2{font-size:1.15rem;margin-top:0}h3{margin-top:6px}p,li{line-height:1.5;color:var(--muted)}form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+label{display:grid;gap:4px;color:var(--muted);font-size:.9rem;font-weight:600}
+input,select,textarea{padding:10px;border:1px solid #b9c9dc;border-radius:8px;background:#fff;color:var(--ink);font:inherit}
+input:focus,textarea:focus{outline:2px solid var(--gold)}button.primary{background:var(--navy);color:#fff;border:0;border-radius:9px;font-weight:700;padding:11px 18px;cursor:pointer}
+button.secondary{background:#fff;color:var(--navy);border:1px solid var(--navy);border-radius:9px;padding:11px 18px}
+.result{background:#edf4fc;border-radius:9px;padding:12px;white-space:pre-wrap;line-height:1.55}
+.notice{border-left:4px solid var(--gold);background:#fff5d5;padding:11px;margin-bottom:15px}
+.muted{color:var(--muted);font-size:.85rem}table{border-collapse:collapse;width:100%;font-size:.87rem}th,td{padding:10px;text-align:left;border-bottom:1px solid var(--line)}th{color:var(--muted)}
+.scroll{overflow-x:auto}.hide{display:none!important}@media(max-width:600px){header{padding:18px}main{padding:12px}.panel{padding:15px}}
+</style></head><body>
+<header><h1>CAPISOL | Central Comercial e Inteligência</h1><small>Energia que não limita, facilita. • Acre primeiro • Rondônia em avaliação</small></header>
+<main>
+<div class="notice"><b>Ambiente de gestão:</b> sem API paga; sem disparos automáticos; sem compras. Preço de terceiro é estimativa até confirmação de custos, impostos e cotação.</div>
+<div id="status" role="status">Verificando sessão de acesso...</div>
+<nav aria-label="Acessos da gestão">
+<a href="../">Gestão principal</a><a href="../prospectar/">Prospecção</a><a href="../orcamento/">Simulador de orçamento</a>
+<button type="button" id="reload">Atualizar dados</button>
+</nav>
+<div id="private" class="hide">
+<section class="panel"><h2>Funil registrado no CRM</h2><div class="cards" id="metrics"></div>
+<p class="muted">Contagem de registros, não significa contatos válidos ou vendas realizadas. Sem propostas e recebimentos registrados, margem e conversão permanecem SEM DADO.</p></section>
+<section class="panel"><h2>Cotações de parceiros • refrigeração, geradores e serviços</h2>
+<p>Margem alvo de <b>4%</b> e mínimo de negociação de <b>2%</b> sobre o preço de venda, depois de custos do parceiro, despesas adicionais e taxas variáveis registradas. Isso não substitui DRE, tributos e revisão da proposta.</p>
+<form id="partnerForm">
+<label>Parceiro <input required name="parceiro" maxlength="70" placeholder="Nome da empresa"></label>
+<label>Segmento <select name="segmento"><option>Refrigeração</option><option>Geradores</option><option>Elétrica</option><option>Energia solar</option><option>Outro</option></select></label>
+<label>Serviço <input required name="servico" maxlength="90" placeholder="Serviço / unidade cotada"></label>
+<label>UF <select name="uf"><option>AC</option><option>RO</option></select></label>
+<label>Custo fornecedor (R$) <input required type="number" min="0.01" step="0.01" name="custo" placeholder="0,00"></label>
+<label>Despesas extras (R$) <input required type="number" min="0" step="0.01" name="extras" placeholder="Preencha 0 se nenhuma"></label>
+<label>Taxas+tributos variáveis (%) <input required type="number" min="0" max="90" step="0.01" name="taxas" placeholder="Preencha só valor confirmado"></label>
+<label>Validade cotação <input name="validade" type="date" required></label>
+<label>Fonte da cotação <input name="fonte" maxlength="180" required placeholder="E-mail, PDF, referência"></label>
+<div><button class="primary" type="button" id="previewPartner">Calcular preço</button> <button class="secondary" type="submit">Salvar cotação interna</button></div>
+</form>
+<div id="partnerResult" class="result" aria-live="polite">Aguardando custos confirmados.</div>
+<div class="scroll"><table><thead><tr><th>Parceiro</th><th>Serviço</th><th>UF</th><th>Custo</th><th>Preço 4%</th><th>Piso 2%</th><th>Situação</th></tr></thead><tbody id="partnerRows"></tbody></table></div>
+</section>
+<section class="panel"><h2>Marketing • rascunhos controlados</h2>
+<p>Esta ferramenta gera um <b>rascunho determinístico</b>, não uma publicação nem um conteúdo criado por modelo de IA. Salvar adiciona somente uma linha ao calendário interno.</p>
+<form id="marketingForm">
+<label>Rede <select name="rede"><option>Instagram</option><option>Facebook</option><option>YouTube</option><option>TikTok</option><option>LinkedIn</option></select></label>
+<label>Segmento <select name="segmento"><option>Empresas</option><option>Condomínios</option><option>Residencial</option><option>Rural</option><option>Manutenção</option><option>CAPISOL+</option></select></label>
+<label>Tema <input name="tema" required maxlength="100" placeholder="Ex.: diagnóstico antes da compra"></label>
+<label>Data planejada <input name="data" type="date" required></label>
+<label>Responsável <select name="resp"><option>Fernanda</option><option>Wendel</option><option>Eduardo</option><option>Chayara</option></select></label>
+<div><button class="primary" type="button" id="genDraft">Gerar rascunho</button> <button class="secondary" type="submit">Salvar planejamento</button></div>
+</form>
+<div class="result" id="draftResult">Aguardando tema.</div>
+<div class="scroll"><table><thead><tr><th>Data</th><th>Rede</th><th>Tema</th><th>Responsável</th><th>Status</th></tr></thead><tbody id="marketingRows"></tbody></table></div>
+</section>
+<section class="panel"><h2>O que ainda não foi ativado</h2>
+<p>WhatsApp oficial, Google Places, Anthropic, Grok, BelEnergy e DNS Cloudflare requerem contas e autorizações próprias. Os links externos abaixo não são conexões habilitadas.</p>
+<nav><a href="https://belenergy.com.br/integrador-parceiro/" target="_blank" rel="noopener">BelEnergy • integrador</a>
+<a href="https://www2.susep.gov.br/safe/Corretores/pesquisa" target="_blank" rel="noopener">Consultar corretor SUSEP</a>
+<a href="https://www.bcb.gov.br/estabilidadefinanceira/encontreinstituicao" target="_blank" rel="noopener">Verificar consórcios BC</a>
+<a href="https://business.facebook.com/" target="_blank" rel="noopener">Meta Business Suite</a></nav>
+</section>
+</div></main>
+<script>
+(function(){
+'use strict';
+const el=id=>document.getElementById(id);
+const sb=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co','sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv',{auth:{persistSession:true,autoRefreshToken:true}});
+const fields=['leads','propostas','clientes','recebimentos','mktcal','cotacoes_terceiros'];
+const currency=v=>Number(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+function message(t){el('status').textContent=t}
+function cell(row,text){const td=document.createElement('td');td.textContent=text==null?'—':String(text);row.appendChild(td)}
+function money(v){return Number.isFinite(Number(v))?currency(v):'—'}
+async function getCount(col){const {count,error}=await sb.from('docs').select('id',{count:'exact',head:true}).eq('col',col);return error?null:count}
+async function getCollection(col){const {data,error}=await sb.from('docs').select('id,data,updated_at').eq('col',col).order('updated_at',{ascending:false}).limit(80);if(error)throw error;return data||[]}
+async function refresh(){
+ message('Consultando os registros permitidos à sua conta...');
+ const {data:{session},error:authError}=await sb.auth.getSession();
+ if(authError||!session){message('Faça login em Gestão principal e retorne a esta página. Sem sessão não há acesso ao CRM.');el('private').classList.add('hide');return}
+ el('private').classList.remove('hide');
+ try{
+  const counts=await Promise.all(fields.slice(0,4).map(getCount));
+  const labels=['Leads cadastrados','Propostas registradas','Clientes cadastrados','Recebimentos registrados'];
+  el('metrics').replaceChildren();
+  counts.forEach((count,i)=>{const b=document.createElement('div');b.className='metric';const num=document.createElement('strong');num.textContent=count===null?'SEM DADO':String(count);const label=document.createElement('span');label.textContent=labels[i];b.append(num,label);el('metrics').appendChild(b)});
+  await Promise.all([loadPartners(),loadMarketing()]);
+  message('Atualizado. Somente dados do CRM acessíveis ao usuário autenticado.');
+ }catch(e){message('Falha ao carregar a gestão: '+(e.message||'verifique login e permissões.'))}
+}
+function vals(form){return Object.fromEntries(new FormData(form).entries())}
+function partnerCalc(v){
+ const cost=Number(v.custo),extras=Number(v.extras),tax=Number(v.taxas)/100;
+ if(!v.parceiro||!v.servico||!v.fonte||!v.validade||v.custo===''||v.extras===''||v.taxas===''||!Number.isFinite(cost)||cost<=0||!Number.isFinite(extras)||extras<0||!Number.isFinite(tax)||tax<0||tax>=.95)throw Error('Preencha fornecedor, serviço, fonte, validade, custo, despesas e impostos/taxas reais.');
+ if(1-tax-.04<=0)throw Error('Taxas e margem não cabem no preço.');
+ const total=cost+extras;
+ return {precoAlvo:Math.ceil(total/(1-tax-.04)*100)/100,precoMin:Math.ceil(total/(1-tax-.02)*100)/100,marcacao:'RASCUNHO — confirmar tributos, responsabilidade e prazo'};
+}
+el('previewPartner').onclick=()=>{try{const p=partnerCalc(vals(el('partnerForm')));el('partnerResult').textContent='Preço sugerido (4%): '+currency(p.precoAlvo)+' | preço mínimo para negociar (2%): '+currency(p.precoMin)+'\nMargem de contribuição antes dos custos fixos. Sem garantia de lucro líquido.';}catch(e){el('partnerResult').textContent=e.message}};
+el('partnerForm').addEventListener('submit',async event=>{
+ event.preventDefault();try{
+ const v=vals(event.target),calc=partnerCalc(v);
+ const item={...v,custo:Number(v.custo),extras:Number(v.extras),taxas:Number(v.taxas),...calc,status:'Pendente de aprovação',criadoEm:new Date().toISOString()};
+ const {error}=await sb.from('docs').insert({col:'cotacoes_terceiros',id:'ct_'+crypto.randomUUID(),data:item});
+ if(error)throw error;
+ el('partnerResult').textContent='Cotação interna registrada. Nenhuma compra, proposta ou mensagem foi enviada.';
+ await loadPartners();
+ }catch(e){el('partnerResult').textContent='Não salvo: '+(e.message||'verifique acesso')}
+});
+async function loadPartners(){
+ el('partnerRows').replaceChildren();
+ for(const x of await getCollection('cotacoes_terceiros')){
+ const a=x.data||{},tr=document.createElement('tr');
+ [a.parceiro,a.servico,a.uf,money(a.custo),money(a.precoAlvo),money(a.precoMin),a.status].forEach(v=>cell(tr,v));el('partnerRows').appendChild(tr);
+ }
+}
+function content(v){
+ const tema=String(v.tema||'').trim(),seg=String(v.segmento||'');
+ if(!tema)throw Error('Informe o tema');
+ return 'CAPISOL Energia Solar | '+seg+'\n\n'+tema+'.\n\nAntes de decidir, confira consumo, características da instalação e custos. Nossa equipe prepara um estudo para sua situação.\n\nFale com a CAPISOL para uma avaliação.\n\nRascunho: confirmar informações, imagens, consentimento e revisão antes de publicar.';
+}
+el('genDraft').onclick=()=>{try{el('draftResult').textContent=content(vals(el('marketingForm')))}catch(e){el('draftResult').textContent=e.message}};
+el('marketingForm').addEventListener('submit',async event=>{
+ event.preventDefault();try{
+ const v=vals(event.target),texto=content(v);
+ if(!v.data||!v.resp)throw Error('Informe data e responsável.');
+ const {error}=await sb.from('docs').insert({col:'mktcal',id:'mkt_'+crypto.randomUUID(),data:{data:v.data,rede:v.rede,tema:v.tema,resp:v.resp,status:'Planejado',segmento:v.segmento,texto,origem:'central_comercial'}});
+ if(error)throw error;el('draftResult').textContent='Planejamento salvo na coleção mktcal. Não houve postagem.\n\n'+texto;
+ await loadMarketing();
+ }catch(e){el('draftResult').textContent='Não salvo: '+(e.message||'verifique acesso')}
+});
+async function loadMarketing(){
+ el('marketingRows').replaceChildren();
+ for(const x of await getCollection('mktcal')){const a=x.data||{},tr=document.createElement('tr');[a.data,a.rede,a.tema,a.resp,a.status].forEach(v=>cell(tr,v));el('marketingRows').appendChild(tr)}
+}
+el('reload').onclick=refresh;
+refresh();
+})();
+</script></body></html>
