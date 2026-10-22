@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Buscar empresas no Google Maps — CAPISOL</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+  :root{--azul:#093566;--noite:#0e2c51;--amarelo:#ffc302;--areia:#fff6e8;--tinta:#1b2533;--fio:#e7e1d4;--ok:#297d24;--erro:#b3261e}
+  *{box-sizing:border-box} body{margin:0;font-family:"Open Sans",Arial,sans-serif;background:var(--areia);color:var(--tinta)}
+  header{background:var(--azul);color:#fff;padding:14px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between}
+  header a{color:#fff;font-size:13px} h1{font:700 18px Montserrat,Arial,sans-serif;margin:0}
+  main{max-width:1100px;margin:0 auto;padding:16px}
+  .cx{background:#fff;border:1px solid var(--fio);border-radius:12px;padding:14px;margin-bottom:14px}
+  .linha{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  input,select{padding:10px;border:1px solid #d6cfc0;border-radius:8px;font-size:15px}
+  input#q{flex:1;min-width:220px}
+  button{padding:10px 14px;border:0;border-radius:8px;background:var(--azul);color:#fff;font-weight:700;cursor:pointer}
+  button.sec{background:#fff;color:var(--azul);border:1px solid var(--azul)} button:disabled{opacity:.5;cursor:default}
+  .chips button{background:#fff;color:var(--azul);border:1px solid var(--fio);font-weight:600;font-size:13px;padding:6px 10px}
+  table{width:100%;border-collapse:collapse;font-size:14px} th,td{padding:8px;border-bottom:1px solid var(--fio);text-align:left;vertical-align:top}
+  .sub{color:#5a6270;font-size:12px} .msg{margin-top:8px;font-size:14px} .erro{color:var(--erro)} .ok{color:var(--ok)}
+  @media (max-width:700px){ table,thead,tbody,tr,td{display:block} thead{display:none} td{border:0;padding:4px 0} tr{border-bottom:1px solid var(--fio);padding:8px 0} }
+</style></head>
+<body>
+<header><h1>Buscar empresas no Google Maps</h1><a href="../">← voltar à gestão</a></header>
+<main>
+  <div class="cx">
+    <div class="linha">
+      <input id="q" placeholder="Ex.: supermercado em Rio Branco AC">
+      <select id="nicho"></select>
+      <button id="buscar">Buscar</button>
+    </div>
+    <div class="linha chips" id="chips" style="margin-top:8px"></div>
+    <div class="msg sub">Dados da API oficial do Google (Places). Só empresas. Ao adicionar, o lead entra no Funil de Prospecção como "Confirmado no Google", sem duplicar. O primeiro contato continua sendo humano, pelo botão do WhatsApp, dentro da cota diária.</div>
+    <div class="msg" id="msg"></div>
+  </div>
+  <div class="cx" id="res" hidden>
+    <div class="linha" style="justify-content:space-between;margin-bottom:8px"><b id="tot"></b><span class="linha"><button class="sec" id="todos">Adicionar todos</button><button class="sec" id="mais" hidden>Mais resultados</button></span></div>
+    <table><thead><tr><th>Empresa</th><th>Telefone</th><th>Nota</th><th></th></tr></thead><tbody id="tb"></tbody></table>
+  </div>
+</main>
+<script>
+(function(){
+  var URL_SB='https://wvgmabqecrlydsranknn.supabase.co', CHAVE='sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv';
+  var sb=supabase.createClient(URL_SB,CHAVE,{auth:{persistSession:true,autoRefreshToken:true}});
+  var NICHOS=['Supermercado/atacado','Hotel/pousada','Saúde','Indústria/frigorífico','Educação','Concessionária/oficina','Agro/rural','Comércio/varejo','Serviços/escritório','Outro'];
+  var EXEMPLOS=[['Supermercado/atacado','supermercado'],['Hotel/pousada','hotel'],['Saúde','clínica médica'],['Indústria/frigorífico','frigorífico'],['Educação','escola particular'],['Concessionária/oficina','oficina mecânica'],['Agro/rural','fazenda'],['Comércio/varejo','loja de materiais de construção']];
+  var $=function(i){ return document.getElementById(i); }, LISTA=[], PROX=null;
+  $('nicho').innerHTML=NICHOS.map(function(n){ return '<option>'+n+'</option>'; }).join('');
+  $('chips').innerHTML=EXEMPLOS.map(function(e,i){ return '<button type="button" data-i="'+i+'">'+e[1]+'</button>'; }).join('');
+  $('chips').onclick=function(ev){ var b=ev.target.closest('[data-i]'); if(!b) return; var e=EXEMPLOS[+b.dataset.i];
+    $('q').value=e[1]+' em Rio Branco AC'; $('nicho').value=e[0]; buscar(); };
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function msg(t,c){ $('msg').className='msg '+(c||''); $('msg').textContent=t; }
+  function fone(f){ var d=String(f||'').replace(/\D/g,''); if(d.length===10||d.length===11) d='55'+d; return d; }
+  function buscar(pagina){
+    var q=$('q').value.trim(); if(!q){ msg('Digite o que buscar.','erro'); return; }
+    msg('Buscando…'); $('buscar').disabled=true;
+    sb.functions.invoke('google-places',{body:{busca:q,pagina:pagina||null}}).then(function(r){
+      $('buscar').disabled=false;
+      var d=r.data, err=r.error;
+      if(err||!d||d.erro){ var t=(d&&d.erro)||(err&&err.message)||'erro';
+        if(/401|JWT|sem acesso/i.test(t)) t='Entre na gestão primeiro (mesmo navegador) e volte a esta página.';
+        msg(t,'erro'); return; }
+      LISTA=pagina?LISTA.concat(d.lista):d.lista; PROX=d.proxima; desenhar(); msg('');
+    });
+  }
+  function desenhar(){
+    $('res').hidden=false; $('tot').textContent=LISTA.length+' empresa(s)'; $('mais').hidden=!PROX;
+    $('tb').innerHTML=LISTA.map(function(p,i){
+      return '<tr><td><b>'+esc(p.nome)+'</b><div class="sub">'+esc(p.tipo)+' · '+esc(p.endereco)+'</div>'+(p.site?'<div class="sub">'+esc(p.site)+'</div>':'')+'</td>'+
+        '<td>'+esc(p.fone||'—')+'</td><td>'+(p.nota!=null?esc(p.nota)+' ('+esc(p.avaliacoes)+')':'—')+'</td>'+
+        '<td><button class="sec" data-a="'+i+'"'+(p.add?' disabled':'')+'>'+(p.add?'No Funil':'Adicionar ao Funil')+'</button></td></tr>'; }).join('');
+  }
+  function adicionar(p){
+    if(p.add) return Promise.resolve();
+    var agora=new Date().toISOString(), id='gm_'+p.placeId;
+    var data={nome:p.nome,fone:fone(p.fone),funil:'prospeccao',etapa:'A contatar',nicho:$('nicho').value,
+      origem:'Google Maps (API oficial)',placeId:p.placeId,confirmadoGoogle:'Confirmado',googleEm:agora.slice(0,10),
+      obs:[p.endereco,p.nota!=null?('nota '+p.nota+' com '+p.avaliacoes+' avaliações'):'',p.site].filter(Boolean).join(' · '),
+      criado:agora.slice(0,10),recebidoEm:agora};
+    return sb.from('docs').select('id').eq('col','leads').eq('id',id).maybeSingle().then(function(r){
+      if(r.data){ p.add=true; return; }
+      return sb.from('docs').insert({col:'leads',id:id,data:data}).then(function(w){ if(w.error) throw w.error; p.add=true; });
+    });
+  }
+  $('tb').onclick=function(ev){ var b=ev.target.closest('[data-a]'); if(!b) return; b.disabled=true;
+    adicionar(LISTA[+b.dataset.a]).then(function(){ desenhar(); msg('Adicionado ao Funil de Prospecção.','ok'); },function(e){ b.disabled=false; msg(e.message||'erro ao salvar','erro'); }); };
+  $('todos').onclick=function(){ var ps=LISTA.filter(function(p){ return !p.add&&p.fone; });
+    msg('Adicionando '+ps.length+'…'); ps.reduce(function(pr,p){ return pr.then(function(){ return adicionar(p); }); },Promise.resolve())
+      .then(function(){ desenhar(); msg(ps.length+' empresa(s) com telefone adicionadas ao Funil.','ok'); },function(e){ desenhar(); msg(e.message||'erro','erro'); }); };
+  $('buscar').onclick=function(){ buscar(); };
+  $('q').onkeydown=function(e){ if(e.key==='Enter') buscar(); };
+  $('mais').onclick=function(){ buscar(PROX); };
+  sb.auth.getSession().then(function(r){ if(!(r.data&&r.data.session)) msg('Entre na gestão primeiro (mesmo navegador) e volte a esta página.','erro'); });
+})();
+</script>
+</body></html>

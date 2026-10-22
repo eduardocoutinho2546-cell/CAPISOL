@@ -1052,11 +1052,11 @@ function respostaStats(){ var v=cardsDe('venda'), ms=v.map(tempoMin).filter(func
 /* ---- Prospecção B2B: cota diária, resposta classificada e leitura por script ----
    O envio é sempre humano, um a um, pelo WhatsApp Business do sócio/vendedor. A cota abaixo é uma regra interna
    conservadora (aquecimento do número); não é um número oficial do WhatsApp. Ajuste só com dados de qualidade/denúncia. */
-var RESP_PROSP=['','Interessado','Pediu mais informação','Não é o decisor','Agora não','Já tem solar','Sem interesse','SAIR (não contatar mais)','Número errado'];
+var RESP_PROSP=['','Interessado','Pediu mais informação','Não é o decisor','Agora não','Já tem solar','Sem interesse','SAIR (não contatar mais)','Número errado','Bloqueou/denunciou'];
 var CONF_GOOGLE=['','Confirmado','Divergente','Não achei'];
 var NICHOS=['','Supermercado/atacado','Hotel/pousada','Saúde','Indústria/frigorífico','Educação','Concessionária/oficina','Agro/rural','Comércio/varejo','Serviços/escritório','Outro'];
-var COTA_ESCADA=[[0,15],[3,30],[7,50],[14,70]]; /* [dias de envio já feitos, limite por dia] */
-var INTERVALO_MIN_S=90;
+var COTA_ESCADA=[[0,20],[7,30],[14,40],[21,50]]; /* [dias de envio já feitos, limite por dia] — mesma regra do banco (capisol_limite_whats); bloqueio/denúncia nos últimos 7 dias derruba para 10 */
+var INTERVALO_MIN_S=300;
 function diaLocal(iso){ var d=new Date(iso); if(isNaN(d.getTime())) return ''; return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function cotaProsp(){
   var cs=cardsDe('prospeccao').filter(function(l){ return l.contatadoEm; }), h=hoje(), dias={}, usados=0, ult=0;
@@ -1064,6 +1064,7 @@ function cotaProsp(){
     var t=Date.parse(l.contatadoEm); if(t>ult) ult=t; });
   var nd=Object.keys(dias).length, lim=COTA_ESCADA[0][1];
   COTA_ESCADA.forEach(function(e){ if(nd>=e[0]) lim=e[1]; });
+  var semana=Date.now()-7*864e5; if(cardsDe('prospeccao').some(function(l){ return l.resposta==='Bloqueou/denunciou'&&Date.parse(l.respostaEm||l.contatadoEm||0)>semana; })) lim=Math.min(lim,10);
   return {usados:usados,limite:lim,diasAnteriores:nd,ultimo:ult};
 }
 function statsProsp(){
@@ -1076,7 +1077,8 @@ function statsProsp(){
 function stripProsp(){
   var c=cotaProsp(), st=statsProsp(), pct=st.contatados?Math.round(st.respostas/st.contatados*100):0, cor=c.usados>=c.limite?'var(--verm,#b3261e)':'var(--tinta)';
   var h='<div class="prosp-strip" style="padding:10px 14px;background:var(--folha);border:1px solid var(--fio);border-radius:12px;font-size:13px;display:grid;gap:6px">'+
-    '<div><b style="color:'+cor+'">Envios hoje: '+c.usados+' / '+c.limite+'</b> <span style="color:var(--tinta-2)">· dias anteriores de envio: '+c.diasAnteriores+' · um por vez, com intervalo de '+INTERVALO_MIN_S+' s</span></div>'+
+    '<div><b style="color:'+cor+'">Envios hoje: '+c.usados+' / '+c.limite+'</b> <span style="color:var(--tinta-2)">· dias anteriores de envio: '+c.diasAnteriores+' · um por vez, com intervalo de '+Math.round(INTERVALO_MIN_S/60)+' min</span></div>'+
+    '<div><a href="prospectar/" style="font-weight:700;color:var(--azul,#093566)">Buscar empresas no Google Maps →</a></div>'+
     '<div style="color:var(--tinta-2)">Contatados '+st.contatados+' · respostas '+st.respostas+' ('+pct+'%) · interessados '+st.interessados+' · pediram SAIR/bloqueados '+st.sair+'</div>';
   var ks=Object.keys(st.grupos).sort();
   if(ks.length){ h+='<details><summary style="cursor:pointer;color:var(--tinta-2)">Resposta por nicho e script</summary><div style="margin-top:6px;display:grid;gap:3px">';
