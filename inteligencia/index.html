@@ -155,19 +155,28 @@ async function loadMarketing(){
  for(const x of await getCollection('mktcal')){const a=x.data||{},tr=document.createElement('tr');[a.data,a.rede,a.tema,a.resp,a.status].forEach(v=>cell(tr,v));el('marketingRows').appendChild(tr)}
 }
 async function loadQualification(){
- const {data,error}=await sb.from('docs').select('id,data').eq('col','triagem_leads').limit(500);
- if(error)throw error;
- const records=(data||[]).map(x=>({id:x.id,...x.data}));
  const order=['P1_VALIDAR','P2_VALIDAR','P3_ENRIQUECER','BLOQUEAR_REVISAO','SEM_ACAO'];
+ const counts=await Promise.all(order.map(async category=>{
+   const {count,error}=await sb.from('docs').select('id',{head:true,count:'exact'})
+     .eq('col','triagem_leads').eq('data->>prioridade',category);
+   if(error)throw error;
+   return {category,count};
+ }));
  el('priorityCounts').replaceChildren();
- for(const category of order){
+ for(const {category,count} of counts){
    const b=document.createElement('div');b.className='metric';
-   const strong=document.createElement('strong');strong.textContent=records.filter(x=>x.prioridade===category).length;
+   const strong=document.createElement('strong');strong.textContent=count===null?'SEM DADO':String(count);
    const label=document.createElement('span');label.textContent=category.replaceAll('_',' ');
    b.append(strong,label);el('priorityCounts').appendChild(b);
  }
  el('priorityRows').replaceChildren();
- for(const x of records.filter(x=>x.prioridade==='P1_VALIDAR'||x.prioridade==='P2_VALIDAR').sort((a,b)=>(Number(b.pontuacao_interna)||0)-(Number(a.pontuacao_interna)||0)).slice(0,50)){
+ const [p1,p2]=await Promise.all(['P1_VALIDAR','P2_VALIDAR'].map(async category=>{
+   const {data,error}=await sb.from('docs').select('id,data').eq('col','triagem_leads')
+     .eq('data->>prioridade',category).limit(100);
+   if(error)throw error;
+   return (data||[]).map(x=>({id:x.id,...x.data}));
+ }));
+ for(const x of [...p1,...p2].sort((a,b)=>(Number(b.pontuacao_interna)||0)-(Number(a.pontuacao_interna)||0)).slice(0,50)){
     const tr=document.createElement('tr');
     [x.id,x.nicho,x.etapa_origem,x.prioridade,x.proxima_acao].forEach(v=>cell(tr,v));
     el('priorityRows').appendChild(tr);
