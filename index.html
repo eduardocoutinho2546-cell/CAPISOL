@@ -6,7 +6,8 @@
 (function(){
   var URL_SB='https://wvgmabqecrlydsranknn.supabase.co', CHAVE='sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv', DONOS=['queiroz.solar68@gmail.com','eduardo.coutinho2546@gmail.com'];
   var ESTATICOS={f04268f0364731fa5b99bb6e060dade7:'arquivos-capisol/f04268f0364731fa5b99bb6e060dade7.png',b6a9b1555d1cb5e4898a8e3a5684ca4c:'arquivos-capisol/b6a9b1555d1cb5e4898a8e3a5684ca4c.pdf',
-    '37986ed0089bc54d536e9cc90529cd42':'arquivos-capisol/37986ed0089bc54d536e9cc90529cd42.pdf','475906f9d5d2a135673a377b578da611':'arquivos-capisol/475906f9d5d2a135673a377b578da611.pdf','8b065c7b373d8f9b731759e61854b515':'arquivos-capisol/8b065c7b373d8f9b731759e61854b515.pdf'};
+    '37986ed0089bc54d536e9cc90529cd42':'arquivos-capisol/37986ed0089bc54d536e9cc90529cd42.pdf','475906f9d5d2a135673a377b578da611':'arquivos-capisol/475906f9d5d2a135673a377b578da611.pdf','8b065c7b373d8f9b731759e61854b515':'arquivos-capisol/8b065c7b373d8f9b731759e61854b515.pdf',
+    'c4a7e1d29b3f4e0a8d6c5b2a1f0e9d87':'arquivos-capisol/c4a7e1d29b3f4e0a8d6c5b2a1f0e9d87.png'};
   var sb=(window.__SB_FAKE||window.supabase).createClient(URL_SB,CHAVE,{auth:{persistSession:true,autoRefreshToken:true}});
   var USER=null, cache={}, subsCol={}, subsDoc={}, canal=null, fila={};
   var resolver; var pronto=new Promise(function(r){ resolver=r; });
@@ -6211,7 +6212,7 @@ function primeiraPermitida(){ var ids=Object.keys(BUILD); for(var i=0;i<ids.leng
 function bibliotecaHTML(){
   var B=CFG.biblioteca||[]; if(!B.length) return '';
   return bloco('Biblioteca da empresa','materiais de venda, fichas de campo e treinamento',
-    '<div class="doc-grid">'+B.map(function(b){ return '<div class="doc-c"><b>'+esc(b.nome)+'</b><span>'+esc(b.desc||'')+'</span><a class="b b-sec b-xs" href="'+esc(blobUrl(b.asset))+'" target="_blank" rel="noopener">Abrir PDF</a></div>'; }).join('')+'</div>');
+    '<div class="doc-grid">'+B.map(function(b){ return '<div class="doc-c"><b>'+esc(b.nome)+'</b><span>'+esc(b.desc||'')+'</span><a class="b b-sec b-xs" href="'+esc(blobUrl(b.asset))+'" target="_blank" rel="noopener">Abrir</a></div>'; }).join('')+'</div>');
 }
 
 /* ---------- ALERTAS a mais (sino e Painel) ---------- */
@@ -6292,7 +6293,9 @@ function agentesHTML(nome){
   var L=agentesPara(nome); if(!L.length) return '<div class="bl-b">'+vazio('Nenhum relatório ainda','Os agentes do escritório publicam aqui o resumo do dia e os alertas da sua área.')+'</div>';
   return '<div class="bl-b">'+L.map(function(a){ return '<div style="padding:10px 0;border-bottom:1px solid var(--fio)">'+selo(a.nivel==='bad'?'Alerta':a.nivel==='wait'?'Atenção':'Ok',a.nivel||'ok')+
     ' <b>'+esc(a.titulo||'Relatório')+'</b> <span class="sub">· '+esc(a.agente||'agente')+' · '+esc(dbr(String(a.criado||'').slice(0,10)))+'</span>'+
-    '<div style="white-space:pre-wrap;font-size:13px;margin-top:4px">'+esc(a.texto||'')+'</div></div>'; }).join('')+'</div>';
+    '<div style="white-space:pre-wrap;font-size:13px;margin-top:4px">'+esc(a.texto||'')+'</div>'+
+    ((a.acoes||[]).length?'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">'+(a.acoes||[]).filter(function(x){ return /^https:\/\/(wa\.me|api\.whatsapp\.com)\//.test(String(x.url||'')); }).map(function(x){
+      return '<a class="b b-sec b-xs" href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.t||'Abrir no WhatsApp')+'</a>'; }).join('')+'</div>':'')+'</div>'; }).join('')+'</div>';
 }
 function pgMinha(el){
   var nome=MINHA_VER||pessoaEu(), d=desigDe(nome), al=alertasPlataforma().filter(function(a){ return pagPermitida(a.ir||'painel'); });
