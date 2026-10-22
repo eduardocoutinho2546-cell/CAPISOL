@@ -1049,6 +1049,42 @@ function respostaStats(){ var v=cardsDe('venda'), ms=v.map(tempoMin).filter(func
   var sem=v.filter(function(l){ return !l.respondeuEm&&l.recebidoEm; }).length;
   return {n:ms.length,mediana:ms.length?ms[Math.floor(ms.length/2)]:null,semResposta:sem}; }
 
+/* ---- Prospecção B2B: cota diária, resposta classificada e leitura por script ----
+   O envio é sempre humano, um a um, pelo WhatsApp Business do sócio/vendedor. A cota abaixo é uma regra interna
+   conservadora (aquecimento do número); não é um número oficial do WhatsApp. Ajuste só com dados de qualidade/denúncia. */
+var RESP_PROSP=['','Interessado','Pediu mais informação','Não é o decisor','Agora não','Já tem solar','Sem interesse','SAIR (não contatar mais)','Número errado'];
+var CONF_GOOGLE=['','Confirmado','Divergente','Não achei'];
+var NICHOS=['','Supermercado/atacado','Hotel/pousada','Saúde','Indústria/frigorífico','Educação','Concessionária/oficina','Agro/rural','Comércio/varejo','Serviços/escritório','Outro'];
+var COTA_ESCADA=[[0,15],[3,30],[7,50],[14,70]]; /* [dias de envio já feitos, limite por dia] */
+var INTERVALO_MIN_S=90;
+function diaLocal(iso){ var d=new Date(iso); if(isNaN(d.getTime())) return ''; return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function cotaProsp(){
+  var cs=cardsDe('prospeccao').filter(function(l){ return l.contatadoEm; }), h=hoje(), dias={}, usados=0, ult=0;
+  cs.forEach(function(l){ var d=diaLocal(l.contatadoEm); if(!d) return; if(d===h) usados++; else dias[d]=1;
+    var t=Date.parse(l.contatadoEm); if(t>ult) ult=t; });
+  var nd=Object.keys(dias).length, lim=COTA_ESCADA[0][1];
+  COTA_ESCADA.forEach(function(e){ if(nd>=e[0]) lim=e[1]; });
+  return {usados:usados,limite:lim,diasAnteriores:nd,ultimo:ult};
+}
+function statsProsp(){
+  var cs=cardsDe('prospeccao'), cont=cs.filter(function(l){ return l.contatadoEm; }), r=cont.filter(function(l){ return l.resposta; });
+  var inte=r.filter(function(l){ return l.resposta==='Interessado'||l.resposta==='Pediu mais informação'; }).length;
+  var sair=cs.filter(function(l){ return l.naoContatar; }).length, g={};
+  cont.forEach(function(l){ var k=(l.nicho||'sem nicho')+' · '+(l.scriptVersao||'sem script'); var x=g[k]||(g[k]={e:0,r:0,i:0}); x.e++; if(l.resposta){ x.r++; if(l.resposta==='Interessado'||l.resposta==='Pediu mais informação') x.i++; } });
+  return {contatados:cont.length,respostas:r.length,interessados:inte,sair:sair,grupos:g};
+}
+function stripProsp(){
+  var c=cotaProsp(), st=statsProsp(), pct=st.contatados?Math.round(st.respostas/st.contatados*100):0, cor=c.usados>=c.limite?'var(--verm,#b3261e)':'var(--tinta)';
+  var h='<div class="prosp-strip" style="padding:10px 14px;background:var(--folha);border:1px solid var(--fio);border-radius:12px;font-size:13px;display:grid;gap:6px">'+
+    '<div><b style="color:'+cor+'">Envios hoje: '+c.usados+' / '+c.limite+'</b> <span style="color:var(--tinta-2)">· dias anteriores de envio: '+c.diasAnteriores+' · um por vez, com intervalo de '+INTERVALO_MIN_S+' s</span></div>'+
+    '<div style="color:var(--tinta-2)">Contatados '+st.contatados+' · respostas '+st.respostas+' ('+pct+'%) · interessados '+st.interessados+' · pediram SAIR/bloqueados '+st.sair+'</div>';
+  var ks=Object.keys(st.grupos).sort();
+  if(ks.length){ h+='<details><summary style="cursor:pointer;color:var(--tinta-2)">Resposta por nicho e script</summary><div style="margin-top:6px;display:grid;gap:3px">';
+    ks.forEach(function(k){ var x=st.grupos[k]; h+='<div>'+esc(k)+': '+x.e+' enviados · '+x.r+' respostas · '+x.i+' interessados</div>'; });
+    h+='</div></details>'; }
+  return h+'</div>';
+}
+
 /* ===================== PAINEL ===================== */
 function pgPainel(el){
   var receb=S.recebimentos, pagos=receb.filter(function(r){ return r.status==='Pago'; });
@@ -1169,6 +1205,14 @@ function verLead(l){
   var pares=[['Etapa',selo(etp(l),'hot')]];
   if(venda) pares.push(['Telefone',esc(l.fone||'—')],['Consumo',l.consumo?nf(l.consumo)+' kWh/mês':'—']);
   if(!venda&&l.fone) pares.push(['Telefone',esc(l.fone)]);
+  var prosp=f==='prospeccao';
+  if(prosp){
+    pares.push(['Nicho · script',esc((l.nicho||'—')+' · '+(l.scriptVersao||'—'))],
+      ['Google',esc(l.confirmadoGoogle||'não conferido')+(l.googleEm?' em '+dmy(l.googleEm):'')],['Instagram',esc(l.instagram||'—')]);
+    if(l.contatadoEm) pares.push(['Enviado',esc(new Date(l.contatadoEm).toLocaleString('pt-BR'))+' · tentativas: '+(l.tentativas||1)]);
+    if(l.resposta) pares.push(['Resposta',esc(l.resposta)+(l.respostaObs?' — '+esc(l.respostaObs):'')]);
+    if(l.naoContatar) pares.push(['Contato','<span style="color:var(--ambar)">NÃO CONTATAR (pediu saída ou número errado)</span>']);
+  }
   if(l.entrega) pares.push(['Entrega do agente','<div style="white-space:pre-wrap">'+esc(l.entrega)+'</div>']);
   pares.push(['Valor',brl(l.valor)]);
   if(venda) pares.push(['Origem',esc(l.origem||'—')]);
@@ -1187,14 +1231,43 @@ function verLead(l){
         {k:'etapa',rot:'Etapa',tipo:'select',opts:et},
         {k:'proximo',rot:'Próximo contato',tipo:'date',meia:1},{k:'motivoPerda',rot:'Motivo (se perdido)',tipo:'select',opts:MOTIVOS_PERDA,meia:1},
         {k:'obs',rot:'Observação',tipo:'texto'}
+      ]:(prosp?[
+        {k:'nome',rot:'Empresa'},{k:'fone',rot:'Telefone',tipo:'tel',meia:1},{k:'valor',rot:'Valor (R$)',tipo:'number',meia:1},
+        {k:'nicho',rot:'Nicho',tipo:'select',opts:NICHOS,meia:1},{k:'scriptVersao',rot:'Versão do script',meia:1},
+        {k:'confirmadoGoogle',rot:'Conferido no Google',tipo:'select',opts:CONF_GOOGLE,meia:1},{k:'instagram',rot:'Instagram (@)',meia:1},
+        {k:'etapa',rot:'Etapa',tipo:'select',opts:et},{k:'obs',rot:'Observação',tipo:'texto'}
       ]:[
         {k:'nome',rot:'Título'},{k:'valor',rot:'Valor (R$)',tipo:'number',meia:1},{k:'etapa',rot:'Etapa',tipo:'select',opts:et,meia:1},
         {k:'obs',rot:'Observação',tipo:'texto'}
-      ],Object.assign({},l,{etapa:etp(l)}),function(d){
+      ]),Object.assign({},l,{etapa:etp(l)}),function(d){
         if(d.etapa!==etp(l)) d.ordem=ultimaOrdem(f,d.etapa);
+        if(prosp&&d.confirmadoGoogle&&d.confirmadoGoogle!==l.confirmadoGoogle) d.googleEm=hoje();
         alterar('leads',l.id,d,'Atualizado.'); fecharGaveta(); }); }}
   ];
-  if(!venda&&l.fone) botoes.push({t:'Abrir WhatsApp',cls:'b-sec',fn:function(){ window.open(waLink(l.fone,l.entrega||''),'_blank'); }});
+  if(prosp){
+    var ct=cotaProsp();
+    if(l.fone) botoes.push({t:'Abrir WhatsApp',cls:'b-sec',fn:function(){
+      var c=cotaProsp();
+      if(l.naoContatar){ aviso('Esta empresa pediu para não ser contatada (ou o número está errado).'); return; }
+      if(c.usados>=c.limite){ aviso('Cota de hoje atingida ('+c.usados+'/'+c.limite+'). Retome amanhã.'); return; }
+      var seg=c.ultimo?Math.round((Date.now()-c.ultimo)/1000):9999, abre=function(){ window.open(waLink(l.fone,l.entrega||''),'_blank'); };
+      if(seg<INTERVALO_MIN_S) confirmar('Vá com calma','O último envio foi há '+seg+' s. Envios em rajada elevam o risco de bloqueio do número. Abrir mesmo assim?',abre); else abre(); }});
+    if(!l.naoContatar&&!l.contatadoEm) botoes.push({t:'Marquei como enviado',cls:'b-sec',fn:function(){
+      var c=cotaProsp(); if(c.usados>=c.limite){ aviso('Cota de hoje atingida ('+c.usados+'/'+c.limite+').'); return; }
+      var p={contatadoEm:new Date().toISOString(),tentativas:(l.tentativas||0)+1};
+      if(etp(l)==='A contatar'||etp(l)==='Mensagem pronta'){ p.etapa='Contatado'; p.ordem=ultimaOrdem(f,'Contatado'); }
+      alterar('leads',l.id,p,'Envio registrado ('+(c.usados+1)+'/'+c.limite+' hoje).'); fecharGaveta(); }});
+    if(l.contatadoEm) botoes.push({t:'Registrar resposta',cls:'b-sec',fn:function(){
+      abrirForm('Resposta de '+l.nome,'Classifique como o cliente respondeu',[
+        {k:'resposta',rot:'Resposta',tipo:'select',opts:RESP_PROSP},{k:'respostaObs',rot:'O que ele disse (resumo)',tipo:'texto'}
+      ],{resposta:l.resposta||'',respostaObs:l.respostaObs||''},function(d){
+        if(!d.resposta){ aviso('Escolha a classificação.'); return; }
+        var sai=d.resposta.indexOf('SAIR')===0||d.resposta==='Número errado', perde=sai||d.resposta==='Sem interesse'||d.resposta==='Já tem solar';
+        var p={resposta:d.resposta,respostaObs:d.respostaObs,respondeuEm:l.respondeuEm||new Date().toISOString()};
+        if(sai) p.naoContatar=true;
+        p.etapa=perde?'Descartado':'Respondeu'; p.ordem=ultimaOrdem(f,p.etapa);
+        alterar('leads',l.id,p,'Resposta registrada.'); fecharGaveta(); }); }});
+  } else if(!venda&&l.fone) botoes.push({t:'Abrir WhatsApp',cls:'b-sec',fn:function(){ window.open(waLink(l.fone,l.entrega||''),'_blank'); }});
   if(venda&&!l.respondeuEm) botoes.push({t:'Registrar 1ª resposta',cls:'b-sec',fn:function(){ alterar('leads',l.id,{respondeuEm:new Date().toISOString()},'1ª resposta registrada.'); fecharGaveta(); }});
   if(venda) botoes.push({t:'Gerar proposta',cls:'b-sec',fn:function(){ fecharGaveta(); PROP_F=novoPropForm(); PROP_F.origem='l:'+l.id; PROP_F.cliNome=l.nome||''; if(l.valor) PROP_F.total=l.valor; PROP_VIEW='novo'; irPara('propostas'); }});
   if(venda) botoes.push({t:'Virar cliente',cls:'b-cta',fn:function(){ fecharGaveta(); virarCliente(l); }});
@@ -1285,7 +1358,7 @@ function pgFunil(el){
   Object.keys(FUNIS_PADRAO).forEach(function(k){
     h+='<button role="tab" class="'+(k===f?'on':'')+'" data-f="'+k+'" aria-selected="'+(k===f)+'">'+esc(funilCfg(k).nome)+'<small>'+cardsDe(k).length+'</small></button>';
   });
-  h+='</div><div class="kan">';
+  h+='</div>'+(f==='prospeccao'?stripProsp():'')+'<div class="kan">';
   var n=0;
   et.forEach(function(e,ei){
     var da=ordenaCol(ls.filter(function(l){ return etp(l)===e; }));
