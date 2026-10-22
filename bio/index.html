@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAPISOL Energia Solar</title>
+<meta name="description" content="Energia solar em Rio Branco (AC): simulação pela conta de luz, visita técnica, CAPISOL+.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--azul:#093566;--amarelo:#ffc302;--laranja:#ff7702;--areia:#fff6e8;--tinta:#1b2533}
+*{box-sizing:border-box}body{margin:0;background:var(--areia);color:var(--tinta);font-family:'Open Sans',Arial,sans-serif}
+main{max-width:480px;margin:0 auto;padding:28px 16px 40px;text-align:center}
+.top{height:8px;background:linear-gradient(90deg,#ffc302,#ff9e02)}
+img{width:190px;max-width:70%;margin:6px auto 4px;display:block}
+p.s{margin:0 0 22px;color:#3d4757;font-size:15px}
+a.b{display:block;margin:12px 0;padding:16px 18px;border-radius:14px;text-decoration:none;font:700 16px Montserrat,Arial,sans-serif;color:var(--azul);background:#fff;border:2px solid var(--azul)}
+a.b.cta{background:var(--laranja);border-color:var(--laranja)}
+a.b small{display:block;font:400 13px 'Open Sans',Arial,sans-serif;color:#3d4757;margin-top:4px}
+.f{margin-top:26px;font-size:12px;color:#5a6270}
+</style></head><body><div class="top"></div><main>
+<img src="logo.png" alt="CAPISOL Energia Solar">
+<p class="s">A energia do sol com a força da natureza. Rio Branco · Acre</p>
+<a class="b cta" data-ref="ig_bio_simulacao" data-msg="Olá! Quero uma simulação de energia solar pela minha conta de luz.">Simulação pela sua conta de luz<small>mande a foto da conta no WhatsApp</small></a>
+<a class="b" data-ref="ig_bio_visita" data-msg="Olá! Quero agendar uma visita técnica.">Agendar visita técnica</a>
+<a class="b" data-ref="ig_bio_empresa" data-msg="Olá! Tenho uma empresa e quero entender a energia solar para ela.">Energia solar para empresa</a>
+<a class="b" data-ref="ig_bio_capisolmais" data-msg="Olá! Quero saber do CAPISOL+ (limpeza e manutenção).">CAPISOL+ · limpeza e manutenção<small>para quem já tem sistema solar</small></a>
+<a class="b" data-ref="ig_feed_c01" data-msg="Olá! Vi o post sobre por que a conta de luz não zera.">Vi o post "a conta não zera"</a>
+<a class="b" data-ref="ig_reels_c02" data-msg="Olá! Vi o vídeo sobre o sol de Rio Branco.">Vi o vídeo "quanto sol tem Rio Branco"</a>
+<a class="b" data-ref="ig_story_c03" data-msg="Olá! Vi o story sobre queda de energia na empresa.">Vi o story "empresa sem energia"</a>
+<p class="f">WhatsApp oficial (68) 99249-0347 · @capisol_ac<br>A conta de luz não zera: há custo de disponibilidade, iluminação pública e Fio B (Lei 14.300/2022).</p>
+</main>
+<script>
+/* cada botão abre o WhatsApp com o código de origem no fim da mensagem: é assim que a gestão sabe de qual post veio o lead */
+var FONE='5568992490347', p=new URLSearchParams(location.search), extra=p.get('ref');
+document.querySelectorAll('a[data-ref]').forEach(function(a){
+  var ref=extra&&/^[a-z0-9_]{3,40}$/.test(extra)&&a.getAttribute('data-ref')==='ig_bio_simulacao'?extra:a.getAttribute('data-ref');
+  a.href='https://wa.me/'+FONE+'?text='+encodeURIComponent(a.getAttribute('data-msg')+' (ref='+ref+')');
+  a.target='_blank'; a.rel='noopener'; });
+</script></body></html>
