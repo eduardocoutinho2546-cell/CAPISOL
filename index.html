@@ -785,7 +785,7 @@ var COLS=['leads','clientes','propostas','contratos','agenda','visitas','obras',
           'recebimentos','custos','estoque','equipe','documentos','precos','arquivos','modelos',
           'localidades','assinaturas','comissoes','juridico','fechamentos','acessos','os','ajustes',
           'viagens','romaneio','movest','campanhas','mktcal','promos','concorrentes','ideias','incentivos','competencias','catalogo','compras','pagar',
-          'descontos','exclusoes','rede','posjornada','agentes','parceiros'];
+          'descontos','exclusoes','rede','posjornada','agentes','parceiros','cotacoes'];
 var S={}; COLS.forEach(function(c){ S[c]=[]; });
 var CFG={razao:'66.360.677 WENDEL MATOS DO SACRAMENTO',cidade:'Rio Branco — AC',fone:'',cnpj:'66.360.677/0001-49',
   slogan:'A energia do sol com a força da natureza.',mgCom:20,mgPro:10,descVend:12,descSocio:20,
@@ -8149,15 +8149,17 @@ function escRel(){ return (S.agentes||[]).slice().sort(function(a,b){ return Str
 function escCotador(){
   var k=n0(ESC_COT.kit), kw=n0(ESC_COT.kwp)||1, mo=n0(ESC_COT.mo), ou=n0(ESC_COT.outros), lu=n0(ESC_COT.lucro), com=0.05;
   var linhas=[['6% (decisão C3)',0.06],['12,87% (efetiva projetada)',0.1287]].map(function(t){
-    var preco=Math.ceil((k+mo+ou+lu)/(1-com-t[1])/50)*50;
-    var deg=[['Preço cheio',0],['Vendedor (−R$ 500)',500],['Wendel (−R$ 1.200)',1200]].map(function(d){ var p=preco-d[1]; var luc=p*(1-com-t[1])-k-mo-ou; return [d[0],p,luc]; });
+    /* kit pago pelo cliente direto ao distribuidor: imposto só sobre (venda − kit), a mesma regra da Tabela de preços (impBase 'servico') */
+    var sv=impBaseCfg()==='servico'?t[1]*k:0;
+    var preco=Math.ceil((k+mo+ou+lu-sv)/(1-com-t[1])/50)*50;
+    var deg=[['Preço cheio',0],['Vendedor (−R$ 500)',500],['Wendel (−R$ 1.200)',1200]].map(function(d){ var p=preco-d[1]; var luc=p*(1-com-t[1])+sv-k-mo-ou; return [d[0],p,luc]; });
     return {t:t[0],deg:deg};
   });
   var ref=18900/10*kw;
   var h='<div class="bl-b"><div class="fr">'+
     [['kit','Custo do kit (R$) — cotação válida'],['kwp','Potência (kWp)'],['mo','Instalação e mão de obra (R$)'],['outros','Frete, ART, homologação, extras (R$)'],['lucro','Lucro que você quer (R$)']].map(function(c){
       return '<div class="fld"><span>'+esc(c[1])+'</span><input type="number" inputmode="decimal" data-cot="'+c[0]+'" value="'+esc(ESC_COT[c[0]]==null?'':ESC_COT[c[0]])+'"></div>'; }).join('')+'</div>';
-  h+='<div class="sub" style="margin:6px 0 10px">Referência pública da v10.2: R$ 1.890/kWp → '+brl(ref)+' para '+kw+' kWp. Comissão de 5% embutida. Fixas do mês: R$ 14.780 ÷ 4 vendas = R$ 3.695 por venda para empatar.</div>';
+  h+='<div class="sub" style="margin:6px 0 10px">Referência pública da v10.2: R$ 1.890/kWp → '+brl(ref)+' para '+kw+' kWp. Comissão de 5% embutida. Imposto '+(impBaseCfg()==='servico'?'só sobre a venda − kit (o cliente paga o kit direto ao distribuidor)':'sobre a venda inteira')+'. Fixas do mês: R$ 14.780 ÷ 4 vendas = R$ 3.695 por venda para empatar.</div>';
   linhas.forEach(function(L){
     h+='<b>Imposto '+esc(L.t)+'</b>'+tabela([{t:'Degrau',v:function(x){ return esc(x[0]); }},{t:'Preço ao cliente',r:1,v:function(x){ return brl(x[1]); }},
       {t:'Lucro líquido',r:1,v:function(x){ return x[2]<0?selo(brl(x[2])+' prejuízo','bad'):x[2]<3695?selo(brl(x[2]),'wait'):selo(brl(x[2]),'ok'); }},
@@ -8171,7 +8173,7 @@ function pgEscritorio(el){
   var R=escRel(), hj=hoje(), deHoje=R.filter(function(r){ return String(r.criado||'').slice(0,10)===hj; }).length;
   var h=cabecalho('Escritório IA','175 agentes trabalhando dentro da gestão, de 5h às 23h · eles preparam, vocês aprovam e enviam',[]);
   h+=faixa([{r:'Agentes',v:String(ESC_AGENTES.length)},{r:'Relatórios hoje',v:String(deHoje)},{r:'Turnos por dia',v:'10'},{r:'Parceiros com preço',v:String((S.parceiros||[]).length),alerta:!(S.parceiros||[]).length,d:(S.parceiros||[]).length?'':'cadastre a tabela do 1º parceiro'}]);
-  h+=abasPg([['hoje','Relatórios'],['andares','Andares'],['turnos','Turnos'],['cotador','Cotador de venda'],['parceiros','Parceiros (4%)']],ESC_ABA,'esc');
+  h+=abasPg([['hoje','Relatórios'],['andares','Andares'],['turnos','Turnos'],['cotacoes','Cotações de kit'],['cotador','Cotador de venda'],['parceiros','Parceiros (4%)']],ESC_ABA,'esc');
   if(ESC_ABA==='hoje'){
     h+=bloco('O que os agentes entregaram','mais novos primeiro · botão verde = mensagem pronta, você toca e envia',R.length?R.slice(0,40).map(function(r){
       var ac=(r.acoes||[]).filter(function(a){ return /^https:\/\/(wa\.me|api\.whatsapp\.com)\//.test(a.url||''); });
@@ -8186,6 +8188,12 @@ function pgEscritorio(el){
     });
   } else if(ESC_ABA==='turnos'){
     h+=bloco('Expediente de 5h às 23h (horário do Acre)','o motor do banco atualiza o placar de hora em hora',tabela([{t:'Hora',v:function(x){ return '<b>'+x[0]+'</b>'; }},{t:'Turno',v:function(x){ return '<b>'+esc(x[1])+'</b><div class="sub">'+esc(x[2])+'</div>'; }},{t:'Quem trabalha',v:function(x){ return '<span class="sub">'+esc(x[3])+'</span>'; }}],ESC_TURNOS,false));
+  } else if(ESC_ABA==='cotacoes'){
+    var C=(S.cotacoes||[]).filter(function(c){ return c.id!=='_config'; }).sort(function(a,b){ return String(b.data||'').localeCompare(String(a.data||'')); });
+    var cfgC=(S.cotacoes||[]).filter(function(c){ return c.id==='_config'; })[0]||{};
+    h+='<div class="nt">Toda segunda, quarta e sexta às 7h o escritório pede a cotação das faixas da Tabela de preços ao distribuidor, salva o PDF, grava o custo do kit na faixa e a Tabela recalcula o preço. Comprar continua sendo só dos sócios. '+(cfgC.email?'Pedido vai para: <b>'+esc(cfgC.email)+'</b>.':'<b>Falta o e-mail do representante da BelEnergy</b> (Wendel ou Eduardo informam).')+'</div>';
+    h+=bloco('Cotações recebidas',C.length+' registros',tabela([{t:'Data',v:function(c){ return '<b>'+esc(String(c.data||'').slice(0,10))+'</b><div class="sub">válida até '+esc(c.validade||'—')+'</div>'; }},{t:'Distribuidor',v:function(c){ return esc(c.fornecedor||''); }},
+      {t:'Itens',v:function(c){ return '<span class="sub">'+esc((c.itens||[]).map(function(i){ return i.kwp+' kWp: '+brl(i.kit); }).join(' · '))+'</span>'; }},{t:'PDF',v:function(c){ return c.pdf&&/^https:\/\//.test(c.pdf)?'<a target="_blank" rel="noopener" href="'+esc(c.pdf)+'">abrir</a>':'<span class="sub">'+esc(c.pdf||'—')+'</span>'; }}],C,false));
   } else if(ESC_ABA==='cotador'){
     h+=bloco('Cotador de venda','preço competitivo com lucro à vista nos dois cenários de imposto',escCotador());
   } else {
