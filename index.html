@@ -1019,7 +1019,8 @@ var FUNIS_PADRAO={
   venda:{nome:'Vendas',etapas:['Lead','Qualificação','Visita técnica','Contrato','Fechamento']},
   projeto:{nome:'Projeto',etapas:['Contrato assinado','Pedido do kit','Instalação','Vistoria','Entregue']},
   posvenda:{nome:'Pós-venda',etapas:['Chamado aberto','Agendado','Em atendimento','Concluído']},
-  operacional:{nome:'Operacional',etapas:['A fazer','Pronto para aprovar','Em execução','Revisão','Concluído']}
+  operacional:{nome:'Operacional',etapas:['A fazer','Pronto para aprovar','Em execução','Revisão','Concluído']},
+  prospeccao:{nome:'Prospecção B2B',etapas:['A contatar','Mensagem pronta','Contatado','Respondeu','Reunião','Descartado']}
 };
 var FUNIL_ATUAL='venda', FUN_ANIM=true;
 /* nomes antigos que ainda podem estar no banco → etapa nova (decisão de 2026-10-03) */
@@ -1166,6 +1167,8 @@ function verLead(l){
   var f=funilDe(l), venda=f==='venda', et=etapasDe(f);
   var pares=[['Etapa',selo(etp(l),'hot')]];
   if(venda) pares.push(['Telefone',esc(l.fone||'—')],['Consumo',l.consumo?nf(l.consumo)+' kWh/mês':'—']);
+  if(!venda&&l.fone) pares.push(['Telefone',esc(l.fone)]);
+  if(l.entrega) pares.push(['Entrega do agente','<div style="white-space:pre-wrap">'+esc(l.entrega)+'</div>']);
   pares.push(['Valor',brl(l.valor)]);
   if(venda) pares.push(['Origem',esc(l.origem||'—')]);
   if(venda&&(l.utm_campaign||l.utm_source)) pares.push(['Campanha',esc([l.utm_source,l.utm_medium,l.utm_campaign].filter(Boolean).join(' / '))]);
@@ -1190,6 +1193,7 @@ function verLead(l){
         if(d.etapa!==etp(l)) d.ordem=ultimaOrdem(f,d.etapa);
         alterar('leads',l.id,d,'Atualizado.'); fecharGaveta(); }); }}
   ];
+  if(!venda&&l.fone) botoes.push({t:'Abrir WhatsApp',cls:'b-sec',fn:function(){ window.open(waLink(l.fone,l.entrega||''),'_blank'); }});
   if(venda&&!l.respondeuEm) botoes.push({t:'Registrar 1ª resposta',cls:'b-sec',fn:function(){ alterar('leads',l.id,{respondeuEm:new Date().toISOString()},'1ª resposta registrada.'); fecharGaveta(); }});
   if(venda) botoes.push({t:'Gerar proposta',cls:'b-sec',fn:function(){ fecharGaveta(); PROP_F=novoPropForm(); PROP_F.origem='l:'+l.id; PROP_F.cliNome=l.nome||''; if(l.valor) PROP_F.total=l.valor; PROP_VIEW='novo'; irPara('propostas'); }});
   if(venda) botoes.push({t:'Virar cliente',cls:'b-cta',fn:function(){ fecharGaveta(); virarCliente(l); }});
