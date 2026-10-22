@@ -219,7 +219,7 @@ footer a{color:var(--azul)}
     if(!$('autContato').checked){ er.textContent='Marque a autorização de contato para podermos responder.'; return; }
     var dados={nome:nome,fone:'55'+fone,email:email,cidade:$('cidade').value.trim(),interesse:sel.interesse||'',imovel:sel.imovel||'',
       conta:ehInst()?String(conta.value):'',ligacao:sel.ligacao||'',telhado:ehInst()?(sel.telhado||''):'',horario:sel.horario||'',
-      mensagem:$('mensagem').value.trim(),autContato:true,aceitaInfo:$('aceitaInfo').checked,site_url:$('site_url').value};
+      mensagem:$('mensagem').value.trim(),utm_source:(qs.get('utm_source')||'').slice(0,60),utm_medium:(qs.get('utm_medium')||'').slice(0,60),utm_campaign:(qs.get('utm_campaign')||'').slice(0,80),utm_content:(qs.get('utm_content')||'').slice(0,80),autContato:true,aceitaInfo:$('aceitaInfo').checked,site_url:$('site_url').value};
     var b=$('enviar'); b.disabled=true; b.textContent='Enviando…';
     fetch(URL_RPC,{method:'POST',headers:{'Content-Type':'application/json','apikey':CHAVE},body:JSON.stringify({p:dados})})
       .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error((j&&j.message)||'Falha ao enviar'); return j; }); })

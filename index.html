@@ -1018,7 +1018,8 @@ function filtra(arr){
 var FUNIS_PADRAO={
   venda:{nome:'Vendas',etapas:['Lead','Qualificação','Visita técnica','Contrato','Fechamento']},
   projeto:{nome:'Projeto',etapas:['Contrato assinado','Pedido do kit','Instalação','Vistoria','Entregue']},
-  posvenda:{nome:'Pós-venda',etapas:['Chamado aberto','Agendado','Em atendimento','Concluído']}
+  posvenda:{nome:'Pós-venda',etapas:['Chamado aberto','Agendado','Em atendimento','Concluído']},
+  operacional:{nome:'Operacional',etapas:['A fazer','Pronto para aprovar','Em execução','Revisão','Concluído']}
 };
 var FUNIL_ATUAL='venda', FUN_ANIM=true;
 /* nomes antigos que ainda podem estar no banco → etapa nova (decisão de 2026-10-03) */
@@ -1033,10 +1034,18 @@ function etp(l){
   var m=ETAPA_ANT[e]; if(f==='venda'&&m&&et.indexOf(m)>-1) return m;
   return et[0];
 }var TIPOS_CLI=['Residencial','Comercial','Rural'];
-var ORIGENS=['Indicação','Instagram','Google','Loja','Parceria','Outro'];
+var MOTIVOS_PERDA=['','Preço','Já fechou com outra empresa','Sem retorno','Não tem telhado/espaço','Financiamento negado','Adiou a decisão','Outro'];
+var ORIGENS=['Indicação','Instagram','Google','Loja','Parceria','Outro','Facebook','WhatsApp','Google Ads'];
 var TECNICOS=function(){ var t=S.equipe.filter(function(p){ return p.perfil==='Técnico'; }).map(function(p){ return p.nome; });
   return t.length?t:['—']; };
 var NOMES_CLI=function(){ var n=S.clientes.map(function(c){ return c.num+' — '+c.nome; }); return n.length?n:['—']; };
+
+/* tempo até a 1ª resposta (a regra do funil: responder em minutos). Usa recebidoEm; sem ele, não entra na média. */
+function tempoMin(l){ if(!l.recebidoEm||!l.respondeuEm) return null; var a=Date.parse(l.recebidoEm), b=Date.parse(l.respondeuEm); return (isNaN(a)||isNaN(b)||b<a)?null:Math.round((b-a)/60000); }
+function tempoResp(l){ var m=tempoMin(l); if(m===null) return 'registrada'; return m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'; }
+function respostaStats(){ var v=cardsDe('venda'), ms=v.map(tempoMin).filter(function(x){ return x!==null; }).sort(function(a,b){ return a-b; });
+  var sem=v.filter(function(l){ return !l.respondeuEm&&l.recebidoEm; }).length;
+  return {n:ms.length,mediana:ms.length?ms[Math.floor(ms.length/2)]:null,semResposta:sem}; }
 
 /* ===================== PAINEL ===================== */
 function pgPainel(el){
@@ -1058,7 +1067,8 @@ function pgPainel(el){
     {r:'Em atraso',v:brl(soma(atraso,function(r){return r.valor;})),d:atraso.length+' parcela(s)',alerta:atraso.length>0},
     {r:'Propostas abertas',v:String(abertas.length),d:brl(soma(abertas,function(p){return p.valor;}))+' em jogo'},
     {r:'Fechamento',v:taxa+'%',d:fech.length+' de '+S.propostas.length+' propostas'},
-    {r:'Margem média',v:nf(mg,1)+'%',d:'meta: '+CFG.mgCom+'%'}
+    {r:'Margem média',v:nf(mg,1)+'%',d:'meta: '+CFG.mgCom+'%'},
+    (function(){ var rs=respostaStats(); return {r:'1ª resposta (mediana)',v:rs.mediana===null?'—':(rs.mediana<60?rs.mediana+' min':Math.round(rs.mediana/60)+' h'),d:rs.semResposta+' lead(s) sem resposta registrada',alerta:rs.semResposta>0}; })()
   ]);
 
   /* funil de vendas: "chegaram" conta quem está na etapa ou já passou dela; a seta mostra a conversão para a próxima */
@@ -1140,13 +1150,14 @@ function novoCartao(f,etapaIni){
     {k:'valor',rot:'Valor estimado (R$)',tipo:'number',meia:1},
     {k:'origem',rot:'Origem',tipo:'select',opts:ORIGENS,meia:1},
     {k:'etapa',rot:'Etapa',tipo:'select',opts:et},
+    {k:'proximo',rot:'Próximo contato',tipo:'date',meia:1},{k:'motivoPerda',rot:'Motivo (se perdido)',tipo:'select',opts:MOTIVOS_PERDA,meia:1},
     {k:'obs',rot:'Observação',tipo:'texto'}
   ]:[
     {k:'nome',rot:'Título'},{k:'valor',rot:'Valor (R$)',tipo:'number',meia:1},{k:'etapa',rot:'Etapa',tipo:'select',opts:et,meia:1},
     {k:'obs',rot:'Observação',tipo:'texto'}
   ];
   abrirForm(venda?'Novo lead':'Novo cartão',funilCfg(f).nome,campos,{origem:'Indicação',etapa:etapaIni||et[0]},function(d){
-    d.funil=f; d.ordem=ultimaOrdem(f,d.etapa);
+    d.funil=f; d.ordem=ultimaOrdem(f,d.etapa); if(!d.criado) d.criado=hoje(); if(!d.recebidoEm) d.recebidoEm=new Date().toISOString();
     FUNIL_ATUAL=f; criar('leads',d,venda?'Lead criado.':'Cartão criado.');
   });
 }
@@ -1157,6 +1168,10 @@ function verLead(l){
   if(venda) pares.push(['Telefone',esc(l.fone||'—')],['Consumo',l.consumo?nf(l.consumo)+' kWh/mês':'—']);
   pares.push(['Valor',brl(l.valor)]);
   if(venda) pares.push(['Origem',esc(l.origem||'—')]);
+  if(venda&&(l.utm_campaign||l.utm_source)) pares.push(['Campanha',esc([l.utm_source,l.utm_medium,l.utm_campaign].filter(Boolean).join(' / '))]);
+  if(venda&&l.proximo) pares.push(['Próximo contato',dmy(l.proximo)]);
+  if(venda&&l.motivoPerda) pares.push(['Motivo da perda',esc(l.motivoPerda)]);
+  if(venda) pares.push(['1ª resposta',l.respondeuEm?esc(tempoResp(l)):'<span style="color:var(--ambar)">ainda não registrada</span>']);
   pares.push(['Observação',esc(l.obs||'—')]);
   var botoes=[
     {t:'Editar',cls:'b-pri',fn:function(){
@@ -1166,6 +1181,7 @@ function verLead(l){
         {k:'valor',rot:'Valor estimado (R$)',tipo:'number',meia:1},
         {k:'origem',rot:'Origem',tipo:'select',opts:ORIGENS,meia:1},
         {k:'etapa',rot:'Etapa',tipo:'select',opts:et},
+        {k:'proximo',rot:'Próximo contato',tipo:'date',meia:1},{k:'motivoPerda',rot:'Motivo (se perdido)',tipo:'select',opts:MOTIVOS_PERDA,meia:1},
         {k:'obs',rot:'Observação',tipo:'texto'}
       ]:[
         {k:'nome',rot:'Título'},{k:'valor',rot:'Valor (R$)',tipo:'number',meia:1},{k:'etapa',rot:'Etapa',tipo:'select',opts:et,meia:1},
@@ -1174,6 +1190,7 @@ function verLead(l){
         if(d.etapa!==etp(l)) d.ordem=ultimaOrdem(f,d.etapa);
         alterar('leads',l.id,d,'Atualizado.'); fecharGaveta(); }); }}
   ];
+  if(venda&&!l.respondeuEm) botoes.push({t:'Registrar 1ª resposta',cls:'b-sec',fn:function(){ alterar('leads',l.id,{respondeuEm:new Date().toISOString()},'1ª resposta registrada.'); fecharGaveta(); }});
   if(venda) botoes.push({t:'Gerar proposta',cls:'b-sec',fn:function(){ fecharGaveta(); PROP_F=novoPropForm(); PROP_F.origem='l:'+l.id; PROP_F.cliNome=l.nome||''; if(l.valor) PROP_F.total=l.valor; PROP_VIEW='novo'; irPara('propostas'); }});
   if(venda) botoes.push({t:'Virar cliente',cls:'b-cta',fn:function(){ fecharGaveta(); virarCliente(l); }});
   botoes.push({t:'Excluir',cls:'b-del',fn:function(){ confirmar('Excluir','Isso remove '+l.nome+' do funil. Não dá para desfazer.',
