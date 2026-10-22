@@ -8236,13 +8236,19 @@ function pgPosts(el){
     h+=bloco(p.titulo||'Post',(p.formato||'')+' · '+(p.objetivo||'')+' · '+(String(p.criado||'').slice(0,10)),
       '<div class="bl-b"><div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px">'+im.map(function(u,k){ return '<a href="'+esc(u)+'" download target="_blank" rel="noopener" style="flex:0 0 auto;text-align:center"><img src="'+esc(u)+'" alt="imagem '+(k+1)+'" style="height:220px;border-radius:10px;border:1px solid var(--fio);display:block"><span class="sub">baixar '+(k+1)+'</span></a>'; }).join('')+'</div>'+
       '<div class="lb" style="margin-top:8px">Legenda</div><div style="white-space:pre-wrap;font-size:14px;background:var(--sol-bg);padding:10px;border-radius:8px">'+esc(p.legenda||'')+'</div>'+
+      (p.hashtags?'<div class="sub" style="margin-top:6px">'+esc(p.hashtags)+'</div>':'')+
+      '<div class="fr" style="margin-top:10px">'+(p.musica?'<div><div class="lb">Música</div><div class="sub">'+esc(p.musica)+'</div></div>':'')+(p.horario?'<div><div class="lb">Quando postar</div><div class="sub">'+esc(p.horario)+'</div></div>':'')+'</div>'+
+      (p.roteiro?'<div class="lb" style="margin-top:8px">Roteiro</div><div class="sub" style="white-space:pre-wrap">'+esc(p.roteiro)+'</div>':'')+
+      (Array.isArray(p.marca)?'<div class="lb" style="margin-top:8px">Identidade e validação</div><ul class="sub" style="margin:4px 0 0;padding-left:18px;line-height:1.7">'+p.marca.map(function(m){ return '<li>'+(m[1]?'✅ ':'⚠️ ')+esc(m[0])+'</li>'; }).join('')+'</ul>':'')+
+      (p.validacao?'<div class="sub" style="margin-top:6px"><b>Revisão:</b> '+esc(p.validacao)+'</div>':'')+
+      (p.alt?'<div class="sub" style="margin-top:4px"><b>Texto alternativo:</b> '+esc(p.alt)+'</div>':'')+
       (p.checagem?'<div class="sub" style="margin-top:6px">Checagem: '+esc(p.checagem)+'</div>':'')+
-      '<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px"><button class="b b-sec b-xs" type="button" data-pocp="'+i+'">Copiar legenda</button>'+
+      '<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px"><button class="b b-sec b-xs" type="button" data-pocp="'+i+'">Copiar legenda + hashtags</button>'+
       (PO_FIL==='Para aprovar'?'<button class="b b-xs" type="button" data-post="'+i+'" data-st="Aprovado">Aprovar</button><button class="b b-sec b-xs" type="button" data-post="'+i+'" data-st="Recusado">Recusar</button>':'')+
       (PO_FIL==='Aprovado'?'<button class="b b-xs" type="button" data-post="'+i+'" data-st="Postado">Marcar como postado</button>':'')+'</div></div>');
   });
   el.innerHTML=h; ligaAbas(el,'pof',function(a){ PO_FIL=a; desenhar(); });
-  el.querySelectorAll('[data-pocp]').forEach(function(b){ b.onclick=function(){ var t=L[+b.getAttribute('data-pocp')].legenda||''; try{ navigator.clipboard.writeText(t).then(function(){ aviso('Legenda copiada.'); },function(){ aviso('Não deu para copiar: selecione o texto.'); }); }catch(e){ aviso('Selecione o texto e copie.'); } }; });
+  el.querySelectorAll('[data-pocp]').forEach(function(b){ b.onclick=function(){ var pp=L[+b.getAttribute('data-pocp')], t=(pp.legenda||'')+(pp.hashtags&&String(pp.legenda||'').indexOf('#')<0?'\n\n'+pp.hashtags:''); try{ navigator.clipboard.writeText(t).then(function(){ aviso('Legenda copiada.'); },function(){ aviso('Não deu para copiar: selecione o texto.'); }); }catch(e){ aviso('Selecione o texto e copie.'); } }; });
   el.querySelectorAll('[data-post]').forEach(function(b){ b.onclick=function(){ var p=L[+b.getAttribute('data-post')], st=b.getAttribute('data-st'); alterar('posts',p.id,{status:st,decididoPor:pessoaEu()||'',decididoEm:hoje()},'Post: '+st+'.'); }; });
 }
 /* ---------- AO VIVO: o que cada agente está fazendo, validando e analisando ---------- */
