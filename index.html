@@ -785,7 +785,7 @@ var COLS=['leads','clientes','propostas','contratos','agenda','visitas','obras',
           'recebimentos','custos','estoque','equipe','documentos','precos','arquivos','modelos',
           'localidades','assinaturas','comissoes','juridico','fechamentos','acessos','os','ajustes',
           'viagens','romaneio','movest','campanhas','mktcal','promos','concorrentes','ideias','incentivos','competencias','catalogo','compras','pagar',
-          'descontos','exclusoes','rede','posjornada','agentes','parceiros','cotacoes'];
+          'descontos','exclusoes','rede','posjornada','agentes','parceiros','cotacoes','concorrentes_cad'];
 var S={}; COLS.forEach(function(c){ S[c]=[]; });
 var CFG={razao:'66.360.677 WENDEL MATOS DO SACRAMENTO',cidade:'Rio Branco — AC',fone:'',cnpj:'66.360.677/0001-49',
   slogan:'A energia do sol com a força da natureza.',mgCom:20,mgPro:10,descVend:12,descSocio:20,
@@ -8173,7 +8173,7 @@ function pgEscritorio(el){
   var R=escRel(), hj=hoje(), deHoje=R.filter(function(r){ return String(r.criado||'').slice(0,10)===hj; }).length;
   var h=cabecalho('Escritório IA','175 agentes trabalhando dentro da gestão, de 5h às 23h · eles preparam, vocês aprovam e enviam',[]);
   h+=faixa([{r:'Agentes',v:String(ESC_AGENTES.length)},{r:'Relatórios hoje',v:String(deHoje)},{r:'Turnos por dia',v:'10'},{r:'Parceiros com preço',v:String((S.parceiros||[]).length),alerta:!(S.parceiros||[]).length,d:(S.parceiros||[]).length?'':'cadastre a tabela do 1º parceiro'}]);
-  h+=abasPg([['hoje','Relatórios'],['andares','Andares'],['turnos','Turnos'],['cotacoes','Cotações de kit'],['cotador','Cotador de venda'],['parceiros','Parceiros (4%)']],ESC_ABA,'esc');
+  h+=abasPg([['hoje','Relatórios'],['andares','Andares'],['turnos','Turnos'],['cotacoes','Cotações de kit'],['concorrentes','Concorrentes'],['cotador','Cotador de venda'],['parceiros','Parceiros (4%)']],ESC_ABA,'esc');
   if(ESC_ABA==='hoje'){
     h+=bloco('O que os agentes entregaram','mais novos primeiro · botão verde = mensagem pronta, você toca e envia',R.length?R.slice(0,40).map(function(r){
       var ac=(r.acoes||[]).filter(function(a){ return /^https:\/\/(wa\.me|api\.whatsapp\.com)\//.test(a.url||''); });
@@ -8188,6 +8188,11 @@ function pgEscritorio(el){
     });
   } else if(ESC_ABA==='turnos'){
     h+=bloco('Expediente de 5h às 23h (horário do Acre)','o motor do banco atualiza o placar de hora em hora',tabela([{t:'Hora',v:function(x){ return '<b>'+x[0]+'</b>'; }},{t:'Turno',v:function(x){ return '<b>'+esc(x[1])+'</b><div class="sub">'+esc(x[2])+'</div>'; }},{t:'Quem trabalha',v:function(x){ return '<span class="sub">'+esc(x[3])+'</span>'; }}],ESC_TURNOS,false));
+  } else if(ESC_ABA==='concorrentes'){
+    var K=(S.concorrentes_cad||[]).slice().sort(function(a,b){ return (a.uf===b.uf?0:a.uf==='AC'?-1:1)||(n0(b.capital)-n0(a.capital)); });
+    h+='<div class="nt">Empresas ativas do Acre e de Rondônia com "solar" ou "fotovoltaico" no nome e atividade de instalação, material elétrico ou engenharia (Receita Federal, dados abertos). Ficam fora: MEI, empresário individual e quem não usa "solar" no nome. Preço da concorrência continua em Marketing → Concorrência. Concorrente nunca vira lead.</div>';
+    h+=bloco('Concorrentes cadastrados',K.length+' empresas · Acre primeiro',tabela([{t:'Empresa',v:function(c){ return '<b>'+esc(c.empresa)+'</b><div class="sub">'+esc(c.razao||'')+'</div>'; }},{t:'Onde',v:function(c){ return esc(c.municipio||'')+'<div class="sub">'+esc(c.bairro||'')+'</div>'; }},
+      {t:'Porte',v:function(c){ return esc(c.porte||'')+'<div class="sub">capital '+brl(c.capital)+'</div>'; }},{t:'Contato',v:function(c){ return '<span class="sub">'+esc(c.fone||'')+(c.email?'<br>'+esc(c.email):'')+'</span>'; }}],K,false));
   } else if(ESC_ABA==='cotacoes'){
     var C=(S.cotacoes||[]).filter(function(c){ return c.id!=='_config'; }).sort(function(a,b){ return String(b.data||'').localeCompare(String(a.data||'')); });
     var cfgC=(S.cotacoes||[]).filter(function(c){ return c.id==='_config'; })[0]||{};
