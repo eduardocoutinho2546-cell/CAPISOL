@@ -32,6 +32,19 @@ button.secondary{background:#fff;color:var(--navy);border:1px solid var(--navy);
 <div id="private" class="hide">
 <section class="panel"><h2>Funil registrado no CRM</h2><div class="cards" id="metrics"></div>
 <p class="muted">Contagem de registros, não significa contatos válidos ou vendas realizadas. Sem propostas e recebimentos registrados, margem e conversão permanecem SEM DADO.</p></section>
+<section class="panel"><h2>Prioridade dos leads • pré-qualificação</h2>
+<p>Ordem baseada em nicho, registros disponíveis e potencial declarado. Não representa interesse confirmado ou consentimento.</p>
+<div class="cards" id="priorityCounts"></div>
+<div class="scroll"><table><thead><tr><th>Cartão</th><th>Nicho</th><th>Etapa</th><th>Prioridade</th><th>Verificação necessária</th></tr></thead><tbody id="priorityRows"></tbody></table></div>
+</section>
+<section class="panel"><h2>Concorrência monitorada • Acre e Rondônia</h2>
+<p>Levantamento inicial de empresas publicamente identificadas; validar presença e operação. Preço marcado como não informado até aparecer uma proposta comparável.</p>
+<div class="scroll"><table><thead><tr><th>Empresa</th><th>Cidade/UF</th><th>Endereço público</th><th>Preço comparável</th><th>Validação</th></tr></thead><tbody id="competitorRows"></tbody></table></div>
+</section>
+<section class="panel"><h2>Gestores virtuais e acessos</h2>
+<p>Perfis de agentes registrados sem usuário no Auth: nenhum pode acessar clientes, comprar, administrar ou enviar mensagens. Pessoas reais devem ser convidadas individualmente e ativar autenticação forte.</p>
+<div class="scroll"><table><thead><tr><th>Perfil</th><th>Situação</th><th>Acesso real</th></tr></thead><tbody id="agentRows"></tbody></table></div>
+</section>
 <section class="panel"><h2>Cotações de parceiros • refrigeração, geradores e serviços</h2>
 <p>Margem alvo de <b>4%</b> e mínimo de negociação de <b>2%</b> sobre o preço de venda, depois de custos do parceiro, despesas adicionais e taxas variáveis registradas. Isso não substitui DRE, tributos e revisão da proposta.</p>
 <form id="partnerForm">
@@ -92,7 +105,7 @@ async function refresh(){
   const labels=['Leads cadastrados','Propostas registradas','Clientes cadastrados','Recebimentos registrados'];
   el('metrics').replaceChildren();
   counts.forEach((count,i)=>{const b=document.createElement('div');b.className='metric';const num=document.createElement('strong');num.textContent=count===null?'SEM DADO':String(count);const label=document.createElement('span');label.textContent=labels[i];b.append(num,label);el('metrics').appendChild(b)});
-  await Promise.all([loadPartners(),loadMarketing()]);
+  await Promise.all([loadPartners(),loadMarketing(),loadQualification(),loadCompetitors(),loadAgentProfiles()]);
   message('Atualizado. Somente dados do CRM acessíveis ao usuário autenticado.');
  }catch(e){message('Falha ao carregar a gestão: '+(e.message||'verifique login e permissões.'))}
 }
@@ -140,6 +153,43 @@ el('marketingForm').addEventListener('submit',async event=>{
 async function loadMarketing(){
  el('marketingRows').replaceChildren();
  for(const x of await getCollection('mktcal')){const a=x.data||{},tr=document.createElement('tr');[a.data,a.rede,a.tema,a.resp,a.status].forEach(v=>cell(tr,v));el('marketingRows').appendChild(tr)}
+}
+async function loadQualification(){
+ const {data,error}=await sb.from('docs').select('id,data').eq('col','triagem_leads').limit(500);
+ if(error)throw error;
+ const records=(data||[]).map(x=>({id:x.id,...x.data}));
+ const order=['P1_VALIDAR','P2_VALIDAR','P3_ENRIQUECER','BLOQUEAR_REVISAO','SEM_ACAO'];
+ el('priorityCounts').replaceChildren();
+ for(const category of order){
+   const b=document.createElement('div');b.className='metric';
+   const strong=document.createElement('strong');strong.textContent=records.filter(x=>x.prioridade===category).length;
+   const label=document.createElement('span');label.textContent=category.replaceAll('_',' ');
+   b.append(strong,label);el('priorityCounts').appendChild(b);
+ }
+ el('priorityRows').replaceChildren();
+ for(const x of records.filter(x=>x.prioridade==='P1_VALIDAR'||x.prioridade==='P2_VALIDAR').sort((a,b)=>(Number(b.pontuacao_interna)||0)-(Number(a.pontuacao_interna)||0)).slice(0,50)){
+    const tr=document.createElement('tr');
+    [x.id,x.nicho,x.etapa_origem,x.prioridade,x.proxima_acao].forEach(v=>cell(tr,v));
+    el('priorityRows').appendChild(tr);
+ }
+}
+async function loadCompetitors(){
+ el('competitorRows').replaceChildren();
+ const list=await getCollection('intel_concorrentes');
+ for(const x of list){
+   const a=x.data||{},tr=document.createElement('tr');
+   [a.empresa,(a.municipio||'')+'/'+(a.uf||''),a.endereco_publico,'SEM DADO',a.verificacao].forEach(v=>cell(tr,v));
+   el('competitorRows').appendChild(tr);
+ }
+}
+async function loadAgentProfiles(){
+ el('agentRows').replaceChildren();
+ const list=await getCollection('gestores_virtuais');
+ for(const x of list){
+   const a=x.data||{},tr=document.createElement('tr');
+   [a.nome,a.status,a.nivel_efetivo==='nenhum'?'SEM LOGIN':'REVISAR'].forEach(v=>cell(tr,v));
+   el('agentRows').appendChild(tr);
+ }
 }
 el('reload').onclick=refresh;
 refresh();
