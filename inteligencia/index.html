@@ -202,6 +202,14 @@ async function loadAgentProfiles(){
    [a.nome,a.status,a.nivel_efetivo==='nenhum'?'SEM LOGIN':'REVISAR'].forEach(v=>cell(tr,v));
    el('agentRows').appendChild(tr);
  }
+
+ const {data:personas,error:catalogoErro}=await sb.from('capisol_personas_v3')
+   .select('id,nome,departamento,superagente,validacao').order('id',{ascending:true}).limit(200);
+ if(!catalogoErro)for(const a of (personas||[])){
+  const tr=document.createElement('tr');
+  [a.id+' · '+a.nome,'Perfil V3 · '+a.departamento+' / '+a.superagente,'PERSONA SEM LOGIN'].forEach(v=>cell(tr,v));
+  el('agentRows').appendChild(tr);
+ }
 }
 el('reload').onclick=refresh;
 refresh();
