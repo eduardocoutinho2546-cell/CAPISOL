@@ -38,8 +38,10 @@ export async function montarPainel({sb,root}){
  if(!root||root.dataset.init==="1")return;
  const {data:{session}}=await sb.auth.getSession();
  if(!session)return;
- const {data:owner,error}=await sb.rpc("eh_dono");
- if(error||owner!==true)return;
+ const {data:owner}=await sb.rpc("eh_dono");
+ const {data:member}=await sb.rpc("eh_membro");
+ if(owner!==true&&member!==true)return;
+ const isOwner=owner===true;
  root.hidden=false;root.dataset.init="1";
  root.append(E("h2","BelEnergy • importação segura de cotação"),
  E("p","Escolha o PDF do fornecedor. Somente campos comerciais são enviados; nenhuma compra ou proposta será finalizada."));
@@ -50,6 +52,7 @@ export async function montarPainel({sb,root}){
  const list=E("button","Listar cotações",{type:"button"});
  const ssw=E("a","Rastreamento oficial SSW",{href:"https://ssw.inf.br/2/rastreamento_pf",target:"_blank",rel:"noopener noreferrer"});
  actions.append(preview,save,list,ssw);root.append(actions);
+ if(!isOwner){preview.hidden=true;save.hidden=true;inp.hidden=true;label.hidden=true;}
  const output=E("div","Aguardando PDF.",{role:"status",class:"cotacoes-output"});root.append(output);
  const hist=E("div");root.append(hist);
  let payload=null;
@@ -78,6 +81,53 @@ export async function montarPainel({sb,root}){
    hist.replaceChildren(table);
   }catch(e){hist.textContent=e.message||"Não foi possível consultar"}
  };
+ const sale=E("section");
+ sale.append(E("h3","Solicitar cotação direta ao cotador BelEnergy"),
+ E("p","A solicitação entra na fila. O agente só poderá gerar a cotação quando o conector autenticado do fornecedor estiver configurado."));
+ const qform=E("form");
+ const qfields=[["template_id","Código de kit (ex.: p16)","p16"],
+ ["target_kwh","Consumo desejado (kWh/mês)","1000"],
+ ["kwp","Potência esperada (kWp)","9.92"],
+ ["shipping_zip","CEP de entrega (8 dígitos)",""],
+ ["structure_type","Cobertura (metalica, ceramica, fibrocimento, solo)","metalica"],
+ ["cable_extra_m","Metragem extra de cabo","33"],
+ ["labor_brl","Mão de obra de referência","893"]];
+ for(const [name,label,def] of qfields){
+  const group=E("label",label+" ");const i=E("input","",{type:"text",name,maxlength:"50",required:"required"});
+  i.value=def;group.append(i);qform.append(group);
+ }
+ qform.append(E("button","Enviar pedido para o agente",{type:"submit"}));
+ const qresult=E("p","",{role:"status"});sale.append(qform,qresult);
+ qform.onsubmit=async(ev)=>{
+  ev.preventDefault();
+  const v=Object.fromEntries(qfields.map(([n])=>[n,qform.elements.namedItem(n).value.trim()]));
+  const entrada={target_kwh:Number(v.target_kwh),kwp:Number(v.kwp),shipping_zip:v.shipping_zip,structure_type:v.structure_type.toLowerCase(),
+   roof_type:v.structure_type,cable_extra_m:Number(v.cable_extra_m),labor_brl:Number(v.labor_brl),module_count:0,inverter_kw:0};
+  try{
+   const r=await request(sb,"solicitar",{template_id:v.template_id,entrada});
+   qresult.textContent="Pedido "+r.solicitacao.id+" registrado para cotação. Estado: "+r.solicitacao.estado+". Nenhuma compra foi efetuada.";
+  }catch(e){qresult.textContent=e.message||"Erro ao solicitar"}
+ };
+ const qmenu=E("div","",{class:"cotacoes-actions"});
+ const jobsButton=E("button","Ver fila de cotações",{type:"button"});
+ const pricesButton=E("button","Tabela atual de custo",{type:"button"});
+ qmenu.append(jobsButton,pricesButton);sale.append(qmenu);
+ const qtable=E("div");sale.append(qtable);root.append(sale);
+ jobsButton.onclick=async()=>{
+  try{const r=await request(sb,"fila");const t=E("table");
+   for(const x of r.fila||[]){const tr=E("tr");
+    [x.template_id,x.finalidade,x.estado,x.cotacao_numero||"-",x.cotacao_total?brl(x.cotacao_total):"-"].forEach(z=>tr.append(E("td",String(z))));
+    t.append(tr)}qtable.replaceChildren(t);
+  }catch(e){qtable.textContent=e.message||"Falha na fila"}
+ };
+ pricesButton.onclick=async()=>{
+  try{const r=await request(sb,"tabela");const t=E("table");
+   for(const x of r.custos||[]){const tr=E("tr");
+    [x.template_id,x.cotacao_numero,brl(x.custo_total_fornecedor),x.validade,x.situacao_custo].forEach(z=>tr.append(E("td",String(z))));
+    t.append(tr)}qtable.replaceChildren(t);
+  }catch(e){qtable.textContent=e.message||"Tabela ainda sem cotação confirmada"}
+ };
+
  const details=E("details"),summary=E("summary","Simulação financeira (rascunho interno)");
  details.append(summary);const form=E("form");
  const names=[["preco","Valor total ao cliente",18900],["kit","Custo do kit",0],["engenharia","Projeto",350],["insumos","Insumos",500],["instalacao","Instalação PJ",0],["deslocamento","Deslocamento",0],["comissaoPct","Comissão (%)",5],["impostoPct","Imposto (%)",6],["stonePct","Stone (%)",0],["risco","Reserva risco",0],["desconto","Desconto",0],["pisoMargem","Piso contribuição",0]];
