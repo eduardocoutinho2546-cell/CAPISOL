@@ -1,0 +1,32 @@
+name: Validar painel de cotacoes CAPISOL
+on:
+  pull_request:
+    paths:
+      - 'inteligencia/index.html'
+      - 'inteligencia/cotacoes-panel.mjs'
+  workflow_dispatch:
+jobs:
+  sintaxe:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check inteligencia/cotacoes-panel.mjs
+      - name: Conferir painel e autenticacao
+        run: |
+          node <<'JS'
+          const fs=require('node:fs'), vm=require('node:vm'), assert=require('node:assert/strict');
+          const s=fs.readFileSync('inteligencia/index.html','utf8');
+          assert(s.includes('id="painelCotacoesBelEnergy"'));
+          assert(s.includes("import('./cotacoes-panel.mjs')"));
+          const scripts=[...s.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
+          for(const code of scripts)if(code.trim())new vm.Script(code);
+          const mod=fs.readFileSync('inteligencia/cotacoes-panel.mjs','utf8');
+          assert(!mod.includes('service_role'));
+          assert(mod.includes('eh_dono')&&mod.includes('application/pdf'));
+          console.log('Painel e checagens validados.');
+          JS
