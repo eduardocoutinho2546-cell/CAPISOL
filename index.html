@@ -2,6 +2,8 @@
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><link rel="icon" href="arquivos-capisol/f04268f0364731fa5b99bb6e060dade7.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="posts/posts-ia-bridge.js"></script>
+<script src="posts/posts-ia-ui.js"></script>
 <script>/* CAPISOL Gestão — ligação com o Supabase (banco, login, arquivos). Substitui o window.claude do Claude. */
 (function(){
   var URL_SB='https://wvgmabqecrlydsranknn.supabase.co', CHAVE='sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv', DONOS=['queiroz.solar68@gmail.com','eduardo.coutinho2546@gmail.com'];
@@ -10,6 +12,7 @@
     'c4a7e1d29b3f4e0a8d6c5b2a1f0e9d87':'arquivos-capisol/c4a7e1d29b3f4e0a8d6c5b2a1f0e9d87.png'};
   var sb=(window.__SB_FAKE||window.supabase).createClient(URL_SB,CHAVE,{auth:{persistSession:true,autoRefreshToken:true}});
   var USER=null, cache={}, subsCol={}, subsDoc={}, canal=null, fila={};
+  window.CAPISOL_POSTS_IA=window.installCapisolPostsBridge(sb,function(){return USER;});
   var resolver; var pronto=new Promise(function(r){ resolver=r; });
 
   function erro(e){ var m=(e&&e.message)||String(e||''), c=(e&&e.code)||''; return {code:/row-level|permission|42501|denied/i.test(m+c)?'permission_denied':(c||'erro'),message:m}; }
@@ -98,7 +101,7 @@
 </script>
 </head><body>
 <title>Capisol Gestão</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&family=Montserrat:wght@400;600;700&display=swap">
 <style>
 /* Identidade CAPISOL 2026-10 (decisão do dono em 2026-10-16): capivara em traço azul-marinho com o sol amarelo.
    Fundo creme de manhã de sol, trilho claro com a marca inteira, azul-marinho para texto e ação, amarelo-sol só para destaque
@@ -8222,34 +8225,14 @@ function pgEscritorio(el){
   }
 }
 /* ---------- POSTS PRONTOS: o escritório gera, o Wendel aprova, qualquer um baixa e posta no Instagram ---------- */
-var PO_FIL='Para aprovar';
+function novoPostIA(){ window.CAPISOL_POSTS_UI.openForm(); }
 function pgPosts(el){
-  var P=(S.posts||[]).slice().sort(function(a,b){ return String(b.criado||'').localeCompare(String(a.criado||'')); });
-  var cont=function(s){ return P.filter(function(p){ return (p.status||'Para aprovar')===s; }).length; };
-  var h=cabecalho('Posts prontos','o escritório cria · o Wendel aprova · baixe as imagens, copie a legenda e poste no Instagram',[]);
-  h+=faixa([{r:'Para aprovar',v:String(cont('Para aprovar')),alerta:cont('Para aprovar')>0},{r:'Aprovados (prontos para postar)',v:String(cont('Aprovado'))},{r:'Postados',v:String(cont('Postado'))}]);
-  h+=abasPg([['Para aprovar','Para aprovar'],['Aprovado','Aprovados'],['Postado','Postados'],['Recusado','Recusados']],PO_FIL,'pof');
-  var L=P.filter(function(p){ return (p.status||'Para aprovar')===PO_FIL; });
-  if(!L.length) h+='<div class="bl"><div class="bl-b sub">Nada aqui. Os posts novos chegam no turno das 13h.</div></div>';
-  L.forEach(function(p,i){
-    var im=(p.imagens||[]).filter(function(u){ return /^(posts\/[\w\-\/]+\.(png|jpg)|https:\/\/[\w.\-\/]+\.(png|jpg))$/.test(u); });
-    h+=bloco(p.titulo||'Post',(p.formato||'')+' · '+(p.objetivo||'')+' · '+(String(p.criado||'').slice(0,10)),
-      '<div class="bl-b"><div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px">'+im.map(function(u,k){ return '<a href="'+esc(u)+'" download target="_blank" rel="noopener" style="flex:0 0 auto;text-align:center"><img src="'+esc(u)+'" alt="imagem '+(k+1)+'" style="height:220px;border-radius:10px;border:1px solid var(--fio);display:block"><span class="sub">baixar '+(k+1)+'</span></a>'; }).join('')+'</div>'+
-      '<div class="lb" style="margin-top:8px">Legenda</div><div style="white-space:pre-wrap;font-size:14px;background:var(--sol-bg);padding:10px;border-radius:8px">'+esc(p.legenda||'')+'</div>'+
-      (p.hashtags?'<div class="sub" style="margin-top:6px">'+esc(p.hashtags)+'</div>':'')+
-      '<div class="fr" style="margin-top:10px">'+(p.musica?'<div><div class="lb">Música</div><div class="sub">'+esc(p.musica)+'</div></div>':'')+(p.horario?'<div><div class="lb">Quando postar</div><div class="sub">'+esc(p.horario)+'</div></div>':'')+'</div>'+
-      (p.roteiro?'<div class="lb" style="margin-top:8px">Roteiro</div><div class="sub" style="white-space:pre-wrap">'+esc(p.roteiro)+'</div>':'')+
-      (Array.isArray(p.marca)?'<div class="lb" style="margin-top:8px">Identidade e validação</div><ul class="sub" style="margin:4px 0 0;padding-left:18px;line-height:1.7">'+p.marca.map(function(m){ return '<li>'+(m[1]?'✅ ':'⚠️ ')+esc(m[0])+'</li>'; }).join('')+'</ul>':'')+
-      (p.validacao?'<div class="sub" style="margin-top:6px"><b>Revisão:</b> '+esc(p.validacao)+'</div>':'')+
-      (p.alt?'<div class="sub" style="margin-top:4px"><b>Texto alternativo:</b> '+esc(p.alt)+'</div>':'')+
-      (p.checagem?'<div class="sub" style="margin-top:6px">Checagem: '+esc(p.checagem)+'</div>':'')+
-      '<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px"><button class="b b-sec b-xs" type="button" data-pocp="'+i+'">Copiar legenda + hashtags</button>'+
-      (PO_FIL==='Para aprovar'?'<button class="b b-xs" type="button" data-post="'+i+'" data-st="Aprovado">Aprovar</button><button class="b b-sec b-xs" type="button" data-post="'+i+'" data-st="Recusado">Recusar</button>':'')+
-      (PO_FIL==='Aprovado'?'<button class="b b-xs" type="button" data-post="'+i+'" data-st="Postado">Marcar como postado</button>':'')+'</div></div>');
+  window.CAPISOL_POSTS_UI.render(el,{
+    posts:S.posts||[],isOwner:!!EU.owner,canApprove:pagPermitida('posts'),api:window.CAPISOL_POSTS_IA,
+    reloadPosts:async function(){ S.posts=await window.CAPISOL_POSTS_IA.posts(); desenhar(); },
+    review:function(p,marca){ alterar('posts',p.id,{marca:marca},'Revisão atualizada.'); },
+    approve:function(p,status){ alterar('posts',p.id,{status:status,decididoPor:pessoaEu()||'',decididoEm:hoje()},'Post: '+status+'.'); }
   });
-  el.innerHTML=h; ligaAbas(el,'pof',function(a){ PO_FIL=a; desenhar(); });
-  el.querySelectorAll('[data-pocp]').forEach(function(b){ b.onclick=function(){ var pp=L[+b.getAttribute('data-pocp')], t=(pp.legenda||'')+(pp.hashtags&&String(pp.legenda||'').indexOf('#')<0?'\n\n'+pp.hashtags:''); try{ navigator.clipboard.writeText(t).then(function(){ aviso('Legenda copiada.'); },function(){ aviso('Não deu para copiar: selecione o texto.'); }); }catch(e){ aviso('Selecione o texto e copie.'); } }; });
-  el.querySelectorAll('[data-post]').forEach(function(b){ b.onclick=function(){ var p=L[+b.getAttribute('data-post')], st=b.getAttribute('data-st'); alterar('posts',p.id,{status:st,decididoPor:pessoaEu()||'',decididoEm:hoje()},'Post: '+st+'.'); }; });
 }
 /* ---------- AO VIVO: o que cada agente está fazendo, validando e analisando ---------- */
 var AV_TIPO='todos';
