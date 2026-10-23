@@ -20,6 +20,7 @@ button.secondary{background:#fff;color:var(--navy);border:1px solid var(--navy);
 .notice{border-left:4px solid var(--gold);background:#fff5d5;padding:11px;margin-bottom:15px}
 .muted{color:var(--muted);font-size:.85rem}table{border-collapse:collapse;width:100%;font-size:.87rem}th,td{padding:10px;text-align:left;border-bottom:1px solid var(--line)}th{color:var(--muted)}
 .scroll{overflow-x:auto}.hide{display:none!important}@media(max-width:600px){header{padding:18px}main{padding:12px}.panel{padding:15px}}
+.cotacoes-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.cotacoes-actions button,.cotacoes-actions a{padding:8px 12px;border:1px solid #bed0e5;border-radius:7px;background:#fff;color:#093566;cursor:pointer;text-decoration:none}.cotacoes-actions button:disabled{opacity:.5;cursor:not-allowed}.cotacoes-output{background:#f5f8fc;border-radius:8px;padding:12px;margin:12px 0}
 </style></head><body>
 <header><h1>CAPISOL | Central Comercial e Inteligência</h1><small>Energia que não limita, facilita. • Acre primeiro • Rondônia em avaliação</small></header>
 <main>
@@ -62,6 +63,7 @@ button.secondary{background:#fff;color:var(--navy);border:1px solid var(--navy);
 <div id="partnerResult" class="result" aria-live="polite">Aguardando custos confirmados.</div>
 <div class="scroll"><table><thead><tr><th>Parceiro</th><th>Serviço</th><th>UF</th><th>Custo</th><th>Preço 4%</th><th>Piso 2%</th><th>Situação</th></tr></thead><tbody id="partnerRows"></tbody></table></div>
 </section>
+<section id="painelCotacoesBelEnergy" class="panel" hidden></section>
 <section class="panel"><h2>Marketing • rascunhos controlados</h2>
 <p>Esta ferramenta gera um <b>rascunho determinístico</b>, não uma publicação nem um conteúdo criado por modelo de IA. Salvar adiciona somente uma linha ao calendário interno.</p>
 <form id="marketingForm">
@@ -100,6 +102,7 @@ async function refresh(){
  const {data:{session},error:authError}=await sb.auth.getSession();
  if(authError||!session){message('Faça login em Gestão principal e retorne a esta página. Sem sessão não há acesso ao CRM.');el('private').classList.add('hide');return}
  el('private').classList.remove('hide');
+ import('./cotacoes-panel.mjs').then(m=>m.montarPainel({sb,root:el('painelCotacoesBelEnergy')})).catch(()=>{});
  try{
   const counts=await Promise.all(fields.slice(0,4).map(getCount));
   const labels=['Leads cadastrados','Propostas registradas','Clientes cadastrados','Recebimentos registrados'];
