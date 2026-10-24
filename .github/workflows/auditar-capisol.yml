@@ -1,0 +1,32 @@
+name: Auditar CAPISOL
+
+on:
+  push:
+    branches: [main, 'feature/**', 'fix/**', 'chore/**']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  integridade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Conferir sintaxe do módulo BelEnergy
+        run: node --check inteligencia/cotacoes-panel.mjs
+      - name: Auditar catálogo, regras e integrações
+        run: node tools/audit-capisol.mjs
+      - name: Procurar segredos proibidos
+        run: |
+          if grep -RInE 'service_role=[^[:space:]]|sk-[A-Za-z0-9]{20,}|WHATSAPP_TOKEN=[^[:space:]]|client_secret=[^[:space:]]' --exclude-dir=.git --exclude='*.md' --exclude='auditar-capisol.yml' .; then
+            echo 'Segredo ou token encontrado no código versionado.'
+            exit 1
+          fi
