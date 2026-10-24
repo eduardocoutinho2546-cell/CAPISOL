@@ -30,3 +30,11 @@ A CAPISOL só poderá chamar a versão de beta final quando houver: adapter de c
 4. A publicação no GitHub continua bloqueada pelo token sem `contents: write`.
 
 Nenhum desses bloqueios deve ser mascarado por uma tela que diga “conectado”.
+
+## Gateway criado em 2026-10-24
+
+Foi adicionado `gateway/`, um serviço server-side com modo `demo` e modo `live`, fila persistente com idempotência, autenticação administrativa, timeout, redaction, adapters para Instagram Graph, TikTok Ads e Respond.io, e bloqueio explícito de efeitos externos sem aprovação.
+
+A URL temporária do gateway demo é `https://8787-iaozm4vz4c423qbq8z2cl-c1e7709c.us5.manus.computer`. Ela não publica nem envia mensagens enquanto estiver em modo demo.
+
+Isso resolve a camada de software, mas não cria contas externas nem inventa canais: o TikTok e o Respond.io continuam precisando de ativos/canais autorizados.
