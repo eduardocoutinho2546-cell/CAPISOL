@@ -17,11 +17,11 @@ const agentsMatch = index.match(/var ESC_AGENTES=(\[.*?\]);/s);
 check('catálogo de agentes', () => {
   assert.ok(agentsMatch, 'ESC_AGENTES não encontrado');
   const agents = JSON.parse(agentsMatch[1]);
-  assert.equal(agents.length, 190, `esperados 190 agentes, encontrados ${agents.length}`);
+  assert.equal(agents.length, 191, `esperados 191 agentes, encontrados ${agents.length}`);
   const ids = agents.map(([id]) => id);
   assert.equal(new Set(ids).size, ids.length, 'há IDs de agentes duplicados');
   for (const id of ids) assert.match(id, /^[a-z0-9-]+$/, `ID inválido: ${id}`);
-}, '190 IDs únicos e normalizados');
+}, '191 IDs únicos e normalizados');
 
 check('BelEnergy seguro', () => {
   assert.match(intelligence, /painelCotacoesBelEnergy/);
@@ -48,11 +48,17 @@ check('WhatsApp sem envio silencioso', () => {
   assert.match(index, /Mensagem pronta no WhatsApp|Abrir no WhatsApp/);
 }, 'atendimento preparado por mensagem explícita');
 
+check('Guardião de Acessos', () => {
+  assert.match(index, /guardiao-acessos/);
+  assert.match(index, /sem armazenar senhas/);
+}, 'agente de segurança e escalonamento definido');
+
 check('documentação operacional', () => {
   for (const file of [
     'docs/CAPISOL_BRANDING_E_DIFERENCIAL.md',
     'docs/CAPISOL_PLANO_COMERCIAL_ACRE.md',
     'docs/CAPISOL_STATUS_INTEGRACOES.md',
+    'docs/CAPISOL_GUARDIAO_DE_ACESSOS.md',
     'docs/CAPISOL_AUDITORIA_GITHUB_E_PLANO_LUCRO_2026-10-24.md',
   ]) assert.ok(fs.existsSync(`${root}/${file}`), `${file} não encontrado`);
 }, 'branding, plano, status e auditoria presentes');

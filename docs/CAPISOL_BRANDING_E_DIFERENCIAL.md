@@ -1,82 +1,73 @@
-# CAPISOL — Branding e diferencial comercial
+# CAPISOL | Energia Solar ☀️
+
+## Lema
+
+**Facilidade, acessibilidade e praticidade.**
 
 ## Essência da marca
 
-**CAPISOL** é a empresa solar regional que transforma uma compra técnica em uma operação acompanhada: diagnóstico honesto, proposta compreensível, instalação documentada e pós-venda próximo.
+A CAPISOL transforma uma decisão técnica em uma jornada simples: explica o que está confirmado, apresenta o que é estimativa, organiza a instalação e continua presente depois da obra.
 
 ## Posicionamento
 
-> **Energia solar com clareza, presença e responsabilidade local.**
+> **Energia solar com facilidade, clareza e presença local.**
 
-A Capisol não disputa apenas pelo menor preço. Ela disputa pela confiança de quem quer instalar, acompanhar e manter o sistema funcionando com uma empresa acessível na sua própria região.
+A CAPISOL começa por Rio Branco e pelo Acre próximo. Não disputa apenas pelo menor preço. Disputa pela confiança de quem quer entender, contratar e manter um sistema solar com atendimento humano e responsabilidade.
+
+## Valores
+
+**Humanização:** tratar cada cliente de forma próxima, respeitosa e personalizada.
+
+**Parceria:** construir relações de confiança e crescer junto com clientes, representantes e parceiros.
+
+**Transparência:** agir com clareza sobre preço, prazo, geração estimada, escopo, fontes e pendências.
+
+**Compromisso:** cumprir o que foi prometido e assumir responsabilidade pelos resultados.
+
+**Integridade:** fazer negócios com ética, respeito e honestidade, sem falsificar cotação ou esconder condição relevante.
+
+**Excelência:** buscar qualidade, documentação, revisão independente e melhoria contínua.
+
+**Economia:** oferecer soluções que reduzam custos e melhorem o aproveitamento dos recursos do cliente sem prometer resultado que não foi demonstrado.
 
 ## Promessa comercial
 
-A Capisol promete somente aquilo que consegue demonstrar:
-
-- explicar geração em kWh/mês e potência em kWp sem misturar as unidades;
-- apresentar preço, premissas, validade e o que está ou não incluído;
-- separar equipamento, projeto, instalação, homologação, deslocamento e manutenção;
-- documentar a entrega com fotos, checklist e termo de aceite;
-- manter atendimento humano, com nome e prazo verdadeiro;
-- oferecer limpeza, vistoria, inspeção e monitoramento como recorrência, quando os custos estiverem validados;
-- encaminhar responsabilidade técnica, contábil, jurídica e fiscal a profissionais habilitados.
+A CAPISOL explica geração em kWh/mês e potência em kWp sem misturar as unidades. Apresenta preço, validade, premissas e itens incluídos. Separa equipamento, projeto, instalação, homologação, deslocamento e manutenção. Documenta a entrega com fotos, checklist e termo de aceite. Oferece limpeza, vistoria, inspeção e monitoramento como recorrência somente quando o custo estiver validado. Responsabilidades técnicas, jurídicas, fiscais e contábeis são encaminhadas a profissionais habilitados.
 
 ## Diferenciais defensáveis
 
-### 1. Pós-venda regional como produto
+### Pós-venda regional como produto
 
-A maioria das propostas termina no fechamento. A Capisol deve vender também a continuidade: primeira fatura, conferência, checklist, limpeza, inspeção, acompanhamento e indicação. Isso cria receita recorrente e reduz abandono.
+A relação não termina no fechamento. A CAPISOL organiza acompanhamento da primeira fatura, conferência, checklist, limpeza, inspeção, monitoramento e pedido de indicação. Isso protege a experiência e cria uma base recorrente.
 
-### 2. Preço explicável
+### Preço explicável e negociação com alçada
 
-O cliente visualiza a composição da decisão, sem revelar custos internos indevidos ao vendedor: cotação do kit, serviço, deslocamento, condições, desconto permitido e alçada de aprovação. O preço não é uma caixa-preta e não deve depender de improviso.
+A proposta diferencia custo atualizado do kit, serviço, deslocamento, comissão, desconto permitido, margem e validade. O vendedor negocia dentro da alçada; descontos maiores, projetos especiais e contratos fora do padrão sobem para aprovação.
 
-### 3. Governança sem promessa enganosa
+### Facilidade sem simplificação enganosa
 
-A Capisol não promete conta zerada, geração garantida, financiamento aprovado ou prazo que depende da distribuidora. A honestidade vira vantagem de marca, não limitação comercial.
+A CAPISOL torna o processo simples para o cliente sem esconder a complexidade necessária. A plataforma usa cartões de “confirmado”, “estimado” e “pendente”, e não promete conta zerada, economia garantida, financiamento aprovado ou prazo que dependa da distribuidora.
 
-### 4. Presença no Acre
+### Presença local com disciplina de margem
 
-Rio Branco e entorno recebem atendimento próximo, visitas agrupadas, conteúdo local e relacionamento com parceiros. Cidades mais distantes entram por rota, lote ou ticket compatível, evitando vender uma operação que destrói a margem.
+Rio Branco e o raio de atendimento próximo recebem resposta rápida, visita agrupada e relacionamento com parceiros locais. Negócios distantes entram por rota, lote ou ticket compatível, evitando crescimento que destrói o caixa.
 
-### 5. Escritório operacional com agentes especializados
+### Escritório inteligente com responsabilidade humana
 
-Agentes de vendas, margem, mercado, conteúdo, recorrência, caixa, jurídico, engenharia e qualidade trabalham com entregas específicas, revisão independente e trilhas de evolução. Eles preparam e aceleram; pessoas habilitadas aprovam o que exige responsabilidade legal ou financeira.
+Agentes especializados ajudam em vendas, mercado, conteúdo, recorrência, caixa, jurídico, engenharia, qualidade e tecnologia. Eles analisam, preparam e alertam. Pessoas aprovam o que envolve dinheiro, contrato, responsabilidade técnica, publicação ou autorização externa.
+
+### Segurança prática nas integrações
+
+O Guardião de Acessos monitora conexões sem armazenar senhas humanas. Ele verifica estado, escopo, validade e último teste; abre alerta no painel e prepara escalonamento aos sócios pelo WhatsApp oficial, sem expor credenciais.
 
 ## Tom de voz
 
-- direto, acolhedor e brasileiro;
-- técnico sem ser pedante;
-- consultivo, não agressivo;
-- transparente sobre hipótese, fonte, validade e incerteza;
-- regional sem folclorizar o Acre;
-- firme em preço e prazo, respeitoso na negociação.
+A voz é direta, acolhedora, brasileira, técnica sem complicação, consultiva e respeitosa. A CAPISOL diz “vamos separar o que é estimativa do que já está confirmado” e evita frases como “sua conta vai zerar”, “a economia é garantida” ou “é o menor preço do mercado” sem fonte, data e comparação equivalente.
 
-## Frases aprovadas
+## Identidade visual
 
-- “Vamos separar o que é estimativa do que já está confirmado.”
-- “O sistema é apresentado por geração estimada em kWh/mês; a potência instalada aparece separadamente em kWp.”
-- “O valor final depende da localidade, do custo atualizado do kit e da vistoria técnica.”
-- “A proposta inclui o que está descrito; qualquer item fora do escopo é aprovado antes.”
-- “O atendimento continua depois da instalação.”
-
-## Frases proibidas
-
-- “Sua conta vai zerar.”
-- “A economia é garantida.”
-- “O banco já aprovou.”
-- “A Energisa garante este prazo.”
-- “É o menor preço do mercado” sem comparação equivalente, fonte e data.
-- “A cotação BelEnergy foi atualizada” sem registro da cotação e validade.
-
-## Identidade visual recomendada
-
-- **Cores:** azul profundo para confiança e técnica; amarelo-sol para energia e destaque; verde natureza para recorrência e cuidado; areia clara para proximidade regional.
-- **Contraste:** texto escuro em fundos claros; amarelo somente para destaque, nunca como corpo de texto pequeno.
-- **Fotografia:** obras reais autorizadas, telhados locais, equipe identificada, detalhes de checklist e atendimento; evitar banco de imagens que pareça promessa de obra própria.
-- **Elementos:** linhas de fluxo, mapas simples do Acre, números de geração com unidade explícita e cartões de “confirmado / estimado / pendente”.
+Azul profundo representa confiança e técnica. Amarelo-sol representa energia e destaque. Verde representa cuidado e recorrência. Areia clara representa proximidade regional. A comunicação usa obras reais autorizadas, equipe identificada, mapas simples do Acre, checklists e números acompanhados da unidade correta.
 
 ## Diferencial em uma frase
 
-> **A Capisol não vende só placas: entrega uma decisão clara, uma instalação documentada e uma relação local que continua depois da obra.**
+> **A CAPISOL torna a energia solar mais fácil de entender, mais segura de contratar e mais próxima de acompanhar — antes, durante e depois da instalação.**
