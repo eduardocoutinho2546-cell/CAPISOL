@@ -1,0 +1,19 @@
+{
+  "updatedAt": "2026-10-24",
+  "brand": "CAPISOL | Energia Solar",
+  "channels": {
+    "tiktok_profile": {
+      "url": "https://www.tiktok.com/@capisol4?_r=1&_t=ZS-9ApiqDZ6h8P",
+      "type": "public_profile",
+      "apiConnected": false,
+      "usage": ["cta", "bio", "content_distribution", "lead_source"]
+    },
+    "whatsapp_click_to_chat": {
+      "url": "https://wa.me/556892490347",
+      "type": "click_to_chat",
+      "apiConnected": false,
+      "usage": ["cta", "lead_source", "manual_handoff"]
+    }
+  },
+  "integrationNote": "Links públicos não substituem credenciais de API, conta Business, canal oficial ou webhook. Não declarar automação ativa somente por existir um link."
+}
