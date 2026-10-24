@@ -1,0 +1,35 @@
+{
+  "versao": "2026-10-24-v1",
+  "territorio": {
+    "sede": "Rio Branco",
+    "zona_1": ["Rio Branco", "Bujari", "Porto Acre", "Senador Guiomard"],
+    "zona_2": ["Plácido de Castro", "Acrelândia"],
+    "zona_3": ["Sena Madureira", "Xapuri", "Brasiléia", "Epitaciolândia", "Assis Brasil", "Manoel Urbano", "Tarauacá", "Feijó", "Cruzeiro do Sul"],
+    "regra": "Atendimento próximo na Zona 1; Zona 2 por rota agrupada; Zona 3 somente com margem, lote ou grande negócio confirmado."
+  },
+  "produto_foco": {
+    "nome": "Kit de 1.000 kWh",
+    "precos_testados": [18900, 18700, 18500],
+    "regra_desconto": "Acima de R$ 500 exige aprovação registrada.",
+    "prioridade": "Vender primeiro a solução representada e usar o plano anual como recorrência depois da validação de custo."
+  },
+  "metas": {
+    "primeiros_30_dias": {"leads_qualificados": 60, "propostas_enviadas": 20, "vendas_fechadas": 2, "receita_bruta_min": 37000, "margem_contribuicao_min_pct": 20, "caixa_min_pos_venda": 1},
+    "dias_31_90": {"leads_qualificados": 180, "propostas_enviadas": 60, "vendas_fechadas": 8, "receita_bruta_min": 148000, "margem_contribuicao_min_pct": 22, "receita_recorrente_mensal": 1500},
+    "meses_4_12": {"vendas_mensais": 8, "receita_bruta_anualizada": 1776000, "receita_recorrente_mensal": 10000, "indicacoes_pct": 30, "cancelamento_pct_max": 5}
+  },
+  "kpis": [
+    {"id":"leads_novos","nome":"Leads novos","frequencia":"diário","dono":"SDR/CRM","meta":"10 por dia útil"},
+    {"id":"tempo_primeira_resposta","nome":"Tempo até primeira resposta","frequencia":"diário","dono":"Atendimento","meta":"até 15 min em horário comercial"},
+    {"id":"contato_proposta","nome":"Lead contatado → proposta","frequencia":"semanal","dono":"Comercial","meta":"≥ 35%"},
+    {"id":"proposta_venda","nome":"Proposta → venda","frequencia":"semanal","dono":"Comercial","meta":"≥ 20%"},
+    {"id":"recebimento_venda","nome":"Venda com sinal/recebimento confirmado","frequencia":"diário","dono":"Financeiro","meta":"100% antes de compra ou compromisso"},
+    {"id":"margem_contribuicao","nome":"Margem de contribuição","frequencia":"por proposta","dono":"Preço/Auditoria","meta":"não publicar abaixo do piso"},
+    {"id":"custo_deslocamento","nome":"Custo de deslocamento / receita","frequencia":"por rota","dono":"Logística","meta":"≤ 25% na operação local"},
+    {"id":"indicacoes","nome":"Vendas por indicação/parceria","frequencia":"mensal","dono":"Canais","meta":"≥ 30% até mês 12"},
+    {"id":"pos_venda_30_90","nome":"Pós-venda realizado em D+30/D+90","frequencia":"semanal","dono":"Pós-venda","meta":"≥ 95%"},
+    {"id":"caixa_13_semanas","nome":"Cobertura de caixa","frequencia":"semanal","dono":"Financeiro","meta":"crescer para 4 semanas sem retiradas fora do plano"}
+  ],
+  "cadencia": {"diaria":"painel de leads, propostas vencendo, recebimentos, margem e bloqueios", "semanal":"conselho comercial com funil, canais, concorrentes, caixa e três decisões", "mensal":"DRE gerencial, coorte de clientes, preço, rotas e revisão de metas"},
+  "gate_producao": ["sem compra de kit antes de sinal ou financiamento aprovado", "desconto acima de R$ 500 aprovado", "projeto fora do padrão escalado", "contrato revisado quando necessário", "instalação só com checklist, fotos e aceite"]
+}

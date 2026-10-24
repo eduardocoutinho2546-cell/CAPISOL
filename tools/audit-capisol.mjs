@@ -7,6 +7,7 @@ const intelligence = fs.readFileSync(`${root}/inteligencia/index.html`, 'utf8');
 const cotacoes = fs.readFileSync(`${root}/inteligencia/cotacoes-panel.mjs`, 'utf8');
 const tokenDemo = fs.readFileSync(`${root}/acesso/index.html`, 'utf8');
 const minerDemo = fs.readFileSync(`${root}/inteligencia/minerador.html`, 'utf8');
+const planoDemo = fs.readFileSync(`${root}/plano-acre/index.html`, 'utf8');
 const report = [];
 const pass = (name, detail) => report.push(`PASS ${name}: ${detail}`);
 const fail = (name, detail) => { report.push(`FAIL ${name}: ${detail}`); process.exitCode = 1; };
@@ -65,6 +66,14 @@ check('demos de tokens e mineração', () => {
   assert.match(minerDemo, /Bloquear/);
 }, 'hash, revogação, fila, aprovação e bloqueio presentes');
 
+check('plano Acre integrado', () => {
+  assert.match(planoDemo, /plano-comercial-acre\.json/);
+  assert.match(planoDemo, /Indicadores de sucesso/);
+  assert.match(planoDemo, /Zona 1/);
+  assert.ok(fs.existsSync(`${root}/data/plano-comercial-acre.json`));
+  assert.ok(fs.existsSync(`${root}/docs/CAPISOL_PLANO_COMERCIAL_ACRE_COMPLETO.md`));
+}, 'metas, KPIs, território e gates do plano consumidos pela demo');
+
 check('documentação operacional', () => {
   for (const file of [
     'docs/CAPISOL_BRANDING_E_DIFERENCIAL.md',
@@ -72,6 +81,12 @@ check('documentação operacional', () => {
     'docs/CAPISOL_STATUS_INTEGRACOES.md',
     'docs/CAPISOL_GUARDIAO_DE_ACESSOS.md',
     'docs/CAPISOL_MINERADOR_E_TOKENS.md',
+    'docs/CAPISOL_RELATORIO_191_AGENTES.md',
+    'docs/CAPISOL_STATUS_CRM.md',
+    'docs/CAPISOL_PLANO_COMERCIAL_ACRE_COMPLETO.md',
+    'docs/CAPISOL_SKILLS_ADICOES.md',
+    'data/plano-comercial-acre.json',
+    'plano-acre/index.html',
     'agents/minerador-oportunidades.md',
     'agents/gestor-tokens.md',
     'manus-routes.json',
