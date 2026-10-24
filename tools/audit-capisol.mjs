@@ -5,6 +5,8 @@ const root = new URL('..', import.meta.url).pathname;
 const index = fs.readFileSync(`${root}/index.html`, 'utf8');
 const intelligence = fs.readFileSync(`${root}/inteligencia/index.html`, 'utf8');
 const cotacoes = fs.readFileSync(`${root}/inteligencia/cotacoes-panel.mjs`, 'utf8');
+const tokenDemo = fs.readFileSync(`${root}/acesso/index.html`, 'utf8');
+const minerDemo = fs.readFileSync(`${root}/inteligencia/minerador.html`, 'utf8');
 const report = [];
 const pass = (name, detail) => report.push(`PASS ${name}: ${detail}`);
 const fail = (name, detail) => { report.push(`FAIL ${name}: ${detail}`); process.exitCode = 1; };
@@ -53,12 +55,26 @@ check('Guardião de Acessos', () => {
   assert.match(index, /sem armazenar senhas/);
 }, 'agente de segurança e escalonamento definido');
 
+check('demos de tokens e mineração', () => {
+  assert.match(tokenDemo, /crypto\.subtle\.digest/);
+  assert.match(tokenDemo, /tokenHash/);
+  assert.match(tokenDemo, /Revogar/);
+  assert.doesNotMatch(tokenDemo, /ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{20,}/);
+  assert.match(minerDemo, /Simular nova varredura/);
+  assert.match(minerDemo, /Aprovar/);
+  assert.match(minerDemo, /Bloquear/);
+}, 'hash, revogação, fila, aprovação e bloqueio presentes');
+
 check('documentação operacional', () => {
   for (const file of [
     'docs/CAPISOL_BRANDING_E_DIFERENCIAL.md',
     'docs/CAPISOL_PLANO_COMERCIAL_ACRE.md',
     'docs/CAPISOL_STATUS_INTEGRACOES.md',
     'docs/CAPISOL_GUARDIAO_DE_ACESSOS.md',
+    'docs/CAPISOL_MINERADOR_E_TOKENS.md',
+    'agents/minerador-oportunidades.md',
+    'agents/gestor-tokens.md',
+    'manus-routes.json',
     'docs/CAPISOL_AUDITORIA_GITHUB_E_PLANO_LUCRO_2026-10-24.md',
   ]) assert.ok(fs.existsSync(`${root}/${file}`), `${file} não encontrado`);
 }, 'branding, plano, status e auditoria presentes');
