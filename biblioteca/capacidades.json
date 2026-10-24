@@ -1,0 +1,4434 @@
+{
+  "versao": "2026-10-24-v2",
+  "fonte": "/home/ubuntu/upload/pasted_content.txt",
+  "total_categorias": 72,
+  "total_funcoes": 2338,
+  "capacidades": [
+    {
+      "id": "governan-a-e-alta-administra-o",
+      "numero": 1,
+      "categoria": "Governança e Alta Administração",
+      "funcoes": [
+        "Conselho de Administração",
+        "Conselho Consultivo",
+        "Conselho Fiscal",
+        "Presidência",
+        "Vice-Presidência",
+        "CEO",
+        "COO",
+        "CFO",
+        "CMO",
+        "CTO",
+        "CIO",
+        "CHRO",
+        "CCO",
+        "CSO",
+        "Diretoria Executiva",
+        "Diretoria Administrativa",
+        "Diretoria Financeira",
+        "Diretoria Comercial",
+        "Diretoria de Marketing",
+        "Diretoria de Operações",
+        "Diretoria de Engenharia",
+        "Diretoria de Tecnologia",
+        "Diretoria Jurídica",
+        "Diretoria de Pessoas",
+        "Diretoria de Expansão",
+        "Diretoria de Inovação",
+        "Diretoria de Sustentabilidade",
+        "Diretoria de Relações Institucionais",
+        "Diretoria Internacional",
+        "Secretaria Executiva",
+        "Chefia de Gabinete",
+        "Assessoria Executiva",
+        "Assessoria Estratégica",
+        "Assessoria Empresarial",
+        "Comitês Executivos",
+        "Comitê de Investimentos",
+        "Comitê de Riscos",
+        "Comitê de Ética",
+        "Governança Corporativa"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "gest-o-empresarial-e-estrat-gia",
+      "numero": 2,
+      "categoria": "Gestão Empresarial e Estratégia",
+      "funcoes": [
+        "Planejamento Estratégico",
+        "Gestão Empresarial",
+        "Gestão de Resultados",
+        "Gestão por Indicadores",
+        "Gestão de Metas",
+        "Gestão de Processos",
+        "Gestão de Projetos",
+        "Gestão de Portfólio",
+        "Gestão de Programas",
+        "Gestão de Mudanças",
+        "Gestão de Prioridades",
+        "Gestão de Produtividade",
+        "Gestão de Eficiência",
+        "Gestão de Desempenho",
+        "Gestão de Crescimento",
+        "Inteligência Estratégica",
+        "Inteligência Corporativa",
+        "Consultoria Empresarial",
+        "Advisory Empresarial",
+        "Mentoria Executiva",
+        "Desenvolvimento Organizacional",
+        "Modelagem de Negócios",
+        "Reestruturação Empresarial",
+        "Transformação Digital",
+        "Transformação Organizacional",
+        "Gestão Multinegócios",
+        "Gestão de Unidades de Negócio",
+        "Gestão de Subsidiárias",
+        "Gestão de Holdings",
+        "Gestão de Conglomerados"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "administra-o-e-servi-os-corporativos",
+      "numero": 3,
+      "categoria": "Administração e Serviços Corporativos",
+      "funcoes": [
+        "Administração Geral",
+        "Administração de Escritórios",
+        "Secretaria Administrativa",
+        "Secretariado Executivo",
+        "Recepção",
+        "Atendimento Interno",
+        "Gestão Documental",
+        "Arquivologia",
+        "Protocolo",
+        "Gestão de Correspondências",
+        "Gestão de Contratos Administrativos",
+        "Controle Patrimonial",
+        "Gestão de Ativos",
+        "Gestão de Inventários",
+        "Gestão de Materiais",
+        "Gestão de Consumo",
+        "Gestão de Despesas Administrativas",
+        "Facilities",
+        "Serviços Gerais",
+        "Limpeza Predial",
+        "Conservação Predial",
+        "Manutenção Predial",
+        "Gestão de Imóveis",
+        "Gestão de Condomínios Empresariais",
+        "Gestão de Frota Administrativa",
+        "Administração de Filiais",
+        "Gestão de Unidades Regionais"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "financeiro-e-controladoria",
+      "numero": 4,
+      "categoria": "Financeiro e Controladoria",
+      "funcoes": [
+        "Planejamento Financeiro",
+        "Gestão Financeira",
+        "Tesouraria",
+        "Contas a Pagar",
+        "Contas a Receber",
+        "Fluxo de Caixa",
+        "Gestão de Capital de Giro",
+        "Gestão de Liquidez",
+        "Controle de Despesas",
+        "Controle de Receitas",
+        "Gestão Orçamentária",
+        "Orçamento Empresarial",
+        "Controladoria",
+        "Contabilidade Gerencial",
+        "Análise Financeira",
+        "Análise de Rentabilidade",
+        "Análise de Lucratividade",
+        "Análise de Custos",
+        "Formação de Preços",
+        "Precificação Dinâmica",
+        "Gestão de Margens",
+        "Gestão de Comissões",
+        "Gestão de Inadimplência",
+        "Cobrança",
+        "Recuperação de Crédito",
+        "Conciliação Bancária",
+        "Gestão de Pagamentos",
+        "Gestão de Recebíveis",
+        "Antecipação de Recebíveis",
+        "Faturamento",
+        "Emissão de Notas Fiscais",
+        "Gestão de Assinaturas",
+        "Receita Recorrente",
+        "Análise de Viabilidade Econômica",
+        "Planejamento de Caixa",
+        "Gestão de Endividamento",
+        "Gestão de Dívidas",
+        "Gestão de Crédito",
+        "Relacionamento Bancário",
+        "Finanças Corporativas",
+        "Finanças Internacionais",
+        "Câmbio",
+        "Hedge Financeiro"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "contabilidade-e-tributa-o",
+      "numero": 5,
+      "categoria": "Contabilidade e Tributação",
+      "funcoes": [
+        "Contabilidade Geral",
+        "Contabilidade Fiscal",
+        "Contabilidade Societária",
+        "Contabilidade Patrimonial",
+        "Contabilidade de Custos",
+        "Contabilidade Internacional",
+        "Contabilidade Regulatória",
+        "Contabilidade de Projetos",
+        "Escrituração Contábil",
+        "Escrituração Fiscal",
+        "Planejamento Tributário",
+        "Gestão Tributária",
+        "Apuração de Impostos",
+        "Gestão do Simples Nacional",
+        "Lucro Presumido",
+        "Lucro Real",
+        "Obrigações Acessórias",
+        "Departamento Fiscal",
+        "Departamento Contábil",
+        "Departamento Pessoal Contábil",
+        "Gestão de ISS",
+        "Gestão de ICMS",
+        "Gestão de PIS e COFINS",
+        "Gestão de IRPJ e CSLL",
+        "Créditos Tributários",
+        "Recuperação Tributária",
+        "Auditoria Contábil",
+        "Auditoria Fiscal",
+        "Perícia Contábil",
+        "Demonstrações Financeiras",
+        "Balanços Patrimoniais",
+        "Consolidação Contábil",
+        "Gestão de Ativos e Depreciação",
+        "Preços de Transferência"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "investimentos-e-mercado-de-capitais",
+      "numero": 6,
+      "categoria": "Investimentos e Mercado de Capitais",
+      "funcoes": [
+        "Planejamento de Investimentos",
+        "Captação de Recursos",
+        "Gestão de Investidores",
+        "Relações com Investidores",
+        "Private Equity",
+        "Venture Capital",
+        "Corporate Venture Capital",
+        "Mercado de Capitais",
+        "Estruturação de Dívidas",
+        "Emissão de Debêntures",
+        "Fundos de Investimento",
+        "Fundos de Infraestrutura",
+        "Fundos de Energia",
+        "Investimentos Imobiliários",
+        "Investimentos Internacionais",
+        "Gestão de Participações Societárias",
+        "Valuation",
+        "Fusões e Aquisições",
+        "Due Diligence",
+        "Estruturação de SPEs",
+        "Estruturação de Holdings",
+        "Financiamento de Projetos",
+        "Project Finance",
+        "Gestão de Dividendos",
+        "Planejamento Patrimonial",
+        "Planejamento Sucessório",
+        "Gestão de Patrimônio Empresarial"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "jur-dico",
+      "numero": 7,
+      "categoria": "Jurídico",
+      "funcoes": [
+        "Jurídico Empresarial",
+        "Jurídico Societário",
+        "Jurídico Contratual",
+        "Jurídico Tributário",
+        "Jurídico Trabalhista",
+        "Jurídico Previdenciário",
+        "Jurídico Cível",
+        "Jurídico Comercial",
+        "Jurídico Consumerista",
+        "Jurídico Ambiental",
+        "Jurídico Imobiliário",
+        "Jurídico Regulatório",
+        "Direito da Energia",
+        "Direito Elétrico",
+        "Direito Administrativo",
+        "Direito Digital",
+        "Direito Internacional",
+        "Direito Concorrencial",
+        "Direito de Franquias",
+        "Direito Securitário",
+        "Direito Bancário",
+        "Direito de Consórcios",
+        "Direito de Propriedade Intelectual",
+        "Direito de Proteção de Dados",
+        "Contencioso Judicial",
+        "Contencioso Administrativo",
+        "Mediação",
+        "Arbitragem",
+        "Negociação Jurídica",
+        "Gestão de Processos Judiciais",
+        "Gestão de Contratos",
+        "Elaboração Contratual",
+        "Revisão Contratual",
+        "Licenciamento Jurídico",
+        "Assessoria Jurídica Preventiva",
+        "Recuperação Judicial",
+        "Recuperação Extrajudicial",
+        "Gestão de Insolvência"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "compliance-auditoria-e-integridade",
+      "numero": 8,
+      "categoria": "Compliance, Auditoria e Integridade",
+      "funcoes": [
+        "Compliance Corporativo",
+        "Compliance Regulatório",
+        "Compliance Trabalhista",
+        "Compliance Tributário",
+        "Compliance Ambiental",
+        "Compliance Comercial",
+        "Compliance Financeiro",
+        "Compliance Digital",
+        "Programa de Integridade",
+        "Governança de Dados",
+        "Proteção de Dados",
+        "LGPD",
+        "Privacidade",
+        "Auditoria Interna",
+        "Auditoria Externa",
+        "Auditoria Operacional",
+        "Auditoria Financeira",
+        "Auditoria de Processos",
+        "Auditoria de Contratos",
+        "Auditoria de Fornecedores",
+        "Auditoria de Franquias",
+        "Auditoria Técnica",
+        "Auditoria Energética",
+        "Controle Interno",
+        "Prevenção à Fraude",
+        "Investigação Corporativa",
+        "Canal de Denúncias",
+        "Ética Corporativa",
+        "Anticorrupção",
+        "Prevenção à Lavagem de Dinheiro",
+        "Gestão de Conflitos de Interesse",
+        "Gestão de Conformidade"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "gest-o-de-riscos-e-crises",
+      "numero": 9,
+      "categoria": "Gestão de Riscos e Crises",
+      "funcoes": [
+        "Gestão de Riscos Empresariais",
+        "Gestão de Riscos Financeiros",
+        "Gestão de Riscos Operacionais",
+        "Gestão de Riscos Técnicos",
+        "Gestão de Riscos Trabalhistas",
+        "Gestão de Riscos Jurídicos",
+        "Gestão de Riscos Ambientais",
+        "Gestão de Riscos Reputacionais",
+        "Gestão de Riscos Cibernéticos",
+        "Gestão de Riscos Regulatórios",
+        "Gestão de Riscos Climáticos",
+        "Gestão de Riscos de Mercado",
+        "Gestão de Riscos de Crédito",
+        "Gestão de Riscos de Fornecimento",
+        "Gestão de Riscos de Terceiros",
+        "Gestão de Crises",
+        "Comitê de Crise",
+        "Gestão de Incidentes",
+        "Gestão de Emergências",
+        "Gestão de Desastres",
+        "Continuidade de Negócios",
+        "Recuperação de Desastres",
+        "Plano de Contingência",
+        "Gestão de Acidentes",
+        "Gestão de Falhas Críticas",
+        "Gestão de Paralisações",
+        "Gestão de Falências",
+        "Gestão de Litígios",
+        "Gestão de Crises de Imagem",
+        "Gestão de Crises Comerciais",
+        "Gestão de Crises Financeiras",
+        "Gestão de Crises Energéticas",
+        "Gestão de Desabastecimento",
+        "Gestão de Conflitos Societários",
+        "Segurança Corporativa",
+        "Inteligência de Ameaças",
+        "Resiliência Empresarial"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "recursos-humanos-e-gest-o-de-pessoas",
+      "numero": 10,
+      "categoria": "Recursos Humanos e Gestão de Pessoas",
+      "funcoes": [
+        "Recursos Humanos",
+        "Departamento Pessoal",
+        "Recrutamento",
+        "Seleção",
+        "Hunting Executivo",
+        "Talent Acquisition",
+        "Onboarding",
+        "Offboarding",
+        "Desenvolvimento de Pessoas",
+        "Treinamento Corporativo",
+        "Educação Corporativa",
+        "Gestão de Talentos",
+        "Gestão de Competências",
+        "Gestão de Carreiras",
+        "Plano de Cargos e Salários",
+        "Remuneração",
+        "Benefícios",
+        "Folha de Pagamento",
+        "Controle de Ponto",
+        "Gestão de Férias",
+        "Gestão de Contratações",
+        "Gestão de Demissões",
+        "Relações Trabalhistas",
+        "Relações Sindicais",
+        "Avaliação de Desempenho",
+        "Gestão de Produtividade Individual",
+        "Gestão de Lideranças",
+        "Formação de Gestores",
+        "Planejamento de Sucessão",
+        "Gestão de Terceirizados",
+        "Gestão de Prestadores de Serviço",
+        "Gestão de Equipes Remotas",
+        "Gestão de Equipes Internacionais",
+        "People Analytics",
+        "Cultura Organizacional",
+        "Clima Organizacional",
+        "Comunicação Interna"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "psicologia-sa-de-e-bem-estar",
+      "numero": 11,
+      "categoria": "Psicologia, Saúde e Bem-Estar",
+      "funcoes": [
+        "Psicologia Organizacional",
+        "Psicologia do Trabalho",
+        "Psicologia Empresarial",
+        "Psicologia Comportamental",
+        "Psicologia de Liderança",
+        "Psicologia de Vendas",
+        "Psicologia do Consumidor",
+        "Apoio Psicológico",
+        "Saúde Mental Corporativa",
+        "Saúde Ocupacional",
+        "Medicina do Trabalho",
+        "Enfermagem do Trabalho",
+        "Ergonomia",
+        "Prevenção de Burnout",
+        "Gestão do Estresse",
+        "Gestão de Conflitos Interpessoais",
+        "Mediação de Conflitos Internos",
+        "Desenvolvimento Emocional",
+        "Inteligência Emocional",
+        "Coaching Executivo",
+        "Coaching de Liderança",
+        "Mentoria Profissional",
+        "Qualidade de Vida no Trabalho",
+        "Bem-Estar Organizacional",
+        "Saúde Preventiva",
+        "Gestão de Absenteísmo",
+        "Gestão de Afastamentos",
+        "Gestão de Riscos Psicossociais",
+        "Assistência Social Corporativa"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "comercial-e-vendas",
+      "numero": 12,
+      "categoria": "Comercial e Vendas",
+      "funcoes": [
+        "Diretoria Comercial",
+        "Gestão Comercial",
+        "Planejamento Comercial",
+        "Estratégia de Vendas",
+        "Inteligência Comercial",
+        "Operações Comerciais",
+        "Pré-Vendas",
+        "SDR",
+        "BDR",
+        "LDR",
+        "Prospecção Ativa",
+        "Prospecção Passiva",
+        "Outbound",
+        "Inbound Sales",
+        "Inside Sales",
+        "Field Sales",
+        "Venda Consultiva",
+        "Venda Técnica",
+        "Venda Direta",
+        "Venda Indireta",
+        "Venda Externa",
+        "Venda Interna",
+        "Vendas B2B",
+        "Vendas B2C",
+        "Vendas B2G",
+        "Vendas B2B2C",
+        "Vendas Corporativas",
+        "Vendas Residenciais",
+        "Vendas Industriais",
+        "Vendas Rurais",
+        "Vendas Institucionais",
+        "Vendas Governamentais",
+        "Vendas por Licitação",
+        "Vendas Recorrentes",
+        "Vendas por Assinatura",
+        "Vendas de Serviços",
+        "Vendas de Equipamentos",
+        "Vendas de Projetos",
+        "Vendas de Soluções Integradas",
+        "Vendas Cruzadas",
+        "Upselling",
+        "Cross-Selling",
+        "Gestão de Leads",
+        "Qualificação Comercial",
+        "Diagnóstico Comercial",
+        "Gestão de Oportunidades",
+        "Elaboração de Propostas",
+        "Engenharia de Vendas",
+        "Orçamentação Comercial",
+        "Cotações",
+        "Negociação Comercial",
+        "Fechamento de Contratos",
+        "Gestão de Metas Comerciais",
+        "Gestão de Comissões",
+        "Gestão de Representantes Comerciais",
+        "Gestão de Territórios",
+        "Sales Enablement",
+        "Revenue Operations"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "crm-e-relacionamento-com-clientes",
+      "numero": 13,
+      "categoria": "CRM e Relacionamento com Clientes",
+      "funcoes": [
+        "Gestão de CRM",
+        "Gestão de Relacionamento",
+        "Atendimento Comercial",
+        "Atendimento Consultivo",
+        "Atendimento Corporativo",
+        "Atendimento Digital",
+        "Atendimento Omnichannel",
+        "Central de Relacionamento",
+        "Contact Center",
+        "Call Center",
+        "Customer Experience",
+        "Customer Success",
+        "Customer Care",
+        "Customer Support",
+        "Pós-Venda Comercial",
+        "Retenção de Clientes",
+        "Fidelização",
+        "Gestão de Carteira de Clientes",
+        "Gestão de Contas Estratégicas",
+        "Key Account Management",
+        "Account Management",
+        "Gestão de Reclamações",
+        "Ouvidoria",
+        "Pesquisa de Satisfação",
+        "NPS",
+        "Gestão de Indicações",
+        "Programa de Embaixadores",
+        "Programa de Fidelidade",
+        "Recuperação de Clientes",
+        "Reativação de Clientes",
+        "Gestão de Churn",
+        "Gestão de Renovações",
+        "Gestão de Cancelamentos",
+        "Gestão de Garantias",
+        "Gestão da Jornada do Cliente",
+        "Gestão de Comunidades de Clientes"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "marketing-estrat-gico",
+      "numero": 14,
+      "categoria": "Marketing Estratégico",
+      "funcoes": [
+        "Diretoria de Marketing",
+        "Planejamento de Marketing",
+        "Marketing Estratégico",
+        "Marketing Institucional",
+        "Marketing Corporativo",
+        "Marketing Comercial",
+        "Marketing de Produto",
+        "Marketing de Serviços",
+        "Marketing Digital",
+        "Marketing Offline",
+        "Marketing Regional",
+        "Marketing Nacional",
+        "Marketing Internacional",
+        "Marketing Local",
+        "Marketing de Relacionamento",
+        "Marketing de Comunidade",
+        "Marketing de Influência",
+        "Marketing de Performance",
+        "Marketing de Conteúdo",
+        "Marketing de Experiência",
+        "Marketing de Eventos",
+        "Marketing de Guerrilha",
+        "Marketing de Proximidade",
+        "Marketing Direto",
+        "Marketing de Indicação",
+        "Marketing de Afiliados",
+        "Marketing de Parcerias",
+        "Marketing de Franquias",
+        "Marketing B2B",
+        "Marketing B2C",
+        "Marketing Industrial",
+        "Marketing Rural",
+        "Marketing Governamental",
+        "Marketing Sazonal",
+        "Marketing de Lançamento",
+        "Marketing de Retenção",
+        "Growth Marketing",
+        "Trade Marketing",
+        "Endomarketing",
+        "Neuromarketing",
+        "Geomarketing",
+        "Marketing Preditivo"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "branding-e-identidade",
+      "numero": 15,
+      "categoria": "Branding e Identidade",
+      "funcoes": [
+        "Gestão de Marca",
+        "Branding Corporativo",
+        "Posicionamento de Marca",
+        "Identidade Visual",
+        "Identidade Verbal",
+        "Identidade Institucional",
+        "Identidade Sonora",
+        "Identidade de Movimento",
+        "Arquitetura de Marca",
+        "Estratégia de Marca",
+        "Brand Equity",
+        "Brand Experience",
+        "Brand Awareness",
+        "Brand Management",
+        "Brand Safety",
+        "Brand Protection",
+        "Rebranding",
+        "Naming",
+        "Design de Marca",
+        "Design de Logotipo",
+        "Design de Identidade Visual",
+        "Manual de Marca",
+        "Manual de Identidade",
+        "Direção de Arte",
+        "Direção Criativa",
+        "Estratégia de Comunicação",
+        "Tom de Voz",
+        "Narrativa de Marca",
+        "Storytelling Empresarial",
+        "Reputação de Marca",
+        "Percepção de Marca",
+        "Pesquisa de Marca",
+        "Gestão de Marcas Registradas"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "publicidade-tr-fego-e-aquisi-o",
+      "numero": 16,
+      "categoria": "Publicidade, Tráfego e Aquisição",
+      "funcoes": [
+        "Publicidade",
+        "Propaganda",
+        "Mídia Paga",
+        "Mídia Orgânica",
+        "Gestão de Tráfego",
+        "Meta Ads",
+        "Google Ads",
+        "YouTube Ads",
+        "TikTok Ads",
+        "LinkedIn Ads",
+        "Pinterest Ads",
+        "Publicidade Programática",
+        "Compra de Mídia",
+        "Planejamento de Mídia",
+        "Campanhas Publicitárias",
+        "Campanhas de Conversão",
+        "Campanhas de Reconhecimento",
+        "Campanhas de Captação",
+        "Remarketing",
+        "Retargeting",
+        "Gestão de Funis",
+        "Otimização de Conversão",
+        "CRO",
+        "Testes A/B",
+        "Gestão de Landing Pages",
+        "Geração de Leads",
+        "Lead Scoring",
+        "Marketing Automation",
+        "E-mail Marketing",
+        "SMS Marketing",
+        "WhatsApp Marketing",
+        "Marketing Conversacional",
+        "Automação de Mensagens",
+        "Growth Hacking",
+        "Analytics de Marketing",
+        "Atribuição de Conversões",
+        "Inteligência de Aquisição",
+        "Otimização de CAC",
+        "Gestão de LTV",
+        "Gestão de ROAS",
+        "Gestão de ROI Publicitário"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "redes-sociais-e-comunidades",
+      "numero": 17,
+      "categoria": "Redes Sociais e Comunidades",
+      "funcoes": [
+        "Social Media",
+        "Gestão de Instagram",
+        "Gestão de Facebook",
+        "Gestão de TikTok",
+        "Gestão de YouTube",
+        "Gestão de LinkedIn",
+        "Gestão de Pinterest",
+        "Gestão de WhatsApp Business",
+        "Gestão de Telegram",
+        "Gestão de Threads",
+        "Gestão de X",
+        "Gestão de Comunidades",
+        "Community Management",
+        "Moderação de Comunidades",
+        "Atendimento em Redes Sociais",
+        "Planejamento de Conteúdo",
+        "Calendário Editorial",
+        "Gestão de Engajamento",
+        "Gestão de Comentários",
+        "Gestão de Mensagens Diretas",
+        "Gestão de Influenciadores",
+        "Relações com Criadores",
+        "UGC",
+        "Monitoramento Social",
+        "Social Listening",
+        "Social Intelligence",
+        "Monitoramento de Tendências",
+        "Gestão de Crises Digitais",
+        "Monitoramento de Menções",
+        "Análise de Sentimento",
+        "Análise de Audiência",
+        "Gestão de Lives",
+        "Gestão de Canais de Transmissão"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "comunica-o-jornalismo-e-imprensa",
+      "numero": 18,
+      "categoria": "Comunicação, Jornalismo e Imprensa",
+      "funcoes": [
+        "Assessoria de Imprensa",
+        "Assessoria de Comunicação",
+        "Jornalismo Corporativo",
+        "Jornalismo Empresarial",
+        "Jornalismo Econômico",
+        "Jornalismo Energético",
+        "Jornalismo Técnico",
+        "Jornalismo Científico",
+        "Jornalismo Investigativo",
+        "Jornalismo de Dados",
+        "Redação Jornalística",
+        "Reportagem",
+        "Produção de Notícias",
+        "Produção de Jornais",
+        "Produção de Revistas",
+        "Produção de Blogs",
+        "Produção de Portais",
+        "Produção de Newsletters",
+        "Produção de Boletins",
+        "Produção de Releases",
+        "Relações com a Imprensa",
+        "Relações Públicas",
+        "Media Relations",
+        "Comunicação Institucional",
+        "Comunicação Externa",
+        "Comunicação Interna",
+        "Comunicação de Crise",
+        "Comunicação Executiva",
+        "Comunicação Política Institucional",
+        "Comunicação Científica",
+        "Monitoramento de Notícias",
+        "Clipping de Notícias",
+        "Clipping de Redes Sociais",
+        "Monitoramento de Concorrentes",
+        "Curadoria de Notícias",
+        "Análise de Mídia",
+        "Gestão Editorial",
+        "Revisão Editorial",
+        "Fact-Checking"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "produ-o-de-conte-do-e-audiovisual",
+      "numero": 19,
+      "categoria": "Produção de Conteúdo e Audiovisual",
+      "funcoes": [
+        "Produção de Conteúdo",
+        "Redação Publicitária",
+        "Copywriting",
+        "Roteirização",
+        "Storytelling",
+        "Produção Editorial",
+        "Redação Técnica",
+        "Redação Comercial",
+        "Redação Institucional",
+        "Design Gráfico",
+        "Design Editorial",
+        "Design Digital",
+        "Design Publicitário",
+        "Design de Apresentações",
+        "Design de Embalagens",
+        "Design de Materiais Impressos",
+        "Fotografia",
+        "Fotografia Corporativa",
+        "Fotografia Comercial",
+        "Fotografia Técnica",
+        "Fotografia Aérea",
+        "Videomaker",
+        "Produção Audiovisual",
+        "Direção Audiovisual",
+        "Direção de Fotografia",
+        "Produção Cinematográfica",
+        "Gravação de Vídeos",
+        "Edição de Vídeos",
+        "Edição de Reels",
+        "Edição de Shorts",
+        "Edição de TikToks",
+        "Motion Design",
+        "Animação 2D",
+        "Animação 3D",
+        "Modelagem 3D",
+        "Renderização",
+        "VFX",
+        "Colorização",
+        "Tratamento de Imagens",
+        "Edição de Áudio",
+        "Sound Design",
+        "Locução",
+        "Narração",
+        "Produção de Podcasts",
+        "Produção de Entrevistas",
+        "Produção de Documentários",
+        "Produção de Comerciais",
+        "Produção de Lives",
+        "Produção de Webinars",
+        "Legendagem",
+        "Transcrição",
+        "Tradução",
+        "Dublagem",
+        "Clipagem de Vídeos",
+        "Clipagem de Podcasts",
+        "Clipagem de Lives",
+        "Recortes de Conteúdo",
+        "Gestão de Acervo Audiovisual"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "intelig-ncia-de-mercado-e-concorr-ncia",
+      "numero": 20,
+      "categoria": "Inteligência de Mercado e Concorrência",
+      "funcoes": [
+        "Pesquisa de Mercado",
+        "Pesquisa de Concorrentes",
+        "Radar de Concorrentes",
+        "Inteligência Competitiva",
+        "Inteligência de Preços",
+        "Monitoramento de Ofertas",
+        "Monitoramento de Anúncios",
+        "Monitoramento de Campanhas",
+        "Inteligência Publicitária",
+        "Inteligência de Consumo",
+        "Inteligência de Clientes",
+        "Pesquisa de Comportamento",
+        "Pesquisa de Público-Alvo",
+        "Pesquisa Demográfica",
+        "Pesquisa Geográfica",
+        "Análise de Concorrência Direta",
+        "Análise de Concorrência Indireta",
+        "Benchmarking",
+        "Análise SWOT",
+        "Análise PESTEL",
+        "Análise de Tendências",
+        "Análise de Demanda",
+        "Análise de Oferta",
+        "Análise de Participação de Mercado",
+        "Market Share",
+        "Market Sizing",
+        "Inteligência Territorial",
+        "Inteligência Regional",
+        "Inteligência Nacional",
+        "Inteligência Internacional",
+        "Estudos Setoriais",
+        "Estudos Econômicos",
+        "Estudos Regulatórios",
+        "Monitoramento de Inovações",
+        "Prospecção de Mercados",
+        "Inteligência de Expansão"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "parcerias-e-desenvolvimento-de-neg-cios",
+      "numero": 21,
+      "categoria": "Parcerias e Desenvolvimento de Negócios",
+      "funcoes": [
+        "Business Development",
+        "Desenvolvimento de Parcerias",
+        "Parcerias Estratégicas",
+        "Parcerias Comerciais",
+        "Parcerias Técnicas",
+        "Parcerias Operacionais",
+        "Parcerias Financeiras",
+        "Parcerias Institucionais",
+        "Gestão de Canais",
+        "Gestão de Distribuidores",
+        "Gestão de Revendedores",
+        "Gestão de Representantes",
+        "Gestão de Afiliados",
+        "Gestão de Indicadores Comerciais",
+        "Gestão de Parceiros Instaladores",
+        "Gestão de Parceiros Eletricistas",
+        "Gestão de Parceiros de Engenharia",
+        "Gestão de Parceiros de Refrigeração",
+        "Gestão de Parceiros de Seguros",
+        "Gestão de Parceiros de Consórcios",
+        "Gestão de Parceiros Bancários",
+        "Gestão de Parceiros Geradores",
+        "Gestão de Parceiros de Energia",
+        "Gestão de Parceiros Industriais",
+        "Gestão de Integradores",
+        "Gestão de Subcontratados",
+        "Gestão de Alianças Estratégicas",
+        "Desenvolvimento de Ecossistemas Empresariais",
+        "Gestão de Joint Ventures",
+        "Gestão de Acordos Comerciais",
+        "Gestão de Convênios",
+        "Gestão de Cooperação Empresarial"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "cons-rcios-seguros-e-cr-dito",
+      "numero": 22,
+      "categoria": "Consórcios, Seguros e Crédito",
+      "funcoes": [
+        "Comercialização de Consórcios",
+        "Intermediação de Consórcios",
+        "Gestão de Parcerias com Administradoras",
+        "Consultoria de Consórcios",
+        "Consórcios de Energia Solar",
+        "Consórcios de Equipamentos",
+        "Consórcios de Imóveis",
+        "Consórcios de Veículos",
+        "Seguros Empresariais",
+        "Seguros Residenciais",
+        "Seguros de Sistemas Fotovoltaicos",
+        "Seguros de Equipamentos",
+        "Seguros de Engenharia",
+        "Seguros de Obras",
+        "Seguros de Responsabilidade Civil",
+        "Seguros Patrimoniais",
+        "Seguros de Vida",
+        "Seguros de Frota",
+        "Gestão de Sinistros",
+        "Intermediação de Seguros",
+        "Corretagem de Seguros",
+        "Financiamento Solar",
+        "Financiamento de Equipamentos",
+        "Crédito Empresarial",
+        "Crédito Rural",
+        "Crédito ao Consumidor",
+        "Crédito para Infraestrutura",
+        "Correspondência Bancária",
+        "Análise de Crédito",
+        "Gestão de Financiamentos",
+        "Gestão de Parcelamentos",
+        "Crédito Estruturado",
+        "Parcerias com Cooperativas de Crédito"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "engenharia-solar-fotovoltaica",
+      "numero": 23,
+      "categoria": "Engenharia Solar Fotovoltaica",
+      "funcoes": [
+        "Engenharia Fotovoltaica",
+        "Engenharia de Energia Solar",
+        "Engenharia de Sistemas Fotovoltaicos",
+        "Dimensionamento Fotovoltaico",
+        "Projeto Fotovoltaico Residencial",
+        "Projeto Fotovoltaico Comercial",
+        "Projeto Fotovoltaico Industrial",
+        "Projeto Fotovoltaico Rural",
+        "Projeto Fotovoltaico de Usinas",
+        "Projeto de Microgeração",
+        "Projeto de Minigeração",
+        "Projeto On-Grid",
+        "Projeto Off-Grid",
+        "Projeto Híbrido",
+        "Projeto de Armazenamento de Energia",
+        "Projeto de Sistemas com Baterias",
+        "Projeto de Sistemas com Backup",
+        "Engenharia de Inversores",
+        "Engenharia de Microinversores",
+        "Engenharia de Otimizadores",
+        "Engenharia de Estruturas Fotovoltaicas",
+        "Engenharia de Proteção Elétrica",
+        "Engenharia de Aterramento",
+        "Engenharia de SPDA",
+        "Estudos de Sombreamento",
+        "Estudos de Irradiação",
+        "Estudos de Performance Energética",
+        "Simulação de Geração",
+        "Análise de Viabilidade Solar",
+        "Homologação Fotovoltaica",
+        "Comissionamento Fotovoltaico",
+        "Documentação Técnica",
+        "ART",
+        "Memorial Descritivo",
+        "As Built",
+        "Engenharia de Interconexão",
+        "Engenharia de Integração Energética"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "engenharias-e-especialidades-t-cnicas",
+      "numero": 24,
+      "categoria": "Engenharias e Especialidades Técnicas",
+      "funcoes": [
+        "Engenharia Elétrica",
+        "Engenharia Eletrônica",
+        "Engenharia de Energia",
+        "Engenharia Civil",
+        "Engenharia Mecânica",
+        "Engenharia de Produção",
+        "Engenharia Ambiental",
+        "Engenharia Sanitária",
+        "Engenharia Química",
+        "Engenharia de Materiais",
+        "Engenharia Metalúrgica",
+        "Engenharia de Segurança do Trabalho",
+        "Engenharia de Controle e Automação",
+        "Engenharia Mecatrônica",
+        "Engenharia de Computação",
+        "Engenharia de Software",
+        "Engenharia de Sistemas",
+        "Engenharia de Telecomunicações",
+        "Engenharia Industrial",
+        "Engenharia de Manutenção",
+        "Engenharia de Confiabilidade",
+        "Engenharia de Qualidade",
+        "Engenharia de Processos",
+        "Engenharia de Projetos",
+        "Engenharia de Custos",
+        "Engenharia de Estruturas",
+        "Engenharia Geotécnica",
+        "Engenharia Hidráulica",
+        "Engenharia Térmica",
+        "Engenharia de Refrigeração",
+        "Engenharia de Climatização",
+        "Engenharia de Combustão",
+        "Engenharia de Instrumentação",
+        "Engenharia de Proteção Contra Incêndios",
+        "Engenharia de Redes Elétricas",
+        "Engenharia de Distribuição",
+        "Engenharia de Transmissão",
+        "Engenharia de Subestações",
+        "Engenharia de Potência",
+        "Engenharia Eletrotécnica",
+        "Engenharia Energética",
+        "Engenharia de Armazenamento",
+        "Engenharia de Baterias",
+        "Engenharia de Automação Predial",
+        "Engenharia de Automação Industrial",
+        "Engenharia Agrícola",
+        "Engenharia Agronômica",
+        "Engenharia de Biossistemas",
+        "Engenharia Hídrica",
+        "Engenharia Florestal",
+        "Engenharia de Transportes",
+        "Engenharia Logística",
+        "Engenharia de Segurança Cibernética",
+        "Engenharia de Dados",
+        "Engenharia de Inteligência Artificial",
+        "Engenharia de Produto",
+        "Engenharia de Pesquisa e Desenvolvimento"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "instala-o-e-integra-o-fotovoltaica",
+      "numero": 25,
+      "categoria": "Instalação e Integração Fotovoltaica",
+      "funcoes": [
+        "Gestão de Instalações",
+        "Planejamento de Instalações",
+        "Coordenação de Obras Solares",
+        "Supervisão de Instalações",
+        "Instalação de Módulos Fotovoltaicos",
+        "Instalação de Inversores",
+        "Instalação de Microinversores",
+        "Instalação de Estruturas",
+        "Instalação de Sistemas de Fixação",
+        "Instalação de String Boxes",
+        "Instalação de Quadros Elétricos",
+        "Instalação de Proteções",
+        "Instalação de Aterramento",
+        "Instalação de Baterias",
+        "Instalação de Sistemas Híbridos",
+        "Instalação de Sistemas Off-Grid",
+        "Montagem Eletromecânica",
+        "Lançamento de Cabos",
+        "Cabeamento Elétrico",
+        "Conexões Elétricas",
+        "Adequações de Entrada de Energia",
+        "Integração com Redes Elétricas",
+        "Integração de Sistemas de Monitoramento",
+        "Comissionamento",
+        "Testes de Funcionamento",
+        "Testes de Segurança",
+        "Inspeção de Entrega",
+        "Documentação de Instalação",
+        "Gestão de Instaladores Terceirizados"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "manuten-o-de-sistemas-fotovoltaicos",
+      "numero": 26,
+      "categoria": "Manutenção de Sistemas Fotovoltaicos",
+      "funcoes": [
+        "Manutenção Preventiva",
+        "Manutenção Corretiva",
+        "Manutenção Preditiva",
+        "Manutenção Detectiva",
+        "Manutenção Emergencial",
+        "Manutenção Residencial",
+        "Manutenção Comercial",
+        "Manutenção Industrial",
+        "Manutenção de Usinas",
+        "Manutenção de Inversores",
+        "Manutenção de Microinversores",
+        "Manutenção de Módulos",
+        "Manutenção de Conexões",
+        "Manutenção de Cabeamento",
+        "Manutenção de Estruturas",
+        "Manutenção de String Boxes",
+        "Manutenção de Quadros",
+        "Manutenção de Aterramento",
+        "Manutenção de Baterias",
+        "Manutenção de Sistemas Híbridos",
+        "Diagnóstico de Falhas",
+        "Diagnóstico de Baixa Geração",
+        "Diagnóstico de Sombreamento",
+        "Análise de Degradação",
+        "Análise de Desempenho",
+        "Monitoramento de Geração",
+        "Monitoramento de Falhas",
+        "Gestão de Alarmes",
+        "Gestão de Ordens de Serviço",
+        "Gestão de Garantias Técnicas",
+        "Gestão de Peças de Reposição",
+        "Gestão de Planos de Manutenção",
+        "Gestão de Contratos O&M",
+        "Gestão de SLA Técnico"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "limpeza-e-conserva-o-fotovoltaica",
+      "numero": 27,
+      "categoria": "Limpeza e Conservação Fotovoltaica",
+      "funcoes": [
+        "Limpeza de Módulos Fotovoltaicos",
+        "Limpeza Residencial",
+        "Limpeza Comercial",
+        "Limpeza Industrial",
+        "Limpeza de Usinas",
+        "Limpeza de Telhados Solares",
+        "Limpeza de Estruturas Fotovoltaicas",
+        "Conservação de Equipamentos",
+        "Gestão de Equipes de Limpeza",
+        "Planejamento de Rotas de Limpeza",
+        "Controle de Produtos de Limpeza",
+        "Controle de Equipamentos de Limpeza",
+        "Inspeção Pré-Limpeza",
+        "Inspeção Pós-Limpeza",
+        "Segurança em Limpeza de Altura",
+        "Automação de Limpeza Solar",
+        "Limpeza Robotizada",
+        "Manutenção de Equipamentos de Limpeza",
+        "Gestão de Limpezas Recorrentes",
+        "Gestão de Assinaturas de Limpeza"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "vistorias-inspe-es-e-diagn-sticos",
+      "numero": 28,
+      "categoria": "Vistorias, Inspeções e Diagnósticos",
+      "funcoes": [
+        "Vistoria Técnica",
+        "Inspeção Técnica",
+        "Inspeção Elétrica",
+        "Inspeção Fotovoltaica",
+        "Inspeção Estrutural",
+        "Inspeção de Telhados",
+        "Inspeção de Aterramento",
+        "Inspeção de SPDA",
+        "Inspeção Termográfica",
+        "Termografia de Drones",
+        "Termografia de Inversores",
+        "Inspeção Visual",
+        "Inspeção por Drone",
+        "Inspeção de Conexões",
+        "Inspeção de Quadros Elétricos",
+        "Inspeção de Baterias",
+        "Inspeção de Cabos",
+        "Inspeção de Proteções",
+        "Auditoria Técnica de Instalações",
+        "Diagnóstico Energético",
+        "Perícia Elétrica",
+        "Perícia Fotovoltaica",
+        "Perícia de Sinistros",
+        "Avaliação de Conformidade",
+        "Avaliação de Riscos Elétricos",
+        "Ensaios Elétricos",
+        "Ensaios de Isolamento",
+        "Ensaios de Continuidade",
+        "Testes de Curva I-V",
+        "Testes de Performance",
+        "Análise de Qualidade de Energia",
+        "Elaboração de Laudos Técnicos",
+        "Elaboração de Pareceres Técnicos",
+        "Inspeção de Segurança",
+        "Fiscalização de Obras",
+        "Fiscalização de Instalações"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "usinas-e-gera-o-de-energia",
+      "numero": 29,
+      "categoria": "Usinas e Geração de Energia",
+      "funcoes": [
+        "Desenvolvimento de Usinas",
+        "Gestão de Usinas Fotovoltaicas",
+        "Planejamento de Usinas",
+        "Engenharia de Usinas",
+        "Implantação de Usinas",
+        "Operação de Usinas",
+        "Manutenção de Usinas",
+        "Administração de Usinas",
+        "Gestão de Terrenos",
+        "Prospecção de Áreas",
+        "Análise Fundiária",
+        "Licenciamento de Usinas",
+        "Viabilidade Econômica de Usinas",
+        "Viabilidade Técnica de Usinas",
+        "Estudos de Conexão",
+        "Gestão de Capacidade de Rede",
+        "Gestão de Acesso à Distribuidora",
+        "Gestão de Créditos de Energia",
+        "Gestão de Geração Distribuída",
+        "Gestão de Geração Compartilhada",
+        "Autoconsumo Remoto",
+        "Gestão de Consórcios de Geração",
+        "Gestão de Cooperativas de Energia",
+        "Gestão de Associações de Energia",
+        "Gestão de SPEs de Geração",
+        "Gestão de Participações em Usinas",
+        "Gestão de Investidores de Usinas",
+        "Monitoramento de Usinas",
+        "Gestão de Performance de Usinas",
+        "Gestão de Disponibilidade",
+        "Gestão de Ativos Energéticos",
+        "Repotenciação de Usinas",
+        "Descomissionamento de Usinas"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "comercializa-o-e-mercado-de-energia",
+      "numero": 30,
+      "categoria": "Comercialização e Mercado de Energia",
+      "funcoes": [
+        "Comercialização de Energia Elétrica",
+        "Gestão Comercial de Energia",
+        "Mercado Livre de Energia",
+        "Mercado Regulado de Energia",
+        "Geração Distribuída Compartilhada",
+        "Assinatura de Energia",
+        "Energia por Créditos",
+        "Gestão de Compensação de Energia",
+        "Gestão de Unidades Consumidoras",
+        "Gestão de Consumidores Beneficiários",
+        "Gestão de Contratos de Energia",
+        "Gestão de Carteira Energética",
+        "Gestão de Portfólio de Usinas",
+        "Gestão de Tarifas",
+        "Gestão de Faturas de Energia",
+        "Auditoria de Faturas",
+        "Gestão de Demanda Contratada",
+        "Gestão de Consumo Energético",
+        "Eficiência Energética",
+        "Consultoria Energética",
+        "Gestão de Migração para Mercado Livre",
+        "Gestão de Comercializadoras",
+        "Gestão de PPAs",
+        "Gestão de Riscos Energéticos",
+        "Gestão de Exposição Energética",
+        "Gestão de Energia Renovável",
+        "Certificação de Energia Renovável",
+        "Gestão de Atributos Ambientais",
+        "Gestão de Armazenamento Energético",
+        "Gestão de Flexibilidade Energética"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "infraestrutura-el-trica-e-servi-os-terceirizados",
+      "numero": 31,
+      "categoria": "Infraestrutura Elétrica e Serviços Terceirizados",
+      "funcoes": [
+        "Instalações Elétricas Residenciais",
+        "Instalações Elétricas Comerciais",
+        "Instalações Elétricas Industriais",
+        "Instalações Elétricas Rurais",
+        "Instalações de Padrões de Entrada",
+        "Adequação de Padrões de Energia",
+        "Montagem de Quadros Elétricos",
+        "Montagem de Painéis Elétricos",
+        "Montagem de Subestações",
+        "Manutenção de Subestações",
+        "Construção de Redes Elétricas",
+        "Manutenção de Redes Elétricas",
+        "Instalação de Transformadores",
+        "Manutenção de Transformadores",
+        "Instalação de Disjuntores",
+        "Instalação de DPS",
+        "Instalação de DR",
+        "Correção de Fator de Potência",
+        "Projetos de Baixa Tensão",
+        "Projetos de Média Tensão",
+        "Projetos de Alta Tensão",
+        "Projetos de Iluminação",
+        "Iluminação Pública",
+        "Iluminação Industrial",
+        "Automação Elétrica",
+        "Automação Predial",
+        "Automação Residencial",
+        "Sistemas de Proteção",
+        "Sistemas de Medição",
+        "Sistemas de Aterramento",
+        "SPDA",
+        "Adequações Elétricas",
+        "Regularização Elétrica",
+        "Homologação com Distribuidoras",
+        "Gestão de Serviços Homologados",
+        "Gestão de Parceiros de Obras Elétricas",
+        "Gestão de Contratos com Concessionárias",
+        "Gestão de Interfaces com Energisa"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "ar-condicionado-climatiza-o-e-refrigera-o",
+      "numero": 32,
+      "categoria": "Ar-Condicionado, Climatização e Refrigeração",
+      "funcoes": [
+        "Comercialização de Ar-Condicionado",
+        "Comercialização de Equipamentos de Refrigeração",
+        "Engenharia de Climatização",
+        "Engenharia de Refrigeração",
+        "Projetos HVAC",
+        "Projetos de Climatização Residencial",
+        "Projetos de Climatização Comercial",
+        "Projetos de Climatização Industrial",
+        "Dimensionamento de Ar-Condicionado",
+        "Instalação de Ar-Condicionado",
+        "Instalação de Split",
+        "Instalação de Multisplit",
+        "Instalação de VRF",
+        "Instalação de Sistemas Centrais",
+        "Instalação de Câmaras Frias",
+        "Instalação de Sistemas de Refrigeração",
+        "Manutenção Preventiva HVAC",
+        "Manutenção Corretiva HVAC",
+        "Limpeza de Ar-Condicionado",
+        "Higienização de Evaporadoras",
+        "Higienização de Condensadoras",
+        "Manutenção de Compressores",
+        "Manutenção de Condensadores",
+        "Manutenção de Evaporadores",
+        "Detecção de Vazamentos",
+        "Gestão de Fluidos Refrigerantes",
+        "Gestão de PMOC",
+        "Qualidade do Ar Interior",
+        "Automação de Climatização",
+        "Eficiência Energética HVAC",
+        "Retrofit de Climatização",
+        "Assistência Técnica de Refrigeração",
+        "Gestão de Garantias HVAC",
+        "Gestão de Técnicos Refrigeristas"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "geradores-e-sistemas-de-energia-de-backup",
+      "numero": 33,
+      "categoria": "Geradores e Sistemas de Energia de Backup",
+      "funcoes": [
+        "Comercialização de Geradores",
+        "Geradores a Gasolina",
+        "Geradores a Diesel",
+        "Geradores a Gás",
+        "Geradores Portáteis",
+        "Geradores Estacionários",
+        "Projetos de Grupos Geradores",
+        "Dimensionamento de Geradores",
+        "Instalação de Geradores",
+        "Integração de Geradores",
+        "Manutenção Preventiva de Geradores",
+        "Manutenção Corretiva de Geradores",
+        "Revisão de Motores",
+        "Sistemas de Partida",
+        "Sistemas de Combustível",
+        "Sistemas de Lubrificação",
+        "Sistemas de Arrefecimento",
+        "Alternadores",
+        "Quadros de Transferência Automática",
+        "Sistemas de Paralelismo",
+        "Sistemas de Backup",
+        "Sistemas UPS",
+        "Nobreaks",
+        "Testes de Carga",
+        "Gestão de Combustíveis",
+        "Monitoramento de Geradores",
+        "Locação de Geradores",
+        "Contratos de Manutenção de Geradores",
+        "Integração Solar-Bateria-Gerador"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "compras-e-suprimentos",
+      "numero": 34,
+      "categoria": "Compras e Suprimentos",
+      "funcoes": [
+        "Departamento de Compras",
+        "Compras Técnicas",
+        "Compras Administrativas",
+        "Compras Estratégicas",
+        "Compras Emergenciais",
+        "Compras Nacionais",
+        "Compras Internacionais",
+        "Procurement",
+        "Sourcing",
+        "Strategic Sourcing",
+        "Homologação de Fornecedores",
+        "Qualificação de Fornecedores",
+        "Avaliação de Fornecedores",
+        "Negociação com Fornecedores",
+        "Gestão de Contratos de Fornecimento",
+        "Gestão de Cotações",
+        "Gestão de Pedidos",
+        "Gestão de Kits Fotovoltaicos",
+        "Gestão de Equipamentos",
+        "Gestão de Materiais Elétricos",
+        "Gestão de Materiais HVAC",
+        "Gestão de Peças de Geradores",
+        "Gestão de Estoques",
+        "Planejamento de Suprimentos",
+        "Gestão de Abastecimento",
+        "Gestão de Importações",
+        "Gestão de Exportações",
+        "Gestão de Dependência de Fornecedores",
+        "Desenvolvimento de Fornecedores",
+        "Inteligência de Compras"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "log-stica-e-distribui-o",
+      "numero": 35,
+      "categoria": "Logística e Distribuição",
+      "funcoes": [
+        "Logística Empresarial",
+        "Logística de Suprimentos",
+        "Logística de Transporte",
+        "Logística de Entregas",
+        "Logística de Instalação",
+        "Logística Reversa",
+        "Logística de Pós-Venda",
+        "Logística Internacional",
+        "Gestão de Transportadoras",
+        "Gestão de Fretes",
+        "Roteirização",
+        "Planejamento de Rotas",
+        "Gestão de Frota",
+        "Gestão de Motoristas",
+        "Gestão de Combustível",
+        "Gestão de Armazéns",
+        "Gestão de Depósitos",
+        "Gestão de Centros de Distribuição",
+        "Gestão de Almoxarifado",
+        "Armazenamento de Equipamentos",
+        "Transporte de Módulos Fotovoltaicos",
+        "Transporte de Baterias",
+        "Transporte de Geradores",
+        "Transporte de Equipamentos HVAC",
+        "Gestão de Embalagens",
+        "Controle de Avarias",
+        "Controle de Perdas",
+        "Rastreamento de Cargas",
+        "Gestão Aduaneira",
+        "Gestão de Entregas Regionais",
+        "Planejamento de Distribuição Nacional",
+        "Planejamento de Distribuição Internacional",
+        "Supply Chain Management"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "opera-es-e-execu-o",
+      "numero": 36,
+      "categoria": "Operações e Execução",
+      "funcoes": [
+        "Diretoria de Operações",
+        "Gestão Operacional",
+        "Planejamento Operacional",
+        "Coordenação Operacional",
+        "Supervisão de Campo",
+        "Gestão de Equipes Técnicas",
+        "Gestão de Instaladores",
+        "Gestão de Prestadores",
+        "Gestão de Ordens de Serviço",
+        "Gestão de Agendamentos",
+        "Gestão de Rotas",
+        "Gestão de Obras",
+        "Gestão de Cronogramas",
+        "Gestão de Capacidade Operacional",
+        "Gestão de Produtividade Operacional",
+        "Gestão de Custos Operacionais",
+        "Gestão de Recursos Operacionais",
+        "Gestão de Equipamentos de Campo",
+        "Gestão de Ferramentas",
+        "Gestão de EPIs",
+        "Gestão de EPCs",
+        "Gestão de SLA",
+        "Gestão de Prazos",
+        "Gestão de Entregas",
+        "Controle de Execução",
+        "Controle de Retrabalho",
+        "Controle de Qualidade Operacional",
+        "Gestão de Emergências Operacionais",
+        "Central de Operações",
+        "Centro de Controle Operacional",
+        "Gestão de Operações Regionais",
+        "Gestão de Operações Nacionais"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "tecnologia-da-informa-o",
+      "numero": 37,
+      "categoria": "Tecnologia da Informação",
+      "funcoes": [
+        "Diretoria de Tecnologia",
+        "Governança de TI",
+        "Infraestrutura de TI",
+        "Suporte de TI",
+        "Help Desk",
+        "Service Desk",
+        "Administração de Sistemas",
+        "Administração de Redes",
+        "Administração de Servidores",
+        "Computação em Nuvem",
+        "Cloud Computing",
+        "Arquitetura de Sistemas",
+        "Arquitetura de Software",
+        "Desenvolvimento de Software",
+        "Desenvolvimento Web",
+        "Desenvolvimento Mobile",
+        "Desenvolvimento Front-End",
+        "Desenvolvimento Back-End",
+        "Desenvolvimento Full Stack",
+        "Desenvolvimento de APIs",
+        "Integração de Sistemas",
+        "Integração de ERPs",
+        "Integração de CRMs",
+        "Integração de Plataformas",
+        "Banco de Dados",
+        "Administração de Banco de Dados",
+        "DevOps",
+        "MLOps",
+        "DataOps",
+        "Site Reliability Engineering",
+        "Observabilidade de Sistemas",
+        "Monitoramento de Infraestrutura",
+        "Gestão de Licenças",
+        "Gestão de Acessos",
+        "Gestão de Identidades",
+        "Gestão de Dispositivos",
+        "Suporte a Usuários",
+        "Gestão de Sistemas Corporativos"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "intelig-ncia-artificial-e-automa-o",
+      "numero": 38,
+      "categoria": "Inteligência Artificial e Automação",
+      "funcoes": [
+        "Estratégia de Inteligência Artificial",
+        "Governança de Inteligência Artificial",
+        "Desenvolvimento de Agentes de IA",
+        "Orquestração Multiagente",
+        "Automação Empresarial",
+        "Automação Administrativa",
+        "Automação Comercial",
+        "Automação Financeira",
+        "Automação Contábil",
+        "Automação Jurídica",
+        "Automação de Marketing",
+        "Automação de Atendimento",
+        "Automação de WhatsApp",
+        "Automação de CRM",
+        "Automação de Prospecção",
+        "Automação de Cotações",
+        "Automação de Compras",
+        "Automação de Agendamentos",
+        "Automação de Relatórios",
+        "Automação de Pós-Venda",
+        "Automação de Monitoramento Solar",
+        "Automação de Processos Robóticos",
+        "RPA",
+        "Engenharia de Prompts",
+        "Engenharia de Contexto",
+        "Engenharia de Agentes",
+        "Machine Learning",
+        "Deep Learning",
+        "Processamento de Linguagem Natural",
+        "Visão Computacional",
+        "Análise Preditiva",
+        "IA Generativa",
+        "IA Conversacional",
+        "Chatbots",
+        "Assistentes Virtuais",
+        "Assistentes Executivos de IA",
+        "IA de Precificação",
+        "IA de Planejamento",
+        "IA de Diagnóstico Técnico",
+        "IA de Gestão de Riscos",
+        "IA de Inteligência Competitiva",
+        "IA de Auditoria",
+        "IA de Segurança",
+        "Avaliação de Modelos de IA",
+        "Segurança de Sistemas de IA",
+        "Integração de IA com Sistemas Corporativos"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "dados-estat-stica-e-business-intelligence",
+      "numero": 39,
+      "categoria": "Dados, Estatística e Business Intelligence",
+      "funcoes": [
+        "Engenharia de Dados",
+        "Análise de Dados",
+        "Ciência de Dados",
+        "Arquitetura de Dados",
+        "Governança de Dados",
+        "Qualidade de Dados",
+        "Data Warehouse",
+        "Data Lake",
+        "Data Lakehouse",
+        "Business Intelligence",
+        "Business Analytics",
+        "People Analytics",
+        "Sales Analytics",
+        "Marketing Analytics",
+        "Financial Analytics",
+        "Operations Analytics",
+        "Customer Analytics",
+        "Product Analytics",
+        "Energy Analytics",
+        "Estatística Aplicada",
+        "Econometria",
+        "Modelagem Estatística",
+        "Modelagem Preditiva",
+        "Análise de Séries Temporais",
+        "Análise de Cenários",
+        "Simulação Empresarial",
+        "Construção de Dashboards",
+        "Visualização de Dados",
+        "Relatórios Gerenciais",
+        "Relatórios Executivos",
+        "Relatórios Operacionais",
+        "Relatórios Financeiros",
+        "Relatórios Comerciais",
+        "Indicadores de Performance",
+        "Gestão de KPIs",
+        "Gestão de OKRs",
+        "Inteligência Decisória"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "seguran-a-da-informa-o-e-seguran-a-digital",
+      "numero": 40,
+      "categoria": "Segurança da Informação e Segurança Digital",
+      "funcoes": [
+        "Cibersegurança",
+        "Segurança da Informação",
+        "Segurança de Redes",
+        "Segurança de Aplicações",
+        "Segurança de APIs",
+        "Segurança de Banco de Dados",
+        "Segurança em Nuvem",
+        "Segurança de Dispositivos",
+        "Gestão de Vulnerabilidades",
+        "Testes de Penetração",
+        "Pentest",
+        "Monitoramento de Ameaças",
+        "Threat Intelligence",
+        "Segurança de Identidades",
+        "Controle de Acessos",
+        "Gestão de Credenciais",
+        "Criptografia",
+        "Backup",
+        "Recuperação de Dados",
+        "Prevenção de Vazamento de Dados",
+        "Resposta a Incidentes",
+        "Forense Digital",
+        "Segurança de Agentes de IA",
+        "Segurança de Integrações",
+        "Segurança de Sistemas Industriais",
+        "Segurança de Sistemas Energéticos",
+        "Gestão de Riscos Cibernéticos",
+        "Segurança de Pagamentos",
+        "Prevenção de Fraudes Digitais",
+        "Centro de Operações de Segurança",
+        "SOC"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "pesquisa-desenvolvimento-e-inova-o",
+      "numero": 41,
+      "categoria": "Pesquisa, Desenvolvimento e Inovação",
+      "funcoes": [
+        "Pesquisa e Desenvolvimento",
+        "Pesquisa Aplicada",
+        "Pesquisa Tecnológica",
+        "Inovação Corporativa",
+        "Inovação Energética",
+        "Inovação Comercial",
+        "Inovação Operacional",
+        "Inovação de Produtos",
+        "Inovação de Serviços",
+        "Inovação de Processos",
+        "Desenvolvimento de Novas Tecnologias",
+        "Desenvolvimento de Novos Negócios",
+        "Pesquisa em Energia Solar",
+        "Pesquisa em Baterias",
+        "Pesquisa em Armazenamento",
+        "Pesquisa em Inversores",
+        "Pesquisa em Eficiência Energética",
+        "Pesquisa em Climatização",
+        "Pesquisa em Geração Híbrida",
+        "Pesquisa em Automação",
+        "Pesquisa em Inteligência Artificial",
+        "Prototipagem",
+        "Laboratório de Testes",
+        "Laboratório de Qualidade",
+        "Propriedade Intelectual",
+        "Gestão de Patentes",
+        "Transferência de Tecnologia",
+        "Parcerias Universitárias",
+        "Parcerias com Centros de Pesquisa",
+        "Gestão de Projetos de Inovação",
+        "Gestão de Incentivos à Inovação"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "produtos-servi-os-e-novos-neg-cios",
+      "numero": 42,
+      "categoria": "Produtos, Serviços e Novos Negócios",
+      "funcoes": [
+        "Gestão de Produtos",
+        "Gestão de Serviços",
+        "Desenvolvimento de Produtos",
+        "Desenvolvimento de Serviços",
+        "Product Management",
+        "Product Operations",
+        "Product Marketing",
+        "Pesquisa de Produto",
+        "Pesquisa de Clientes",
+        "Design de Serviços",
+        "Design Thinking",
+        "Service Design",
+        "UX Research",
+        "UX Design",
+        "UI Design",
+        "Jornada do Usuário",
+        "Experiência de Serviço",
+        "Gestão de Portfólio de Produtos",
+        "Gestão de Portfólio de Serviços",
+        "Gestão de Assinaturas",
+        "Gestão de Planos de Manutenção",
+        "Gestão de Soluções Integradas",
+        "Gestão de Combos Comerciais",
+        "Gestão de Pacotes de Serviços",
+        "Gestão de Modelos de Receita",
+        "Gestão de Produtos Digitais",
+        "Gestão de Plataformas Digitais",
+        "Gestão de Marketplaces",
+        "Gestão de E-commerce",
+        "Desenvolvimento de Novas Linhas de Negócio"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "franquias-licenciamento-e-expans-o",
+      "numero": 43,
+      "categoria": "Franquias, Licenciamento e Expansão",
+      "funcoes": [
+        "Planejamento de Franquias",
+        "Estruturação de Franquias",
+        "Gestão de Franquias",
+        "Gestão de Franqueados",
+        "Expansão de Franquias",
+        "Seleção de Franqueados",
+        "Implantação de Franquias",
+        "Treinamento de Franqueados",
+        "Suporte a Franqueados",
+        "Auditoria de Franquias",
+        "Consultoria de Campo",
+        "Operações de Franquias",
+        "Marketing de Franquias",
+        "Comercial de Franquias",
+        "Jurídico de Franquias",
+        "Financeiro de Franquias",
+        "Gestão de Royalties",
+        "Gestão de Taxas de Franquia",
+        "Gestão de Fundos de Marketing",
+        "Gestão de Territórios",
+        "Gestão de Exclusividade Territorial",
+        "Licenciamento de Marca",
+        "Licenciamento de Tecnologia",
+        "Licenciamento de Operação",
+        "Gestão de Unidades Próprias",
+        "Gestão de Unidades Franqueadas",
+        "Gestão de Microfranquias",
+        "Gestão de Master Franquias",
+        "Gestão de Franquias Internacionais",
+        "Padronização Operacional",
+        "Manualização de Processos",
+        "Expansão Regional",
+        "Expansão Nacional",
+        "Expansão Continental",
+        "Expansão Global"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "internacionaliza-o-e-com-rcio-exterior",
+      "numero": 44,
+      "categoria": "Internacionalização e Comércio Exterior",
+      "funcoes": [
+        "Planejamento Internacional",
+        "Expansão Internacional",
+        "Desenvolvimento de Mercados Externos",
+        "Comércio Exterior",
+        "Importação",
+        "Exportação",
+        "Desembaraço Aduaneiro",
+        "Gestão Aduaneira",
+        "Logística Internacional",
+        "Tributação Internacional",
+        "Contabilidade Internacional",
+        "Jurídico Internacional",
+        "Contratos Internacionais",
+        "Compliance Internacional",
+        "Relações Comerciais Internacionais",
+        "Gestão de Distribuidores Internacionais",
+        "Gestão de Fornecedores Internacionais",
+        "Gestão Cambial",
+        "Gestão de Riscos Geopolíticos",
+        "Inteligência Geopolítica",
+        "Análise de Países",
+        "Gestão de Subsidiárias Internacionais",
+        "Gestão de Franquias Internacionais",
+        "Gestão de Licenças Internacionais",
+        "Gestão de Certificações Internacionais",
+        "Localização de Produtos",
+        "Localização de Conteúdo",
+        "Tradução Corporativa",
+        "Relações Multiculturais",
+        "Recursos Humanos Internacionais",
+        "Mobilidade Internacional",
+        "Gestão de Expatriados",
+        "Gestão de Fusos Horários",
+        "Gestão de Operações Multinacionais"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "qualidade-e-melhoria-cont-nua",
+      "numero": 45,
+      "categoria": "Qualidade e Melhoria Contínua",
+      "funcoes": [
+        "Gestão da Qualidade",
+        "Controle de Qualidade",
+        "Garantia da Qualidade",
+        "Qualidade Técnica",
+        "Qualidade Operacional",
+        "Qualidade Comercial",
+        "Qualidade de Atendimento",
+        "Qualidade de Engenharia",
+        "Qualidade de Instalação",
+        "Qualidade de Manutenção",
+        "Qualidade de Fornecedores",
+        "Inspeção de Qualidade",
+        "Auditoria de Qualidade",
+        "Gestão de Não Conformidades",
+        "Gestão de Ações Corretivas",
+        "Gestão de Ações Preventivas",
+        "Melhoria Contínua",
+        "Lean Management",
+        "Lean Six Sigma",
+        "Kaizen",
+        "Gestão de Padronização",
+        "Gestão de Procedimentos",
+        "Gestão de Checklists",
+        "Gestão de Certificações",
+        "Gestão de Normas Técnicas",
+        "Gestão de Documentação Técnica",
+        "Gestão de Retrabalho",
+        "Gestão de Falhas",
+        "Gestão de Reclamações Técnicas",
+        "Excelência Operacional"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "seguran-a-do-trabalho",
+      "numero": 46,
+      "categoria": "Segurança do Trabalho",
+      "funcoes": [
+        "Segurança do Trabalho",
+        "Engenharia de Segurança",
+        "Medicina Ocupacional",
+        "SESMT",
+        "CIPA",
+        "Gestão de EPIs",
+        "Gestão de EPCs",
+        "Gestão de NR-10",
+        "Gestão de NR-35",
+        "Gestão de NR-6",
+        "Gestão de NR-12",
+        "Gestão de NR-18",
+        "Gestão de NR-33",
+        "Gestão de NR-1",
+        "Gestão de PGR",
+        "Gestão de PCMSO",
+        "Gestão de LTCAT",
+        "Gestão de APR",
+        "Permissão de Trabalho",
+        "Segurança em Altura",
+        "Segurança Elétrica",
+        "Segurança em Obras",
+        "Segurança em Usinas",
+        "Segurança em Manutenção",
+        "Segurança em Limpeza Técnica",
+        "Prevenção de Acidentes",
+        "Investigação de Acidentes",
+        "Prevenção de Incêndios",
+        "Combate a Incêndios",
+        "Brigada de Emergência",
+        "Gestão de Emergências Médicas",
+        "Primeiros Socorros",
+        "Treinamentos Obrigatórios",
+        "Fiscalização de Segurança",
+        "Auditorias de Segurança",
+        "Gestão de Acidentes com Terceirizados"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "meio-ambiente-e-sustentabilidade",
+      "numero": 47,
+      "categoria": "Meio Ambiente e Sustentabilidade",
+      "funcoes": [
+        "Gestão Ambiental",
+        "Licenciamento Ambiental",
+        "Consultoria Ambiental",
+        "Engenharia Ambiental",
+        "Gestão de Resíduos",
+        "Gestão de Resíduos Eletrônicos",
+        "Gestão de Resíduos Fotovoltaicos",
+        "Reciclagem de Módulos",
+        "Reciclagem de Baterias",
+        "Logística Reversa Ambiental",
+        "Gestão de Emissões",
+        "Inventário de Carbono",
+        "Gestão de Créditos de Carbono",
+        "Descarbonização",
+        "Economia Circular",
+        "Gestão de Recursos Hídricos",
+        "Gestão de Recursos Naturais",
+        "Eficiência Energética Ambiental",
+        "Sustentabilidade Corporativa",
+        "ESG",
+        "Governança Ambiental",
+        "Responsabilidade Socioambiental",
+        "Gestão de Impactos Ambientais",
+        "Gestão de Riscos Climáticos",
+        "Gestão de Indicadores ESG",
+        "Relatórios de Sustentabilidade",
+        "Certificações Ambientais",
+        "Preservação Ambiental",
+        "Gestão de Projetos Sustentáveis",
+        "Gestão de Cadeias de Suprimentos Sustentáveis"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "rela-es-institucionais-e-governamentais",
+      "numero": 48,
+      "categoria": "Relações Institucionais e Governamentais",
+      "funcoes": [
+        "Relações Governamentais",
+        "Relações Institucionais",
+        "Assuntos Públicos",
+        "Public Affairs",
+        "Relações com Prefeituras",
+        "Relações com Governos Estaduais",
+        "Relações com Governo Federal",
+        "Relações com Agências Reguladoras",
+        "Relações com Distribuidoras",
+        "Relações com Concessionárias",
+        "Relações com ANEEL",
+        "Relações com Órgãos Ambientais",
+        "Relações com Conselhos Profissionais",
+        "Relações com Associações Empresariais",
+        "Relações com Federações",
+        "Relações com Sindicatos Patronais",
+        "Relações com Entidades Setoriais",
+        "Relações com Universidades",
+        "Relações com Instituições Financeiras",
+        "Relações com Cooperativas",
+        "Gestão de Políticas Públicas",
+        "Monitoramento Legislativo",
+        "Monitoramento Regulatório",
+        "Gestão de Incentivos Públicos",
+        "Gestão de Convênios",
+        "Participação em Consultas Públicas",
+        "Participação em Audiências Públicas",
+        "Relações Diplomáticas Comerciais",
+        "Relações com Câmaras de Comércio"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "licita-es-e-contratos-p-blicos",
+      "numero": 49,
+      "categoria": "Licitações e Contratos Públicos",
+      "funcoes": [
+        "Inteligência de Licitações",
+        "Pesquisa de Editais",
+        "Análise de Editais",
+        "Cadastro de Fornecedores Públicos",
+        "Documentação de Habilitação",
+        "Gestão de Certidões",
+        "Elaboração de Propostas Públicas",
+        "Precificação de Licitações",
+        "Engenharia de Licitações",
+        "Pregões Eletrônicos",
+        "Concorrências Públicas",
+        "Dispensas Eletrônicas",
+        "Gestão de Atas de Registro de Preços",
+        "Gestão de Contratos Públicos",
+        "Fiscalização Contratual",
+        "Gestão de Medições",
+        "Gestão de Aditivos",
+        "Gestão de Garantias Contratuais",
+        "Prestação de Contas Públicas",
+        "Gestão de Sanções Administrativas",
+        "Recursos Administrativos",
+        "Compliance em Licitações",
+        "Gestão de Obras Públicas",
+        "Gestão de Projetos Públicos",
+        "Relacionamento com Órgãos Contratantes"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "educa-o-treinamento-e-universidade-corporativa",
+      "numero": 50,
+      "categoria": "Educação, Treinamento e Universidade Corporativa",
+      "funcoes": [
+        "Educação Corporativa",
+        "Universidade Corporativa",
+        "Academia Técnica",
+        "Academia Comercial",
+        "Academia de Liderança",
+        "Academia de Marketing",
+        "Academia de Engenharia",
+        "Treinamento de Instaladores",
+        "Treinamento de Eletricistas",
+        "Treinamento de Técnicos de Manutenção",
+        "Treinamento de Consultores",
+        "Treinamento de Representantes",
+        "Treinamento de Franqueados",
+        "Treinamento de Gestores",
+        "Capacitação em Energia Solar",
+        "Capacitação em Armazenamento",
+        "Capacitação em Sistemas Híbridos",
+        "Capacitação em Refrigeração",
+        "Capacitação em Geradores",
+        "Capacitação em Segurança do Trabalho",
+        "Capacitação em Normas Técnicas",
+        "Capacitação em Vendas",
+        "Capacitação em Atendimento",
+        "Capacitação em IA",
+        "Capacitação em Sistemas Corporativos",
+        "Produção de Cursos",
+        "Produção de Apostilas",
+        "Produção de Manuais",
+        "Produção de Videoaulas",
+        "Gestão de Certificações Profissionais",
+        "Gestão de Trilhas de Aprendizagem",
+        "Gestão do Conhecimento",
+        "Biblioteca Corporativa",
+        "Pesquisa Educacional",
+        "Gestão de Mentorias",
+        "Gestão de Instrutores"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "eventos-e-rela-es-p-blicas",
+      "numero": 51,
+      "categoria": "Eventos e Relações Públicas",
+      "funcoes": [
+        "Organização de Eventos",
+        "Produção de Eventos",
+        "Eventos Corporativos",
+        "Eventos Comerciais",
+        "Eventos Técnicos",
+        "Feiras de Negócios",
+        "Feiras de Energia",
+        "Congressos",
+        "Seminários",
+        "Workshops",
+        "Webinars",
+        "Treinamentos Presenciais",
+        "Treinamentos Online",
+        "Palestras",
+        "Convenções Comerciais",
+        "Convenções de Franqueados",
+        "Eventos de Lançamento",
+        "Eventos para Clientes",
+        "Eventos para Parceiros",
+        "Eventos Institucionais",
+        "Rodadas de Negócios",
+        "Networking Empresarial",
+        "Patrocínios",
+        "Gestão de Patrocínios",
+        "Gestão de Cerimonial",
+        "Gestão de Protocolo",
+        "Gestão de Convidados",
+        "Comunicação de Eventos",
+        "Produção de Materiais para Eventos"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "experi-ncia-do-cliente-e-p-s-venda-t-cnico",
+      "numero": 52,
+      "categoria": "Experiência do Cliente e Pós-Venda Técnico",
+      "funcoes": [
+        "Gestão de Pós-Venda",
+        "Suporte Técnico",
+        "Assistência Técnica",
+        "Central de Suporte",
+        "Gestão de Chamados",
+        "Gestão de Tickets",
+        "Gestão de Garantias",
+        "Atendimento de Garantias de Fabricantes",
+        "Gestão de Garantias de Instalação",
+        "Gestão de Devoluções",
+        "Gestão de Trocas",
+        "Gestão de Reparos",
+        "Gestão de Contratos Recorrentes",
+        "Gestão de Visitas Preventivas",
+        "Gestão de Vistorias Periódicas",
+        "Gestão de Manutenções Periódicas",
+        "Monitoramento Remoto",
+        "Monitoramento de Clientes",
+        "Relatórios de Geração",
+        "Relatórios de Economia",
+        "Relatórios de Desempenho",
+        "Orientação ao Cliente",
+        "Educação do Cliente",
+        "Gestão de Expectativas",
+        "Gestão de Incidentes com Clientes",
+        "Gestão de Clientes Críticos",
+        "Atendimento Emergencial",
+        "Gestão de Prioridades de Atendimento",
+        "Gestão de Satisfação Técnica",
+        "Fidelização Pós-Instalação"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "gest-o-de-assinaturas-e-servi-os-recorrentes",
+      "numero": 53,
+      "categoria": "Gestão de Assinaturas e Serviços Recorrentes",
+      "funcoes": [
+        "Gestão de Assinaturas de Manutenção",
+        "Gestão de Assinaturas de Limpeza",
+        "Gestão de Assinaturas de Monitoramento",
+        "Gestão de Assinaturas de Energia",
+        "Gestão de Contratos de Longo Prazo",
+        "Gestão de Planos de Serviço",
+        "Gestão de Cobrança Recorrente",
+        "Gestão de Renovações Automáticas",
+        "Gestão de Reajustes",
+        "Gestão de Inadimplência Recorrente",
+        "Gestão de Retenção de Assinantes",
+        "Gestão de Cancelamentos",
+        "Gestão de Benefícios",
+        "Gestão de Serviços Inclusos",
+        "Gestão de Serviços Extras",
+        "Gestão de Atendimento Prioritário",
+        "Gestão de Recorrência Financeira",
+        "Gestão de MRR",
+        "Gestão de ARR",
+        "Gestão de Churn",
+        "Gestão de LTV",
+        "Gestão de Cohorts",
+        "Gestão de Rentabilidade por Assinante"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "gest-o-de-ativos-patrim-nio-e-infraestrutura",
+      "numero": 54,
+      "categoria": "Gestão de Ativos, Patrimônio e Infraestrutura",
+      "funcoes": [
+        "Gestão de Ativos Físicos",
+        "Gestão de Ativos Energéticos",
+        "Gestão de Ativos Digitais",
+        "Gestão de Equipamentos",
+        "Gestão de Ferramentas",
+        "Gestão de Veículos",
+        "Gestão de Imóveis",
+        "Gestão de Terrenos",
+        "Gestão de Instalações",
+        "Gestão de Prédios",
+        "Gestão de Escritórios",
+        "Gestão de Galpões",
+        "Gestão de Almoxarifados",
+        "Gestão de Oficinas",
+        "Gestão de Laboratórios",
+        "Gestão de Centros Técnicos",
+        "Gestão de Centros de Distribuição",
+        "Gestão de Subestações Próprias",
+        "Gestão de Usinas Próprias",
+        "Gestão de Sistemas de Backup",
+        "Gestão de Infraestrutura de TI",
+        "Manutenção Patrimonial",
+        "Seguro Patrimonial",
+        "Inventário Patrimonial",
+        "Gestão de Depreciação",
+        "Gestão de Alienação de Ativos"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "seguran-a-patrimonial-e-corporativa",
+      "numero": 55,
+      "categoria": "Segurança Patrimonial e Corporativa",
+      "funcoes": [
+        "Segurança Patrimonial",
+        "Segurança Física",
+        "Controle de Acesso",
+        "Vigilância Patrimonial",
+        "Videomonitoramento",
+        "Monitoramento de Alarmes",
+        "Segurança de Escritórios",
+        "Segurança de Galpões",
+        "Segurança de Usinas",
+        "Segurança de Obras",
+        "Segurança de Equipamentos",
+        "Segurança de Frota",
+        "Segurança de Transporte",
+        "Prevenção de Furtos",
+        "Prevenção de Roubos",
+        "Prevenção de Vandalismo",
+        "Segurança de Executivos",
+        "Gestão de Visitantes",
+        "Gestão de Chaves",
+        "Gestão de Credenciais",
+        "Investigação Patrimonial",
+        "Gestão de Ocorrências",
+        "Planos de Evacuação",
+        "Gestão de Segurança de Unidades Remotas"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "planejamento-territorial-e-expans-o-regional",
+      "numero": 56,
+      "categoria": "Planejamento Territorial e Expansão Regional",
+      "funcoes": [
+        "Inteligência Geográfica",
+        "Geomarketing",
+        "Geoprocessamento",
+        "Cartografia",
+        "Mapeamento de Mercado",
+        "Mapeamento de Clientes",
+        "Mapeamento de Concorrentes",
+        "Mapeamento de Consumo Energético",
+        "Mapeamento de Potencial Solar",
+        "Análise de Regiões",
+        "Análise de Municípios",
+        "Análise de Bairros",
+        "Análise de Densidade Comercial",
+        "Análise de Viabilidade de Filiais",
+        "Seleção de Pontos Comerciais",
+        "Planejamento de Territórios de Vendas",
+        "Planejamento de Rotas Regionais",
+        "Planejamento de Polos Operacionais",
+        "Gestão de Expansão Municipal",
+        "Gestão de Expansão Estadual",
+        "Gestão de Expansão Interestadual",
+        "Gestão de Expansão Nacional",
+        "Inteligência Logística Regional",
+        "Estudos de Infraestrutura Regional"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "constru-o-civil-e-obras",
+      "numero": 57,
+      "categoria": "Construção Civil e Obras",
+      "funcoes": [
+        "Gestão de Obras",
+        "Engenharia Civil",
+        "Projetos Estruturais",
+        "Projetos Arquitetônicos",
+        "Projetos de Coberturas",
+        "Projetos de Fundações",
+        "Projetos de Estruturas Metálicas",
+        "Projetos de Estruturas de Concreto",
+        "Projetos de Galpões",
+        "Projetos de Usinas",
+        "Obras de Infraestrutura",
+        "Obras de Adequação",
+        "Obras Elétricas",
+        "Obras Eletromecânicas",
+        "Obras de Reforço Estrutural",
+        "Reforma de Telhados",
+        "Impermeabilização",
+        "Obras de Drenagem",
+        "Terraplenagem",
+        "Pavimentação",
+        "Topografia",
+        "Georreferenciamento",
+        "Sondagens Geotécnicas",
+        "Fiscalização de Obras",
+        "Planejamento Físico-Financeiro",
+        "Orçamento de Obras",
+        "Controle de Materiais de Construção",
+        "Gestão de Empreiteiras",
+        "Gestão de Subempreiteiras",
+        "Gerenciamento de Construção"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "agricultura-agroneg-cio-e-energia-rural",
+      "numero": 58,
+      "categoria": "Agricultura, Agronegócio e Energia Rural",
+      "funcoes": [
+        "Energia Solar Rural",
+        "Eletrificação Rural",
+        "Bombeamento Solar",
+        "Irrigação Solar",
+        "Sistemas Fotovoltaicos para Fazendas",
+        "Sistemas Off-Grid Rurais",
+        "Sistemas de Armazenamento Rural",
+        "Sistemas de Refrigeração Rural",
+        "Climatização de Instalações Agropecuárias",
+        "Energia para Agroindústrias",
+        "Energia para Piscicultura",
+        "Energia para Pecuária",
+        "Energia para Agricultura",
+        "Energia para Cooperativas Rurais",
+        "Sistemas de Bombeamento",
+        "Sistemas de Abastecimento de Água",
+        "Automação Rural",
+        "Monitoramento Energético Rural",
+        "Consultoria Energética Rural",
+        "Projetos Agrovoltaicos",
+        "Energia para Cadeias de Frio",
+        "Gestão de Projetos Agroenergéticos"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "novas-tecnologias-energ-ticas",
+      "numero": 59,
+      "categoria": "Novas Tecnologias Energéticas",
+      "funcoes": [
+        "Armazenamento de Energia",
+        "BESS",
+        "Baterias de Lítio",
+        "Baterias de Estado Sólido",
+        "Sistemas de Backup",
+        "Microrredes",
+        "Smart Grids",
+        "Redes Inteligentes",
+        "Medidores Inteligentes",
+        "IoT Energético",
+        "Internet das Coisas Industrial",
+        "Gestão Inteligente de Energia",
+        "Sistemas EMS",
+        "Sistemas BMS",
+        "Sistemas SCADA",
+        "Sistemas de Supervisão",
+        "Integração de Redes",
+        "Virtual Power Plants",
+        "Usinas Virtuais",
+        "Resposta da Demanda",
+        "Vehicle-to-Grid",
+        "Vehicle-to-Home",
+        "Carregadores de Veículos Elétricos",
+        "Eletropostos",
+        "Infraestrutura de Recarga",
+        "Energia Eólica",
+        "Energia Híbrida",
+        "Biomassa",
+        "Biogás",
+        "Hidrogênio Verde",
+        "Energia Hidrelétrica de Pequeno Porte",
+        "Energia Térmica",
+        "Cogeração",
+        "Trigeração",
+        "Geração Descentralizada",
+        "Eficiência Energética Avançada"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "e-commerce-e-canais-digitais",
+      "numero": 60,
+      "categoria": "E-commerce e Canais Digitais",
+      "funcoes": [
+        "E-commerce",
+        "Loja Virtual",
+        "Marketplace",
+        "Gestão de Catálogo Digital",
+        "Gestão de Produtos Online",
+        "Gestão de Preços Online",
+        "Gestão de Estoque Online",
+        "Gestão de Pagamentos Digitais",
+        "Gestão de Checkout",
+        "Gestão de Fretes Online",
+        "Gestão de Vendas por WhatsApp",
+        "Gestão de Vendas por Instagram",
+        "Gestão de Vendas por Sites",
+        "Gestão de Vendas por Aplicativos",
+        "Gestão de Plataformas de Assinatura",
+        "Gestão de Portais do Cliente",
+        "Gestão de Portais de Parceiros",
+        "Gestão de Portais de Franqueados",
+        "Gestão de Leads Digitais",
+        "Atendimento Digital",
+        "Operações de Marketplace",
+        "Integração Omnichannel",
+        "Gestão de Reputação Digital",
+        "Gestão de Avaliações Online"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "experi-ncia-digital-e-design-de-interfaces",
+      "numero": 61,
+      "categoria": "Experiência Digital e Design de Interfaces",
+      "funcoes": [
+        "UX Design",
+        "UI Design",
+        "UX Research",
+        "Product Design",
+        "Design de Sistemas",
+        "Design de Interação",
+        "Design de Interfaces",
+        "Design Responsivo",
+        "Design de Aplicativos",
+        "Design de Websites",
+        "Design de Dashboards",
+        "Design de Portais",
+        "Arquitetura da Informação",
+        "Design de Navegação",
+        "Design de Formulários",
+        "Design de Conversação",
+        "Design de Chatbots",
+        "Design de Experiência do Usuário",
+        "Testes de Usabilidade",
+        "Testes de Acessibilidade",
+        "Design de Acessibilidade",
+        "Prototipagem Digital",
+        "Design Systems",
+        "Otimização de Interfaces",
+        "Pesquisa de Usabilidade",
+        "Design de Experiência Multicanal"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "desenvolvimento-social-e-responsabilidade-corporativa",
+      "numero": 62,
+      "categoria": "Desenvolvimento Social e Responsabilidade Corporativa",
+      "funcoes": [
+        "Responsabilidade Social Corporativa",
+        "Investimento Social Privado",
+        "Projetos Sociais",
+        "Projetos Comunitários",
+        "Projetos Educacionais",
+        "Projetos de Inclusão",
+        "Inclusão Digital",
+        "Inclusão Energética",
+        "Acesso à Energia",
+        "Projetos de Energia Comunitária",
+        "Programas de Voluntariado",
+        "Doações Corporativas",
+        "Parcerias com Organizações Sociais",
+        "Parcerias com Instituições Religiosas",
+        "Parcerias com Escolas",
+        "Parcerias com Comunidades Rurais",
+        "Apoio a Empreendedores",
+        "Capacitação Comunitária",
+        "Desenvolvimento Local",
+        "Desenvolvimento Regional",
+        "Sustentabilidade Social",
+        "Gestão de Impacto Social",
+        "Comunicação Social Institucional"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "rela-es-com-segmentos-e-clientes-especializados",
+      "numero": 63,
+      "categoria": "Relações com Segmentos e Clientes Especializados",
+      "funcoes": [
+        "Gestão de Clientes Residenciais",
+        "Gestão de Clientes Comerciais",
+        "Gestão de Clientes Industriais",
+        "Gestão de Clientes Rurais",
+        "Gestão de Clientes Públicos",
+        "Gestão de Clientes Institucionais",
+        "Gestão de Igrejas e Instituições Religiosas",
+        "Gestão de Escolas",
+        "Gestão de Hospitais",
+        "Gestão de Clínicas",
+        "Gestão de Supermercados",
+        "Gestão de Hotéis",
+        "Gestão de Restaurantes",
+        "Gestão de Postos de Combustível",
+        "Gestão de Condomínios",
+        "Gestão de Cooperativas",
+        "Gestão de Associações",
+        "Gestão de Fazendas",
+        "Gestão de Indústrias",
+        "Gestão de Redes Varejistas",
+        "Gestão de Grandes Contas",
+        "Gestão de Pequenas Empresas",
+        "Gestão de Médias Empresas",
+        "Gestão de Grupos Econômicos",
+        "Gestão de Órgãos Governamentais"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "intelig-ncia-econ-mica-e-planejamento-de-cen-rios",
+      "numero": 64,
+      "categoria": "Inteligência Econômica e Planejamento de Cenários",
+      "funcoes": [
+        "Economia Empresarial",
+        "Macroeconomia Aplicada",
+        "Microeconomia Aplicada",
+        "Planejamento Econômico",
+        "Inteligência Econômica",
+        "Análise de Inflação",
+        "Análise de Juros",
+        "Análise de Câmbio",
+        "Análise de Consumo",
+        "Análise de Crédito",
+        "Análise de Investimentos",
+        "Análise de Política Energética",
+        "Análise de Tarifas de Energia",
+        "Análise de Custos de Equipamentos",
+        "Análise de Cadeias Globais",
+        "Análise de Mercado Nacional",
+        "Análise de Mercado Internacional",
+        "Projeção de Crescimento",
+        "Projeção de Demanda",
+        "Projeção de Vendas",
+        "Projeção de Receita",
+        "Projeção de Custos",
+        "Planejamento de Cenários",
+        "Análise de Sensibilidade",
+        "Testes de Estresse Financeiro",
+        "Simulação de Crises",
+        "Planejamento Anticíclico",
+        "Inteligência de Oportunidades"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "gest-o-de-crises-especializadas",
+      "numero": 65,
+      "categoria": "Gestão de Crises Especializadas",
+      "funcoes": [
+        "Crise Financeira",
+        "Crise de Caixa",
+        "Crise de Crédito",
+        "Crise de Endividamento",
+        "Crise de Inadimplência",
+        "Crise Comercial",
+        "Crise de Demanda",
+        "Crise de Precificação",
+        "Crise de Margem",
+        "Crise de Concorrência",
+        "Crise Reputacional",
+        "Crise de Imagem",
+        "Crise de Redes Sociais",
+        "Crise Jurídica",
+        "Crise Trabalhista",
+        "Crise Tributária",
+        "Crise Regulatória",
+        "Crise Ambiental",
+        "Crise Climática",
+        "Crise Energética",
+        "Crise de Fornecimento",
+        "Crise Logística",
+        "Crise Operacional",
+        "Crise Tecnológica",
+        "Crise Cibernética",
+        "Crise de Dados",
+        "Crise de Liderança",
+        "Crise Societária",
+        "Crise de Governança",
+        "Crise de Recursos Humanos",
+        "Crise de Segurança",
+        "Crise de Acidentes",
+        "Crise de Qualidade",
+        "Crise de Produtos",
+        "Crise de Atendimento",
+        "Crise de Terceirizados",
+        "Crise de Franquias",
+        "Crise Internacional",
+        "Crise Geopolítica",
+        "Crise Sanitária",
+        "Crise de Continuidade Empresarial"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "gest-o-de-conhecimento-e-intelig-ncia-organizacional",
+      "numero": 66,
+      "categoria": "Gestão de Conhecimento e Inteligência Organizacional",
+      "funcoes": [
+        "Gestão do Conhecimento",
+        "Gestão da Informação",
+        "Biblioteca Empresarial",
+        "Biblioteca Técnica",
+        "Biblioteca Jurídica",
+        "Biblioteca Financeira",
+        "Biblioteca Comercial",
+        "Gestão de Procedimentos",
+        "Gestão de Políticas Corporativas",
+        "Gestão de Documentos",
+        "Gestão de Lições Aprendidas",
+        "Gestão de Boas Práticas",
+        "Gestão de Estudos de Caso",
+        "Gestão de Pesquisas",
+        "Gestão de Referências Técnicas",
+        "Curadoria de Conhecimento",
+        "Curadoria de Conteúdo",
+        "Monitoramento Científico",
+        "Monitoramento Tecnológico",
+        "Inteligência de Aprendizagem",
+        "Base de Conhecimento Corporativa",
+        "Wikis Internas",
+        "Gestão de Memória Institucional",
+        "Gestão de Documentação de Sistemas",
+        "Gestão de Documentação de Processos",
+        "Gestão de Documentação de Engenharia"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "gest-o-de-projetos-e-escrit-rio-de-projetos",
+      "numero": 67,
+      "categoria": "Gestão de Projetos e Escritório de Projetos",
+      "funcoes": [
+        "PMO",
+        "Escritório de Projetos",
+        "Gestão de Projetos Estratégicos",
+        "Gestão de Projetos Comerciais",
+        "Gestão de Projetos Financeiros",
+        "Gestão de Projetos Tecnológicos",
+        "Gestão de Projetos de Engenharia",
+        "Gestão de Projetos de Instalação",
+        "Gestão de Projetos de Usinas",
+        "Gestão de Projetos de Franquias",
+        "Gestão de Projetos de Expansão",
+        "Gestão de Cronogramas",
+        "Gestão de Escopo",
+        "Gestão de Custos",
+        "Gestão de Prazos",
+        "Gestão de Riscos de Projetos",
+        "Gestão de Recursos",
+        "Gestão de Entregáveis",
+        "Gestão de Dependências",
+        "Gestão de Portfólio de Projetos",
+        "Gestão de Programas",
+        "Metodologias Ágeis",
+        "Scrum",
+        "Kanban",
+        "Gestão Tradicional de Projetos",
+        "Gestão Híbrida de Projetos",
+        "Escritório de Transformação",
+        "Escritório de Estratégia",
+        "Gestão de Benefícios de Projetos"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "auditoria-e-fiscaliza-o-de-terceiros",
+      "numero": 68,
+      "categoria": "Auditoria e Fiscalização de Terceiros",
+      "funcoes": [
+        "Gestão de Terceirização",
+        "Homologação de Terceirizados",
+        "Avaliação Técnica de Terceirizados",
+        "Avaliação Financeira de Terceirizados",
+        "Auditoria de Prestadores",
+        "Auditoria de Instaladores",
+        "Auditoria de Eletricistas",
+        "Auditoria de Técnicos HVAC",
+        "Auditoria de Manutenção",
+        "Auditoria de Geradores",
+        "Auditoria de Empresas de Limpeza",
+        "Auditoria de Engenharia",
+        "Fiscalização de Contratos Terceirizados",
+        "Fiscalização de Segurança Terceirizada",
+        "Fiscalização de Qualidade Terceirizada",
+        "Gestão de SLA de Terceiros",
+        "Gestão de Documentação Trabalhista",
+        "Gestão de Seguros de Terceirizados",
+        "Gestão de Responsabilidades Técnicas",
+        "Gestão de Penalidades Contratuais",
+        "Gestão de Substituição de Fornecedores",
+        "Gestão de Continuidade de Parceiros",
+        "Gestão de Redes Técnicas Credenciadas"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "rela-es-com-fabricantes-e-distribuidores",
+      "numero": 69,
+      "categoria": "Relações com Fabricantes e Distribuidores",
+      "funcoes": [
+        "Gestão de Fabricantes",
+        "Gestão de Distribuidores Fotovoltaicos",
+        "Gestão de Fabricantes de Módulos",
+        "Gestão de Fabricantes de Inversores",
+        "Gestão de Fabricantes de Baterias",
+        "Gestão de Fabricantes de Estruturas",
+        "Gestão de Fabricantes de Equipamentos Elétricos",
+        "Gestão de Fabricantes de Ar-Condicionado",
+        "Gestão de Fabricantes de Refrigeração",
+        "Gestão de Fabricantes de Geradores",
+        "Gestão de Assistências Autorizadas",
+        "Gestão de Garantias de Fabricantes",
+        "Gestão de RMA",
+        "Gestão de Credenciamentos Técnicos",
+        "Gestão de Treinamentos de Fabricantes",
+        "Negociação de Condições Comerciais",
+        "Negociação de Garantias",
+        "Gestão de Fornecimento Exclusivo",
+        "Gestão de Distribuição Regional",
+        "Gestão de Revendas Autorizadas",
+        "Gestão de Parcerias de Marca"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "gest-o-de-inova-o-comercial-e-novas-receitas",
+      "numero": 70,
+      "categoria": "Gestão de Inovação Comercial e Novas Receitas",
+      "funcoes": [
+        "Desenvolvimento de Novas Fontes de Receita",
+        "Expansão de Serviços",
+        "Diversificação de Produtos",
+        "Diversificação de Mercados",
+        "Modelos de Assinatura",
+        "Modelos de Locação",
+        "Modelos de Financiamento",
+        "Modelos de Franquia",
+        "Modelos de Licenciamento",
+        "Modelos de Receita Compartilhada",
+        "Modelos de Comissão",
+        "Modelos de Marketplace",
+        "Modelos de Parcerias",
+        "Modelos de Venda Cruzada",
+        "Modelos de Contratos Recorrentes",
+        "Modelos de Energia por Assinatura",
+        "Modelos de Serviços Energéticos",
+        "Energy as a Service",
+        "Solar as a Service",
+        "Cooling as a Service",
+        "Equipment as a Service",
+        "Manutenção como Serviço",
+        "Monitoramento como Serviço",
+        "Gestão de Receitas de Franquias",
+        "Gestão de Receitas de Royalties",
+        "Gestão de Receitas de Energia",
+        "Gestão de Receitas de Consultoria",
+        "Gestão de Receitas de Educação",
+        "Gestão de Receitas Digitais"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "protocolo-representa-o-e-gest-o-institucional",
+      "numero": 71,
+      "categoria": "Protocolo, Representação e Gestão Institucional",
+      "funcoes": [
+        "Representação Empresarial",
+        "Representação Institucional",
+        "Relações Corporativas",
+        "Relações Diplomáticas Empresariais",
+        "Cerimonial Empresarial",
+        "Protocolo Executivo",
+        "Gestão de Agenda Executiva",
+        "Gestão de Reuniões",
+        "Gestão de Assembleias",
+        "Gestão de Conselhos",
+        "Gestão de Comitês",
+        "Gestão de Atas",
+        "Gestão de Decisões",
+        "Gestão de Deliberações",
+        "Gestão de Procurações",
+        "Gestão de Representantes Legais",
+        "Gestão de Comunicações Oficiais",
+        "Gestão de Documentação Societária",
+        "Gestão de Relações entre Sócios",
+        "Gestão de Participação em Entidades Empresariais"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    },
+    {
+      "id": "continuidade-sucess-o-e-longevidade-empresarial",
+      "numero": 72,
+      "categoria": "Continuidade, Sucessão e Longevidade Empresarial",
+      "funcoes": [
+        "Planejamento de Continuidade",
+        "Planejamento de Sucessão",
+        "Sucessão de Lideranças",
+        "Sucessão Societária",
+        "Sucessão Familiar Empresarial",
+        "Gestão de Dependência de Pessoas-Chave",
+        "Gestão de Dependência de Fornecedores",
+        "Gestão de Dependência Tecnológica",
+        "Gestão de Dependência Financeira",
+        "Gestão de Reserva de Emergência",
+        "Gestão de Planos Alternativos",
+        "Planejamento de Recuperação Operacional",
+        "Planejamento de Recuperação Financeira",
+        "Planejamento de Recuperação Tecnológica",
+        "Reestruturação de Empresas",
+        "Recuperação Empresarial",
+        "Gestão de Empresas em Dificuldade",
+        "Gestão de Reorganização Societária",
+        "Gestão de Venda de Empresas",
+        "Gestão de Encerramento de Unidades",
+        "Gestão de Desinvestimentos",
+        "Gestão de Descontinuação de Produtos",
+        "Gestão de Descontinuação de Serviços",
+        "Preservação de Conhecimento Crítico",
+        "Planejamento de Sustentabilidade de Longo Prazo"
+      ],
+      "protocolo": {
+        "entrada": [
+          "pedido ou evento",
+          "contexto e evidência",
+          "dono e prazo"
+        ],
+        "saida": [
+          "registro estruturado",
+          "próxima ação",
+          "evidência e status"
+        ],
+        "gates": [
+          "sem segredo em texto/log",
+          "revisão independente quando houver risco",
+          "escalar decisão jurídica, financeira, técnica ou de segurança"
+        ],
+        "nao_fazer": [
+          "não afirmar integração sem recibo",
+          "não substituir profissional habilitado",
+          "não executar ação irreversível sem aprovação"
+        ]
+      }
+    }
+  ]
+}
