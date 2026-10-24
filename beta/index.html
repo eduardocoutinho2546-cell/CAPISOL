@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CAPISOL · Versão demonstrável</title>
+  <style>
+    :root{--bg:#07130f;--panel:#10251c;--line:#29543e;--text:#effaf2;--muted:#a9c4b1;--accent:#86e27f;--warn:#ffd166}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#1b4a2d 0,#07130f 42%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+    main{max-width:1100px;margin:auto;padding:48px 20px 70px}header{max-width:780px;margin-bottom:30px}h1{font-size:clamp(32px,6vw,64px);line-height:1;margin:0 0 16px}h2{margin-top:34px}.eyebrow{color:var(--accent);font-weight:700;letter-spacing:.08em;text-transform:uppercase}.lead{font-size:20px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.card{background:rgba(16,37,28,.88);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 14px 40px #0003}.card h3{margin:0 0 8px}.card p{color:var(--muted);min-height:48px}.button{display:inline-block;color:#061008;background:var(--accent);font-weight:800;text-decoration:none;padding:10px 14px;border-radius:10px}.button.alt{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+    .status{display:flex;gap:10px;align-items:center;color:var(--muted);margin:8px 0}.dot{width:10px;height:10px;border-radius:50%;background:var(--warn)}.ok{background:var(--accent)}.notice{border-left:4px solid var(--warn);padding:14px 18px;background:#3b3218;color:#fff4c5;border-radius:8px}.small{font-size:13px;color:var(--muted)}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">CAPISOL · Energia Solar</div>
+    <h1>Versão demonstrável consolidada</h1>
+    <p class="lead">Central de teste da operação comercial, inteligência, metas, biblioteca, tokens, minerador e gateway multicanal.</p>
+  </header>
+  <div class="notice"><strong>Estado:</strong> os módulos abaixo estão disponíveis para teste. Publicações e mensagens reais permanecem protegidas até os canais API serem autorizados.</div>
+  <h2>Módulos</h2>
+  <section class="grid">
+    <article class="card"><h3>Central CAPISOL</h3><p>Painel principal da gestão e catálogo de agentes.</p><a class="button" href="../">Abrir central</a></article>
+    <article class="card"><h3>Plano comercial Acre</h3><p>Metas, indicadores, território e execução comercial.</p><a class="button" href="../plano-acre/">Abrir plano</a></article>
+    <article class="card"><h3>Biblioteca operacional</h3><p>Capacidades, funções, entradas, saídas e gates.</p><a class="button" href="../biblioteca/">Abrir biblioteca</a></article>
+    <article class="card"><h3>Minerador de oportunidades</h3><p>Fila de oportunidades e aprovação de integração.</p><a class="button" href="../inteligencia/minerador.html">Abrir minerador</a></article>
+    <article class="card"><h3>Tokens delegados</h3><p>Demo de emissão, limite, validade e revogação.</p><a class="button" href="../acesso/">Abrir tokens</a></article>
+    <article class="card"><h3>Gateway multicanal</h3><p>Fila server-side com modo demo, idempotência e adapters.</p><a class="button alt" href="https://8787-iaozm4vz4c423qbq8z2cl-c1e7709c.us5.manus.computer/health">Verificar gateway</a></article>
+  </section>
+  <h2>Canais públicos</h2>
+  <section class="grid">
+    <article class="card"><h3>TikTok</h3><div class="status"><span class="dot"></span>Perfil público; API não conectada</div><a class="button alt" href="https://www.tiktok.com/@capisol4">Abrir perfil</a></article>
+    <article class="card"><h3>WhatsApp</h3><div class="status"><span class="dot"></span>Click-to-chat; API não conectada</div><a class="button alt" href="https://wa.me/556892490347">Conversar</a></article>
+    <article class="card"><h3>Instagram</h3><div class="status"><span class="dot ok"></span>Conector autorizado; adapter aguarda ambiente live</div><a class="button alt" href="https://www.instagram.com/capisol_ac/">Abrir perfil</a></article>
+  </section>
+  <p class="small" style="margin-top:32px">Versão demonstrável: 2026-10-24 · Não inserir tokens ou senhas nesta página.</p>
+</main>
+</body>
+</html>
