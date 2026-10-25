@@ -241,7 +241,7 @@ function renderAccess(){
   <button id="grant-scope" class="primary">Configurar permissão</button>
   ${table(['Membro','Permissão','Situação'],(data.grants||[]).map(g=>[esc(memberName(g.user_id)),esc(g.scope),g.active?'Ativa':'Revogada']))}</section>`);
   $('grant-scope').onclick=()=>showForm('Acesso específico',[
-    ['user_id','Membro da empresa','member'],['scope','Permissão (ex.: rural.read, rural.write, media.read, media.write, crm.read)','text'],
+    ['user_id','Membro da empresa','member'],['scope','Permissão: rural.read, rural.write, media.read, media.write','text'],
     ['state','Digite ATIVAR ou REVOGAR','text']
   ],{},async v=>{
     if(!['ATIVAR','REVOGAR'].includes(v.state))throw Error('Digite ATIVAR ou REVOGAR.');
