@@ -1,11 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { unlink } from 'node:fs/promises';
 import { integrationStatus, executeJob } from '../src/adapters.mjs';
 import { enqueue, listQueue } from '../src/queue.mjs';
 
 process.env.GATEWAY_MODE = 'demo';
 process.env.ALLOW_LIVE_PUBLISH = 'false';
 process.env.GATEWAY_QUEUE_FILE = '/tmp/capisol-gateway-test-queue.json';
+await unlink(process.env.GATEWAY_QUEUE_FILE).catch(() => {});
 
  test('status reports demo mode and unconfigured channels safely', () => {
   const status = integrationStatus();

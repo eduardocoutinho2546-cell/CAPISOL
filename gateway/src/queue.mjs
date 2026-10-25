@@ -1,11 +1,13 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 
-const queuePath = resolve(process.env.GATEWAY_QUEUE_FILE || './data/gateway-queue.json');
+function queuePath() {
+  return resolve(process.env.GATEWAY_QUEUE_FILE || './data/gateway-queue.json');
+}
 
 async function load() {
   try {
-    return JSON.parse(await readFile(queuePath, 'utf8'));
+    return JSON.parse(await readFile(queuePath(), 'utf8'));
   } catch (error) {
     if (error.code === 'ENOENT') return [];
     throw error;
@@ -13,10 +15,11 @@ async function load() {
 }
 
 async function save(items) {
-  await mkdir(dirname(queuePath), { recursive: true });
-  const temporary = `${queuePath}.tmp`;
+  const path = queuePath();
+  await mkdir(dirname(path), { recursive: true });
+  const temporary = `${path}.tmp`;
   await writeFile(temporary, JSON.stringify(items, null, 2), { mode: 0o600 });
-  await rename(temporary, queuePath);
+  await rename(temporary, path);
 }
 
 export function redact(value) {

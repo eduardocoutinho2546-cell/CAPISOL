@@ -2,13 +2,14 @@ import http from 'node:http';
 import crypto from 'node:crypto';
 import { enqueue, listQueue, publicItem, update } from './queue.mjs';
 import { executeJob, integrationStatus } from './adapters.mjs';
+import { evaluateLead, messageWithOptOut } from '../../outreach/policy.mjs';
 
 const port = Number(process.env.GATEWAY_PORT || 8787);
 const mode = process.env.GATEWAY_MODE || 'demo';
 const adminToken = process.env.GATEWAY_ADMIN_TOKEN || '';
 
 function json(response, status, body) {
-  response.writeHead(status, {'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store'});
+  response.writeHead(status, {'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'access-control-allow-origin': process.env.GATEWAY_CORS_ORIGIN || '*', 'access-control-allow-headers': 'content-type, authorization, idempotency-key'});
   response.end(JSON.stringify(body));
 }
 
@@ -32,10 +33,32 @@ function idempotency(request, payload) {
 
 async function route(request, response) {
   const url = new URL(request.url, `http://${request.headers.host || 'localhost'}`);
+  if (request.method === 'OPTIONS') return json(response, 204, {});
   if (request.method === 'GET' && url.pathname === '/health') return json(response, 200, {ok: true, service: 'capisol-gateway', mode});
   if (request.method === 'GET' && url.pathname === '/v1/integrations/status') return json(response, 200, integrationStatus());
   if (!authorized(request)) return json(response, 401, {error: 'unauthorized'});
   if (request.method === 'GET' && url.pathname === '/v1/queue') return json(response, 200, (await listQueue()).map(publicItem));
+
+  if (request.method === 'POST' && url.pathname === '/v1/outreach/evaluate') {
+    const payload = await body(request);
+    return json(response, 200, evaluateLead(payload.lead || payload, payload.context || {}));
+  }
+
+  if (request.method === 'POST' && url.pathname === '/v1/outreach/queue') {
+    const payload = await body(request);
+    const decision = evaluateLead(payload.lead || {}, payload.context || {});
+    if (!decision.eligible) return json(response, 422, {status: 'blocked', decision});
+    const text = messageWithOptOut(payload.text);
+    const job = {
+      id: idempotency(request, payload),
+      provider: 'whatsapp',
+      payload: {contactId: payload.contactId, text, phone: decision.normalizedPhone},
+      approvedAt: payload.approvedAt || null,
+      outreachDecision: decision,
+    };
+    const result = await enqueue(job);
+    return json(response, result.duplicate ? 200 : 202, publicItem(result.item));
+  }
 
   if (request.method === 'POST' && url.pathname === '/v1/queue') {
     const payload = await body(request);
