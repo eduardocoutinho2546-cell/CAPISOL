@@ -1,0 +1,44 @@
+-- Integration regression: every fixture is rolled back; no real account or document is changed.
+begin;
+select set_config('test.admin',gen_random_uuid()::text,true),set_config('test.operator',gen_random_uuid()::text,true),set_config('test.stranger',gen_random_uuid()::text,true),set_config('test.workspace',gen_random_uuid()::text,true),set_config('test.other',gen_random_uuid()::text,true);
+insert into auth.users(id,email) values(current_setting('test.admin')::uuid,'test-admin@capisol.invalid'),(current_setting('test.operator')::uuid,'test-operator@capisol.invalid'),(current_setting('test.stranger')::uuid,'test-stranger@capisol.invalid');
+insert into public.capisol_workspaces(id,name) values(current_setting('test.workspace')::uuid,'TEST rollback'),(current_setting('test.other')::uuid,'OTHER rollback');
+insert into public.capisol_workspace_members(workspace_id,user_id,role) values(current_setting('test.workspace')::uuid,current_setting('test.admin')::uuid,'admin'),(current_setting('test.workspace')::uuid,current_setting('test.operator')::uuid,'operator');
+insert into public.capisol_tasks(workspace_id,sector,title,assignee_id,created_by) values(current_setting('test.workspace')::uuid,1,'Own task',current_setting('test.operator')::uuid,current_setting('test.admin')::uuid),(current_setting('test.workspace')::uuid,1,'Other task',current_setting('test.admin')::uuid,current_setting('test.admin')::uuid);
+select set_config('request.jwt.claims',json_build_object('sub',current_setting('test.operator'),'role','authenticated')::text,true);
+set local role authenticated;
+do $$ declare blocked boolean; begin
+ assert (select count(*) from public.capisol_tasks where workspace_id=current_setting('test.workspace')::uuid)=1,'operator sees another task';
+ assert (select count(*) from public.capisol_workspaces where id=current_setting('test.other')::uuid)=0,'tenant leak';
+ blocked=false;begin insert into public.capisol_proposals(workspace_id,customer,price,estimated_cost,valid_until) values(current_setting('test.workspace')::uuid,'Forbidden',10,5,current_date);exception when insufficient_privilege then blocked=true;end;assert blocked,'operator wrote financial data';
+ blocked=false;begin insert into public.capisol_tasks(workspace_id,sector,title,assignee_id) values(current_setting('test.other')::uuid,1,'Cross tenant',null);exception when insufficient_privilege then blocked=true;end;assert blocked,'cross tenant write';
+ blocked=false;begin update public.capisol_tasks set status='done' where title='Own task';exception when check_violation then blocked=true;end;assert blocked,'completed without evidence';
+ blocked=false;begin update public.capisol_office_audit set action='FORGED';exception when insufficient_privilege then blocked=true;end;assert blocked,'audit mutable';
+end $$;
+reset role;
+select set_config('request.jwt.claims',json_build_object('sub',current_setting('test.admin'),'role','authenticated')::text,true);
+set local role authenticated;
+do $$ declare blocked boolean; begin
+ assert (select count(*) from public.capisol_tasks where workspace_id=current_setting('test.workspace')::uuid)=2,'admin cannot see tasks';
+ insert into public.capisol_proposals(workspace_id,customer,price,estimated_cost,valid_until) values(current_setting('test.workspace')::uuid,'Allowed',100,50,current_date);
+ blocked=false;begin insert into public.capisol_fiscal_documents(workspace_id,customer,description,amount,status) values(current_setting('test.workspace')::uuid,'Test','Service',100,'authorized');exception when raise_exception then blocked=true;end;assert blocked,'client forged fiscal authorization';
+ blocked=false;begin insert into public.capisol_bank_connections(workspace_id,provider_item_id,status) values(current_setting('test.workspace')::uuid,'fake','connected');exception when insufficient_privilege then blocked=true;end;assert blocked,'client forged bank link';
+ assert not has_table_privilege('authenticated','public.capisol_cotacoes_ia','TRUNCATE'),'truncate quote permission remains';
+ insert into public.capisol_tasks(workspace_id,sector,title,assignee_id,status,objective,due_date) select current_setting('test.workspace')::uuid,1,'Active priority '||i,current_setting('test.admin')::uuid,'active','Evidence based review',current_date from generate_series(1,3) i;
+ blocked=false;begin insert into public.capisol_tasks(workspace_id,sector,title,assignee_id,status,objective,due_date) values(current_setting('test.workspace')::uuid,1,'Fourth priority',current_setting('test.admin')::uuid,'active','Evidence based review',current_date);exception when raise_exception then blocked=true;end;assert blocked,'fourth active priority allowed';
+ perform public.capisol_office_revoke_member(current_setting('test.workspace')::uuid,current_setting('test.operator')::uuid);
+end $$;
+reset role;
+select set_config('request.jwt.claims',json_build_object('sub',current_setting('test.operator'),'role','authenticated')::text,true);
+set local role authenticated;
+do $$ begin assert public.capisol_workspace_role(current_setting('test.workspace')::uuid) is null,'revoked role active';assert (select count(*) from public.capisol_tasks)=0,'revoked operator still reads tasks';end $$;
+reset role;
+select set_config('request.jwt.claims',json_build_object('sub',current_setting('test.stranger'),'role','authenticated')::text,true);
+set local role authenticated;
+do $$ begin assert (select count(*) from public.capisol_workspaces)=0,'unauthorized sees workspace';assert (select count(*) from public.capisol_proposals)=0,'unauthorized sees finance';end $$;
+reset role;
+set local role anon;
+do $$ declare blocked boolean=false;begin begin perform * from public.capisol_workspaces;exception when insufficient_privilege then blocked=true;end;assert blocked,'anonymous workspace access';end $$;
+reset role;
+rollback;
+select 'PASS: tenant isolation, own tasks, finance restrictions, fiscal forgery, bank forgery, immutable audit, quote permissions, anonymous denial; fixtures rolled back' as result;

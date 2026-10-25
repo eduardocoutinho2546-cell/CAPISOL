@@ -26,9 +26,25 @@ jobs:
         run: node tools/audit-capisol.mjs
       - name: Auditar runtime, peso, backup e biblioteca
         run: node tools/audit-production.mjs
+      - name: Testar fila, setores e cálculos
+        run: node --test gateway/test/*.test.mjs saas/test/*.test.mjs
       - name: Procurar segredos proibidos
         run: |
           if grep -RInE 'service_role=[^[:space:]]|sk-[A-Za-z0-9]{20,}|WHATSAPP_TOKEN=[^[:space:]]|client_secret=[^[:space:]]' --exclude-dir=.git --exclude='*.md' --exclude='auditar-capisol.yml' .; then
             echo 'Segredo ou token encontrado no código versionado.'
             exit 1
           fi
+
+  interface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preparar teste visual
+        run: npm install --no-save --package-lock=false playwright@1.51.1
+      - name: Instalar navegador de teste
+        run: npx playwright install --with-deps chromium
+      - name: Testar fluxos do escritório
+        run: node tools/test-office-ui.mjs

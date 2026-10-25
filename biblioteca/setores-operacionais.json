@@ -1,0 +1,1876 @@
+{
+  "version": 1,
+  "sectors": [
+    {
+      "sector": 1,
+      "id": "governan-a-e-alta-administra-o",
+      "name": "Governança e Alta Administração",
+      "routine": "Decisões e alçadas",
+      "inputs": [
+        "atas",
+        "alçadas",
+        "metas"
+      ],
+      "steps": [
+        "Conferir responsável e aprovação",
+        "priorizar até três decisões",
+        "registrar divergências"
+      ],
+      "metric": "Decisões com dono e prazo",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 2,
+      "id": "gest-o-empresarial-e-estrat-gia",
+      "name": "Gestão Empresarial e Estratégia",
+      "routine": "Plano estratégico",
+      "inputs": [
+        "metas",
+        "receita",
+        "capacidade"
+      ],
+      "steps": [
+        "Comparar metas e capacidade",
+        "separar hipótese de fato",
+        "propor experimento reversível"
+      ],
+      "metric": "Metas atingidas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 3,
+      "id": "administra-o-e-servi-os-corporativos",
+      "name": "Administração e Serviços Corporativos",
+      "routine": "Rotinas administrativas",
+      "inputs": [
+        "solicitações",
+        "prazos",
+        "documentos"
+      ],
+      "steps": [
+        "Classificar demandas",
+        "conferir documentos",
+        "organizar responsáveis e vencimentos"
+      ],
+      "metric": "Demandas no prazo",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 4,
+      "id": "financeiro-e-controladoria",
+      "name": "Financeiro e Controladoria",
+      "routine": "Caixa e margem",
+      "inputs": [
+        "recebimentos",
+        "custos",
+        "extratos"
+      ],
+      "steps": [
+        "Conferir somas",
+        "separar previsto de realizado",
+        "apontar saldo e divergências"
+      ],
+      "metric": "Margem de contribuição",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 5,
+      "id": "contabilidade-e-tributa-o",
+      "name": "Contabilidade e Tributação",
+      "routine": "Pré-fechamento contábil",
+      "inputs": [
+        "notas",
+        "extratos",
+        "regime tributário"
+      ],
+      "steps": [
+        "Conferir documentos faltantes",
+        "cruzar competência e valores",
+        "encaminhar ao contador"
+      ],
+      "metric": "Documentos conciliados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 6,
+      "id": "investimentos-e-mercado-de-capitais",
+      "name": "Investimentos e Mercado de Capitais",
+      "routine": "Cenários de investimento",
+      "inputs": [
+        "política de investimentos",
+        "fluxo de caixa",
+        "riscos"
+      ],
+      "steps": [
+        "Identificar premissas",
+        "comparar cenários de liquidez",
+        "preparar análise para responsável"
+      ],
+      "metric": "Exposição e liquidez",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 7,
+      "id": "jur-dico",
+      "name": "Jurídico",
+      "routine": "Revisão documental jurídica",
+      "inputs": [
+        "contrato",
+        "partes",
+        "prazos"
+      ],
+      "steps": [
+        "Identificar obrigações",
+        "apontar cláusulas ausentes",
+        "encaminhar ao advogado"
+      ],
+      "metric": "Pendências contratuais",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 8,
+      "id": "compliance-auditoria-e-integridade",
+      "name": "Compliance, Auditoria e Integridade",
+      "routine": "Auditoria de integridade",
+      "inputs": [
+        "políticas",
+        "evidências",
+        "autorizações"
+      ],
+      "steps": [
+        "Amostrar registros",
+        "identificar conflito de interesse",
+        "registrar achados e evidências"
+      ],
+      "metric": "Achados resolvidos",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 9,
+      "id": "gest-o-de-riscos-e-crises",
+      "name": "Gestão de Riscos e Crises",
+      "routine": "Mapa de riscos",
+      "inputs": [
+        "incidentes",
+        "impactos",
+        "controles"
+      ],
+      "steps": [
+        "Classificar probabilidade e impacto",
+        "conferir contingências",
+        "atribuir dono"
+      ],
+      "metric": "Riscos sem controle",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 10,
+      "id": "recursos-humanos-e-gest-o-de-pessoas",
+      "name": "Recursos Humanos e Gestão de Pessoas",
+      "routine": "Capacidade da equipe",
+      "inputs": [
+        "pessoas",
+        "competências",
+        "escalas"
+      ],
+      "steps": [
+        "Verificar lacunas e carga",
+        "conferir documentação",
+        "propor treinamento"
+      ],
+      "metric": "Cobertura de competências",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 11,
+      "id": "psicologia-sa-de-e-bem-estar",
+      "name": "Psicologia, Saúde e Bem-Estar",
+      "routine": "Acolhimento e bem-estar",
+      "inputs": [
+        "demanda voluntária",
+        "recursos de apoio"
+      ],
+      "steps": [
+        "Preservar privacidade",
+        "oferecer informação geral",
+        "encaminhar a profissional habilitado"
+      ],
+      "metric": "Ações de apoio concluídas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 12,
+      "id": "comercial-e-vendas",
+      "name": "Comercial e Vendas",
+      "routine": "Conversão comercial",
+      "inputs": [
+        "leads",
+        "propostas",
+        "motivos de perda"
+      ],
+      "steps": [
+        "Revisar dados do cliente",
+        "identificar gargalo",
+        "preparar próxima ação autorizada"
+      ],
+      "metric": "Conversão por etapa",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 13,
+      "id": "crm-e-relacionamento-com-clientes",
+      "name": "CRM e Relacionamento com Clientes",
+      "routine": "Qualidade do CRM",
+      "inputs": [
+        "clientes",
+        "origens",
+        "consentimentos"
+      ],
+      "steps": [
+        "Detectar duplicados",
+        "conferir campos e consentimento",
+        "atribuir próxima ação"
+      ],
+      "metric": "Cadastros completos",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 14,
+      "id": "marketing-estrat-gico",
+      "name": "Marketing Estratégico",
+      "routine": "Plano de marketing",
+      "inputs": [
+        "público",
+        "oferta",
+        "resultados"
+      ],
+      "steps": [
+        "Definir hipótese",
+        "comparar canais",
+        "propor teste com métrica"
+      ],
+      "metric": "Leads qualificados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 15,
+      "id": "branding-e-identidade",
+      "name": "Branding e Identidade",
+      "routine": "Consistência da marca",
+      "inputs": [
+        "logos",
+        "textos",
+        "canais oficiais"
+      ],
+      "steps": [
+        "Conferir nome e contatos",
+        "revisar tom",
+        "verificar aplicação visual"
+      ],
+      "metric": "Peças conformes",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 16,
+      "id": "publicidade-tr-fego-e-aquisi-o",
+      "name": "Publicidade, Tráfego e Aquisição",
+      "routine": "Análise de campanhas",
+      "inputs": [
+        "investimento",
+        "conversões",
+        "período"
+      ],
+      "steps": [
+        "Conferir atribuição",
+        "calcular custo por lead",
+        "propor ajuste para aprovação"
+      ],
+      "metric": "Custo por aquisição",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 17,
+      "id": "redes-sociais-e-comunidades",
+      "name": "Redes Sociais e Comunidades",
+      "routine": "Calendário social",
+      "inputs": [
+        "canais",
+        "conteúdo",
+        "aprovações"
+      ],
+      "steps": [
+        "Revisar público e formato",
+        "organizar calendário",
+        "preparar rascunhos"
+      ],
+      "metric": "Engajamento por alcance",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 18,
+      "id": "comunica-o-jornalismo-e-imprensa",
+      "name": "Comunicação, Jornalismo e Imprensa",
+      "routine": "Pautas e imprensa",
+      "inputs": [
+        "fontes",
+        "entrevistas",
+        "autorização"
+      ],
+      "steps": [
+        "Verificar fatos e datas",
+        "separar opinião",
+        "preparar pauta revisável"
+      ],
+      "metric": "Pautas com fonte",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 19,
+      "id": "produ-o-de-conte-do-e-audiovisual",
+      "name": "Produção de Conteúdo e Audiovisual",
+      "routine": "Produção audiovisual",
+      "inputs": [
+        "briefing",
+        "roteiro",
+        "direitos de uso"
+      ],
+      "steps": [
+        "Conferir roteiro e autorização de imagem",
+        "adaptar formato",
+        "preparar revisão"
+      ],
+      "metric": "Peças aprovadas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 20,
+      "id": "intelig-ncia-de-mercado-e-concorr-ncia",
+      "name": "Inteligência de Mercado e Concorrência",
+      "routine": "Inteligência competitiva",
+      "inputs": [
+        "fontes públicas",
+        "preços",
+        "escopo"
+      ],
+      "steps": [
+        "Registrar fonte e data",
+        "normalizar comparações",
+        "apontar diferenças de escopo"
+      ],
+      "metric": "Comparações verificáveis",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 21,
+      "id": "parcerias-e-desenvolvimento-de-neg-cios",
+      "name": "Parcerias e Desenvolvimento de Negócios",
+      "routine": "Avaliação de parcerias",
+      "inputs": [
+        "parceiros",
+        "escopo",
+        "contrapartidas"
+      ],
+      "steps": [
+        "Conferir capacidade",
+        "identificar riscos",
+        "preparar proposta para direção"
+      ],
+      "metric": "Parcerias qualificadas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 22,
+      "id": "cons-rcios-seguros-e-cr-dito",
+      "name": "Consórcios, Seguros e Crédito",
+      "routine": "Triagem de crédito e seguros",
+      "inputs": [
+        "demanda",
+        "consentimento",
+        "parceiro habilitado"
+      ],
+      "steps": [
+        "Conferir autorização",
+        "organizar documentos",
+        "encaminhar simulação ao parceiro"
+      ],
+      "metric": "Dossiês completos",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 23,
+      "id": "engenharia-solar-fotovoltaica",
+      "name": "Engenharia Solar Fotovoltaica",
+      "routine": "Pré-análise fotovoltaica",
+      "inputs": [
+        "consumo",
+        "telhado",
+        "localização"
+      ],
+      "steps": [
+        "Conferir kWh e kWp",
+        "identificar dados ausentes",
+        "encaminhar dimensionamento ao engenheiro"
+      ],
+      "metric": "Projetos com dados completos",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 24,
+      "id": "engenharias-e-especialidades-t-cnicas",
+      "name": "Engenharias e Especialidades Técnicas",
+      "routine": "Revisão de engenharia",
+      "inputs": [
+        "projeto",
+        "normas",
+        "responsável técnico"
+      ],
+      "steps": [
+        "Conferir versão e responsabilidade",
+        "listar incompatibilidades",
+        "requerer validação técnica"
+      ],
+      "metric": "Revisões encerradas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 25,
+      "id": "instala-o-e-integra-o-fotovoltaica",
+      "name": "Instalação e Integração Fotovoltaica",
+      "routine": "Checklist de instalação",
+      "inputs": [
+        "projeto",
+        "materiais",
+        "equipe"
+      ],
+      "steps": [
+        "Conferir materiais e segurança",
+        "registrar etapas",
+        "anexar evidência e aceite"
+      ],
+      "metric": "Instalações sem retrabalho",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 26,
+      "id": "manuten-o-de-sistemas-fotovoltaicos",
+      "name": "Manutenção de Sistemas Fotovoltaicos",
+      "routine": "Plano de manutenção",
+      "inputs": [
+        "histórico",
+        "alarmes",
+        "ordens de serviço"
+      ],
+      "steps": [
+        "Triar sintomas",
+        "planejar inspeção habilitada",
+        "registrar solução e evidências"
+      ],
+      "metric": "Tempo de atendimento",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 27,
+      "id": "limpeza-e-conserva-o-fotovoltaica",
+      "name": "Limpeza e Conservação Fotovoltaica",
+      "routine": "Plano de limpeza",
+      "inputs": [
+        "sistema",
+        "acesso",
+        "condições de segurança"
+      ],
+      "steps": [
+        "Conferir acesso e riscos",
+        "programar equipe habilitada",
+        "registrar antes e depois"
+      ],
+      "metric": "Serviços concluídos",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 28,
+      "id": "vistorias-inspe-es-e-diagn-sticos",
+      "name": "Vistorias, Inspeções e Diagnósticos",
+      "routine": "Dossiê de inspeção",
+      "inputs": [
+        "checklist",
+        "fotos",
+        "responsável técnico"
+      ],
+      "steps": [
+        "Verificar completude",
+        "classificar achados",
+        "encaminhar laudo ao habilitado"
+      ],
+      "metric": "Achados técnicos tratados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 29,
+      "id": "usinas-e-gera-o-de-energia",
+      "name": "Usinas e Geração de Energia",
+      "routine": "Análise de geração",
+      "inputs": [
+        "medições",
+        "período",
+        "capacidade"
+      ],
+      "steps": [
+        "Conferir unidade e lacunas",
+        "comparar histórico",
+        "investigar desvios"
+      ],
+      "metric": "Disponibilidade e geração",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 30,
+      "id": "comercializa-o-e-mercado-de-energia",
+      "name": "Comercialização e Mercado de Energia",
+      "routine": "Estudo de mercado de energia",
+      "inputs": [
+        "perfil de consumo",
+        "contratos",
+        "regras vigentes"
+      ],
+      "steps": [
+        "Conferir elegibilidade documental",
+        "comparar cenários",
+        "encaminhar proposta especializada"
+      ],
+      "metric": "Estudos validados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 31,
+      "id": "infraestrutura-el-trica-e-servi-os-terceirizados",
+      "name": "Infraestrutura Elétrica e Serviços Terceirizados",
+      "routine": "Coordenação elétrica",
+      "inputs": [
+        "escopo",
+        "parceiros",
+        "ordens"
+      ],
+      "steps": [
+        "Conferir habilitação",
+        "alinhar responsabilidades",
+        "registrar entrega"
+      ],
+      "metric": "Ordens aceitas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 32,
+      "id": "ar-condicionado-climatiza-o-e-refrigera-o",
+      "name": "Ar-Condicionado, Climatização e Refrigeração",
+      "routine": "Serviços de climatização",
+      "inputs": [
+        "equipamento",
+        "sintomas",
+        "local"
+      ],
+      "steps": [
+        "Conferir cadastro",
+        "preparar diagnóstico profissional",
+        "registrar manutenção"
+      ],
+      "metric": "Chamados resolvidos",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 33,
+      "id": "geradores-e-sistemas-de-energia-de-backup",
+      "name": "Geradores e Sistemas de Energia de Backup",
+      "routine": "Sistemas de backup",
+      "inputs": [
+        "carga crítica",
+        "equipamentos",
+        "autonomia"
+      ],
+      "steps": [
+        "Conferir necessidades",
+        "comparar opções",
+        "requerer projeto habilitado"
+      ],
+      "metric": "Testes de disponibilidade",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 34,
+      "id": "compras-e-suprimentos",
+      "name": "Compras e Suprimentos",
+      "routine": "Cotações de suprimentos",
+      "inputs": [
+        "itens",
+        "cotações",
+        "validade"
+      ],
+      "steps": [
+        "Normalizar preço e frete",
+        "conferir prazo",
+        "preparar comparação sem comprar"
+      ],
+      "metric": "Economia comparável",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 35,
+      "id": "log-stica-e-distribui-o",
+      "name": "Logística e Distribuição",
+      "routine": "Roteiro logístico",
+      "inputs": [
+        "entregas",
+        "rotas",
+        "capacidade"
+      ],
+      "steps": [
+        "Consolidar destino e prazo",
+        "identificar restrições",
+        "preparar roteiro"
+      ],
+      "metric": "Entregas no prazo",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 36,
+      "id": "opera-es-e-execu-o",
+      "name": "Operações e Execução",
+      "routine": "Controle de execução",
+      "inputs": [
+        "tarefas",
+        "equipe",
+        "evidências"
+      ],
+      "steps": [
+        "Identificar bloqueios",
+        "ordenar prioridades",
+        "conferir conclusão"
+      ],
+      "metric": "Tarefas no prazo",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 37,
+      "id": "tecnologia-da-informa-o",
+      "name": "Tecnologia da Informação",
+      "routine": "Saúde dos sistemas",
+      "inputs": [
+        "inventário",
+        "logs",
+        "incidentes"
+      ],
+      "steps": [
+        "Conferir disponibilidade",
+        "reproduzir falhas",
+        "preparar correção e reversão"
+      ],
+      "metric": "Incidentes resolvidos",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 38,
+      "id": "intelig-ncia-artificial-e-automa-o",
+      "name": "Inteligência Artificial e Automação",
+      "routine": "Avaliação de agentes",
+      "inputs": [
+        "execuções",
+        "limites",
+        "evidências"
+      ],
+      "steps": [
+        "Verificar permissões",
+        "avaliar respostas",
+        "registrar falhas e testes"
+      ],
+      "metric": "Entregas validadas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 39,
+      "id": "dados-estat-stica-e-business-intelligence",
+      "name": "Dados, Estatística e Business Intelligence",
+      "routine": "Qualidade e análise de dados",
+      "inputs": [
+        "base",
+        "definições",
+        "período"
+      ],
+      "steps": [
+        "Verificar duplicidade e ausência",
+        "recalcular indicadores",
+        "declarar limitações"
+      ],
+      "metric": "Completude de dados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 40,
+      "id": "seguran-a-da-informa-o-e-seguran-a-digital",
+      "name": "Segurança da Informação e Segurança Digital",
+      "routine": "Revisão de segurança",
+      "inputs": [
+        "acessos",
+        "logs",
+        "escopos"
+      ],
+      "steps": [
+        "Revisar privilégio mínimo",
+        "conferir segregação",
+        "registrar correções"
+      ],
+      "metric": "Acessos revisados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 41,
+      "id": "pesquisa-desenvolvimento-e-inova-o",
+      "name": "Pesquisa, Desenvolvimento e Inovação",
+      "routine": "Pesquisa aplicada",
+      "inputs": [
+        "hipótese",
+        "fontes",
+        "critério de sucesso"
+      ],
+      "steps": [
+        "Verificar fontes",
+        "desenhar experimento",
+        "medir resultado"
+      ],
+      "metric": "Experimentos conclusivos",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 42,
+      "id": "produtos-servi-os-e-novos-neg-cios",
+      "name": "Produtos, Serviços e Novos Negócios",
+      "routine": "Validação de produto",
+      "inputs": [
+        "demanda",
+        "custo",
+        "capacidade"
+      ],
+      "steps": [
+        "Definir problema",
+        "estimar viabilidade",
+        "propor piloto"
+      ],
+      "metric": "Pilotos validados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 43,
+      "id": "franquias-licenciamento-e-expans-o",
+      "name": "Franquias, Licenciamento e Expansão",
+      "routine": "Expansão por franquias",
+      "inputs": [
+        "modelo",
+        "processos",
+        "assessoria jurídica"
+      ],
+      "steps": [
+        "Verificar replicabilidade",
+        "apontar lacunas",
+        "submeter viabilidade"
+      ],
+      "metric": "Unidades com padrão definido",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 44,
+      "id": "internacionaliza-o-e-com-rcio-exterior",
+      "name": "Internacionalização e Comércio Exterior",
+      "routine": "Estudo internacional",
+      "inputs": [
+        "mercado",
+        "logística",
+        "regras locais"
+      ],
+      "steps": [
+        "Conferir fontes oficiais",
+        "comparar custos",
+        "encaminhar validação especializada"
+      ],
+      "metric": "Estudos completos",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 45,
+      "id": "qualidade-e-melhoria-cont-nua",
+      "name": "Qualidade e Melhoria Contínua",
+      "routine": "Melhoria contínua",
+      "inputs": [
+        "não conformidades",
+        "causas",
+        "ações"
+      ],
+      "steps": [
+        "Analisar causa",
+        "definir correção",
+        "verificar eficácia"
+      ],
+      "metric": "Recorrência de falhas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 46,
+      "id": "seguran-a-do-trabalho",
+      "name": "Segurança do Trabalho",
+      "routine": "Segurança do trabalho",
+      "inputs": [
+        "riscos",
+        "treinamentos",
+        "EPIs"
+      ],
+      "steps": [
+        "Conferir documentação",
+        "bloquear tarefa insegura",
+        "encaminhar avaliação profissional"
+      ],
+      "metric": "Pendências de segurança",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 47,
+      "id": "meio-ambiente-e-sustentabilidade",
+      "name": "Meio Ambiente e Sustentabilidade",
+      "routine": "Gestão ambiental",
+      "inputs": [
+        "resíduos",
+        "consumo",
+        "licenças"
+      ],
+      "steps": [
+        "Organizar registros",
+        "identificar destinação",
+        "conferir evidências"
+      ],
+      "metric": "Resíduos rastreados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 48,
+      "id": "rela-es-institucionais-e-governamentais",
+      "name": "Relações Institucionais e Governamentais",
+      "routine": "Agenda institucional",
+      "inputs": [
+        "entidades",
+        "pautas",
+        "compromissos"
+      ],
+      "steps": [
+        "Verificar representantes",
+        "registrar interesse",
+        "preparar agenda"
+      ],
+      "metric": "Compromissos acompanhados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 49,
+      "id": "licita-es-e-contratos-p-blicos",
+      "name": "Licitações e Contratos Públicos",
+      "routine": "Triagem de licitações",
+      "inputs": [
+        "edital",
+        "prazos",
+        "habilitação"
+      ],
+      "steps": [
+        "Extrair requisitos",
+        "comparar capacidade",
+        "encaminhar decisão formal"
+      ],
+      "metric": "Editais elegíveis",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 50,
+      "id": "educa-o-treinamento-e-universidade-corporativa",
+      "name": "Educação, Treinamento e Universidade Corporativa",
+      "routine": "Trilhas de formação",
+      "inputs": [
+        "competências",
+        "conteúdo",
+        "avaliações"
+      ],
+      "steps": [
+        "Mapear lacunas",
+        "organizar trilha",
+        "verificar aprendizagem"
+      ],
+      "metric": "Competências desenvolvidas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 51,
+      "id": "eventos-e-rela-es-p-blicas",
+      "name": "Eventos e Relações Públicas",
+      "routine": "Organização de eventos",
+      "inputs": [
+        "briefing",
+        "orçamento",
+        "participantes"
+      ],
+      "steps": [
+        "Conferir objetivo e recursos",
+        "organizar tarefas",
+        "preparar avaliação"
+      ],
+      "metric": "Eventos entregues",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 52,
+      "id": "experi-ncia-do-cliente-e-p-s-venda-t-cnico",
+      "name": "Experiência do Cliente e Pós-Venda Técnico",
+      "routine": "Pós-venda técnico",
+      "inputs": [
+        "histórico",
+        "garantias",
+        "chamados"
+      ],
+      "steps": [
+        "Conferir cobertura",
+        "priorizar atendimento",
+        "registrar solução e satisfação"
+      ],
+      "metric": "Resolução no primeiro atendimento",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 53,
+      "id": "gest-o-de-assinaturas-e-servi-os-recorrentes",
+      "name": "Gestão de Assinaturas e Serviços Recorrentes",
+      "routine": "Gestão CAPISOL+",
+      "inputs": [
+        "assinaturas",
+        "escopo",
+        "vencimentos"
+      ],
+      "steps": [
+        "Conferir serviço contratado",
+        "acompanhar renovação",
+        "analisar receita recorrente"
+      ],
+      "metric": "MRR contratado",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 54,
+      "id": "gest-o-de-ativos-patrim-nio-e-infraestrutura",
+      "name": "Gestão de Ativos, Patrimônio e Infraestrutura",
+      "routine": "Inventário patrimonial",
+      "inputs": [
+        "ativos",
+        "localização",
+        "responsáveis"
+      ],
+      "steps": [
+        "Conferir identificação",
+        "registrar conservação",
+        "programar revisão"
+      ],
+      "metric": "Ativos localizados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 55,
+      "id": "seguran-a-patrimonial-e-corporativa",
+      "name": "Segurança Patrimonial e Corporativa",
+      "routine": "Segurança patrimonial",
+      "inputs": [
+        "ocorrências",
+        "controles",
+        "acessos"
+      ],
+      "steps": [
+        "Classificar ocorrências",
+        "verificar controles",
+        "atribuir ação"
+      ],
+      "metric": "Ocorrências tratadas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 56,
+      "id": "planejamento-territorial-e-expans-o-regional",
+      "name": "Planejamento Territorial e Expansão Regional",
+      "routine": "Planejamento territorial",
+      "inputs": [
+        "municípios",
+        "demanda",
+        "logística"
+      ],
+      "steps": [
+        "Comparar demanda e distância",
+        "estimar capacidade",
+        "priorizar piloto regional"
+      ],
+      "metric": "Margem por território",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 57,
+      "id": "constru-o-civil-e-obras",
+      "name": "Construção Civil e Obras",
+      "routine": "Controle de obras civis",
+      "inputs": [
+        "projeto",
+        "cronograma",
+        "medições"
+      ],
+      "steps": [
+        "Conferir escopo",
+        "acompanhar etapas",
+        "encaminhar validação técnica"
+      ],
+      "metric": "Desvio de prazo e custo",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 58,
+      "id": "agricultura-agroneg-cio-e-energia-rural",
+      "name": "Agricultura, Agronegócio e Energia Rural",
+      "routine": "Energia rural",
+      "inputs": [
+        "consumo sazonal",
+        "acesso",
+        "atividade"
+      ],
+      "steps": [
+        "Conferir sazonalidade",
+        "identificar restrições",
+        "encaminhar estudo técnico"
+      ],
+      "metric": "Estudos rurais completos",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 59,
+      "id": "novas-tecnologias-energ-ticas",
+      "name": "Novas Tecnologias Energéticas",
+      "routine": "Novas tecnologias",
+      "inputs": [
+        "fontes",
+        "maturidade",
+        "custos"
+      ],
+      "steps": [
+        "Verificar evidência",
+        "comparar risco e benefício",
+        "propor piloto"
+      ],
+      "metric": "Tecnologias validadas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Responsável habilitado e direção",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 60,
+      "id": "e-commerce-e-canais-digitais",
+      "name": "E-commerce e Canais Digitais",
+      "routine": "Canais digitais de venda",
+      "inputs": [
+        "catálogo",
+        "pedidos",
+        "conversões"
+      ],
+      "steps": [
+        "Conferir ofertas",
+        "analisar abandono",
+        "preparar melhoria"
+      ],
+      "metric": "Conversão digital",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 61,
+      "id": "experi-ncia-digital-e-design-de-interfaces",
+      "name": "Experiência Digital e Design de Interfaces",
+      "routine": "Usabilidade e acessibilidade",
+      "inputs": [
+        "jornadas",
+        "erros",
+        "feedback"
+      ],
+      "steps": [
+        "Reproduzir problema",
+        "avaliar acesso",
+        "testar fluxo corrigido"
+      ],
+      "metric": "Jornadas concluídas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 62,
+      "id": "desenvolvimento-social-e-responsabilidade-corporativa",
+      "name": "Desenvolvimento Social e Responsabilidade Corporativa",
+      "routine": "Responsabilidade social",
+      "inputs": [
+        "demandas",
+        "parceiros",
+        "impacto"
+      ],
+      "steps": [
+        "Conferir objetivo",
+        "planejar ação autorizada",
+        "registrar resultado"
+      ],
+      "metric": "Benefícios documentados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 63,
+      "id": "rela-es-com-segmentos-e-clientes-especializados",
+      "name": "Relações com Segmentos e Clientes Especializados",
+      "routine": "Atendimento por segmento",
+      "inputs": [
+        "segmento",
+        "demanda",
+        "restrições"
+      ],
+      "steps": [
+        "Entender contexto",
+        "adaptar proposta",
+        "conferir evidência"
+      ],
+      "metric": "Conversão por segmento",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 64,
+      "id": "intelig-ncia-econ-mica-e-planejamento-de-cen-rios",
+      "name": "Inteligência Econômica e Planejamento de Cenários",
+      "routine": "Cenários econômicos",
+      "inputs": [
+        "fontes",
+        "séries",
+        "premissas"
+      ],
+      "steps": [
+        "Conferir atualização",
+        "separar cenários",
+        "avaliar sensibilidade"
+      ],
+      "metric": "Premissas rastreáveis",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 65,
+      "id": "gest-o-de-crises-especializadas",
+      "name": "Gestão de Crises Especializadas",
+      "routine": "Resposta a crises",
+      "inputs": [
+        "evento",
+        "impacto",
+        "protocolo"
+      ],
+      "steps": [
+        "Confirmar fatos",
+        "priorizar contenção",
+        "preparar comunicação aprovada"
+      ],
+      "metric": "Tempo de resposta",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 66,
+      "id": "gest-o-de-conhecimento-e-intelig-ncia-organizacional",
+      "name": "Gestão de Conhecimento e Inteligência Organizacional",
+      "routine": "Curadoria de conhecimento",
+      "inputs": [
+        "documentos",
+        "versões",
+        "fontes"
+      ],
+      "steps": [
+        "Deduplicar",
+        "registrar validade",
+        "ligar documento ao processo"
+      ],
+      "metric": "Documentos atualizados",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 67,
+      "id": "gest-o-de-projetos-e-escrit-rio-de-projetos",
+      "name": "Gestão de Projetos e Escritório de Projetos",
+      "routine": "Controle de projetos",
+      "inputs": [
+        "escopo",
+        "marcos",
+        "dependências"
+      ],
+      "steps": [
+        "Conferir responsável",
+        "identificar caminho crítico",
+        "registrar impedimentos"
+      ],
+      "metric": "Marcos no prazo",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 68,
+      "id": "auditoria-e-fiscaliza-o-de-terceiros",
+      "name": "Auditoria e Fiscalização de Terceiros",
+      "routine": "Auditoria de terceiros",
+      "inputs": [
+        "contrato",
+        "entregas",
+        "evidências"
+      ],
+      "steps": [
+        "Comparar obrigação e entrega",
+        "registrar desvios",
+        "propor correção"
+      ],
+      "metric": "Terceiros conformes",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 69,
+      "id": "rela-es-com-fabricantes-e-distribuidores",
+      "name": "Relações com Fabricantes e Distribuidores",
+      "routine": "Relacionamento com fabricantes",
+      "inputs": [
+        "catálogo",
+        "garantias",
+        "cotações"
+      ],
+      "steps": [
+        "Conferir vigência",
+        "organizar homologação",
+        "registrar atendimento"
+      ],
+      "metric": "Cotações válidas",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 70,
+      "id": "gest-o-de-inova-o-comercial-e-novas-receitas",
+      "name": "Gestão de Inovação Comercial e Novas Receitas",
+      "routine": "Experimentos de receita",
+      "inputs": [
+        "hipótese",
+        "oferta",
+        "métrica"
+      ],
+      "steps": [
+        "Estimar margem",
+        "definir teste limitado",
+        "avaliar resultado"
+      ],
+      "metric": "Receita incremental validada",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 71,
+      "id": "protocolo-representa-o-e-gest-o-institucional",
+      "name": "Protocolo, Representação e Gestão Institucional",
+      "routine": "Protocolo institucional",
+      "inputs": [
+        "documentos",
+        "destinatários",
+        "prazos"
+      ],
+      "steps": [
+        "Conferir autorização",
+        "registrar tramitação",
+        "acompanhar resposta"
+      ],
+      "metric": "Protocolos no prazo",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    },
+    {
+      "sector": 72,
+      "id": "continuidade-sucess-o-e-longevidade-empresarial",
+      "name": "Continuidade, Sucessão e Longevidade Empresarial",
+      "routine": "Continuidade empresarial",
+      "inputs": [
+        "processos críticos",
+        "backups",
+        "responsáveis"
+      ],
+      "steps": [
+        "Conferir dependências",
+        "testar recuperação",
+        "documentar sucessão"
+      ],
+      "metric": "Tempo de recuperação testado",
+      "output": "Diagnóstico com evidências, divergências, até 3 ações, responsável, prazo e critério de conclusão.",
+      "reviewer": "Gestor do setor",
+      "limits": [
+        "Não comprar, transferir dinheiro ou assinar contratos",
+        "Não publicar nem contatar terceiros automaticamente",
+        "Não elevar permissões nem substituir responsável profissional"
+      ],
+      "mode": "assisted_review",
+      "version": 1
+    }
+  ]
+}

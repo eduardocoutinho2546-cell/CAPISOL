@@ -1,6 +1,6 @@
 import http from 'node:http';
 import crypto from 'node:crypto';
-import { enqueue, listQueue, publicItem, update } from './queue.mjs';
+import { enqueue, listQueue, publicItem, update, claim } from './queue.mjs';
 import { executeJob, integrationStatus } from './adapters.mjs';
 import { evaluateLead, messageWithOptOut } from '../../outreach/policy.mjs';
 
@@ -72,17 +72,15 @@ async function route(request, response) {
   const executeMatch = url.pathname.match(/^\/v1\/queue\/([^/]+)\/execute$/);
   if (request.method === 'POST' && executeMatch) {
     const id = executeMatch[1];
-    const items = await listQueue();
-    const job = items.find((item) => item.id === id);
+    const { item: job, claimed } = await claim(id);
     if (!job) return json(response, 404, {error: 'job_not_found'});
-    if (job.status === 'published' || job.status === 'sent' || job.status === 'submitted') return json(response, 200, publicItem(job));
-    await update(id, {status: 'running', attempts: (job.attempts || 0) + 1});
+    if (!claimed) return json(response, job.status === 'running' || job.status === 'uncertain' ? 409 : 200, publicItem(job));
     try {
       const result = await executeJob(job);
       const updated = await update(id, result);
       return json(response, result.status === 'dry_run' ? 200 : 201, publicItem(updated));
     } catch (error) {
-      const updated = await update(id, {status: 'failed', error: error.message, providerStatus: error.providerStatus || null});
+      const updated = await update(id, {status: 'uncertain', error: 'provider_execution_not_confirmed', providerStatus: error.providerStatus || null});
       return json(response, 502, publicItem(updated));
     }
   }
@@ -93,4 +91,5 @@ const server = http.createServer((request, response) => {
   route(request, response).catch((error) => json(response, error.message === 'payload_too_large' ? 413 : 400, {error: error.message}));
 });
 
-server.listen(port, '0.0.0.0', () => console.log(`CAPISOL gateway listening on ${port} mode=${mode}`));
+if (mode !== 'demo' && adminToken.length < 32) throw new Error('GATEWAY_ADMIN_TOKEN must have at least 32 characters in live mode');
+server.listen(port, adminToken ? (process.env.GATEWAY_HOST || '127.0.0.1') : '127.0.0.1', () => console.log(`CAPISOL gateway listening on ${port} mode=${mode}`));
