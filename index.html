@@ -793,10 +793,10 @@ var COLS=['leads','clientes','propostas','contratos','agenda','visitas','obras',
           'descontos','exclusoes','rede','posjornada','agentes','parceiros','cotacoes','concorrentes_cad','atividade','posts'];
 var S={}; COLS.forEach(function(c){ S[c]=[]; });
 var CFG={razao:'66.360.677 WENDEL MATOS DO SACRAMENTO',cidade:'Rio Branco — AC',fone:'',cnpj:'66.360.677/0001-49',
-  slogan:'A energia do sol com a força da natureza.',mgCom:20,mgPro:10,descVend:12,descSocio:20,
-  fixo:15000,reserva:3,
+  slogan:'Energia que não limita, facilita.',mgCom:20,mgPro:10,descVend:12,descSocio:20,
+  fixo:15000,reserva:3,metaSistemas:10,notificacoesInternas:true,
     tabTitulo:'Tabela promocional',tabSub:'Sistemas fotovoltaicos',tabValidade:'2026-10-31',tabLocal:'Rio Branco, AC',
-  tabFone1:'68 99987-7538',tabFone2:'68 98119-5554',tabInsta:'@capisolenergiasolar',
+  tabFone1:'68 99249-0347',tabFone2:'',tabInsta:'@capisol_ac',
   tabNota:'Valores válidos para {municipio}. Em outras regiões, o valor total pode ter acréscimo. Preços à vista (PIX ou transferência), válidos até {validade} ou enquanto durar o estoque, sujeitos a vistoria técnica. Parcelamento e financiamento sob consulta. Geração estimada; a conta de energia não zera.',
   tabBase:'pro',imposto:6,impBase:'servico',seguro:3,segBase:'kit',limA:10.5,limB:50,moVeic:'p',moLocal:'c',moTipo:'t',
   moTab:{'pt1c':141.12,'pt1k':155.82,'pt1m':170.52,'pt2c':107.46,'pt2k':119.95,'pt2m':124.95,'pt3c':88.49,'pt3k':98.78,'pt3m':102.9,'ps1c':70.56,'ps1k':77.91,'ps1m':85.26,'ps2c':53.73,'ps2k':59.98,'ps2m':62.48,'ps3c':44.25,'ps3k':49.39,'ps3m':51.45,'et1c':117.6,'et1k':132.3,'et1m':147,'et2c':87.47,'et2k':99.96,'et2m':112.46,'et3c':72.03,'et3k':82.32,'et3m':92.61,'es1c':58.8,'es1k':66.15,'es1m':73.5,'es2c':43.73,'es2k':49.98,'es2m':56.23,'es3c':36.02,'es3k':41.16,'es3m':46.31},
@@ -5552,7 +5552,7 @@ var KITS=[800,1000,1500,2000];
 var CF_PAD={
   kits:{'800':{kit:0,insumos:0,merMin:0,merMed:0},'1000':{kit:0,insumos:0,merMin:0,merMed:0},
         '1500':{kit:0,insumos:0,merMin:0,merMed:0},'2000':{kit:0,insumos:0,merMin:0,merMed:0}},
-  lucroMeta:4000,lucroMin:2500,comissao:5,gas:7.59,cons:10,kmLocal:30,pessoas:3,alim:25,hotel:150,
+  lucroMeta:4000,lucroMin:0,metaSistemas:10,comissao:5,gas:7.59,cons:10,kmLocal:30,pessoas:3,alim:25,hotel:150,
   frete:{A:{'800':0,'1000':0,'1500':0,'2000':0},B:{'800':0,'1000':0,'1500':0,'2000':0}},
   gerKwp:100,tarBase:0.8297,tarImp:1.32,tarConf:false,fioB:0.22,tmin:{'Monofásico':30,'Bifásico':50,'Trifásico':100},
   bvTaxa:2.61,bvUnid:'a.m.',bvConf:false,
@@ -5566,7 +5566,7 @@ function pctTxt(v,d){ return nf(n0(v)*100,d==null?1:d)+'%'; }
 function cima100(p){ return Math.ceil((p-0.5)/100)*100; }
 function CF(){
   var c=CFG.cf; if(!c||typeof c!=='object'){ CFG.cf=clonar(CF_PAD); c=CFG.cf; }
-  for(var k in CF_PAD) if(c[k]==null) c[k]=clonar(CF_PAD[k]);
+  for(var k in CF_PAD) if(c[k]==null) c[k]=clonar(CF_PAD[k]); c.lucroMin=0;
   KITS.forEach(function(k){ if(!c.kits[k]) c.kits[k]=clonar(CF_PAD.kits[k]); });
   for(var a in CF_PAD.as) if(!(a in c.as)) c.as[a]=CF_PAD.as[a];
   return c;
@@ -5682,19 +5682,19 @@ function cfCalc(kwh,L){
   var com=n0(c.comissao)/100, i=aliqUsada(), serv=impBaseCfg()==='servico';
   function precoPara(l){ var d=1-com-i; if(d<=0) return 0; return cima100((kf+cs+l-(serv?i*kf:0))/d); }
   function lucroDe(p){ var imp=i*(serv?Math.max(0,p-kf):p); return {imp:imp,com:com*p,lucro:p-kf-cs-com*p-imp}; }
-  var pMeta=precoPara(n0(c.lucroMeta)), pPiso=precoPara(n0(c.lucroMin));
+  var pMeta=precoPara(n0(c.lucroMeta)), pPiso=precoPara(0);
   var pTab=0; if(k.f){ var t=calcPreco(k.f); pTab=t.erro?0:(t.preco-n0(t.acr)); }
   var rec=Math.max(pMeta,n0(L.km)===0?pTab:0);
   var r=lucroDe(rec), rt=pTab?lucroDe(pTab):null;
-  var sem=r.lucro>=n0(c.lucroMeta)-0.5?'ok':(r.lucro>=n0(c.lucroMin)?'wait':'bad');
+  var sem=r.lucro<0?'bad':r.lucro>=n0(c.lucroMeta)-0.5?'ok':'wait';
   return {k:k,L:L,mo:mo,proj:proj,ins:k.insumos,ds:ds,fr:fr,seg:segFix,cs:cs,kf:kf,ali:i,serv:serv,comP:com,pMeta:pMeta,pPiso:pPiso,pTab:pTab,
     rec:rec,imp:r.imp,com:r.com,lucro:r.lucro,mg:rec?r.lucro/rec:0,mgProp:rec-kf>0?r.lucro/(rec-kf):0,cmv:rec?(kf+cs)/rec:0,
     lucroTab:rt?rt.lucro:null,sem:sem,acimaMerc:k.merMed>0&&rec>k.merMed};
 }
-function semTxt(s){ return s==='ok'?'Meta atingida':s==='wait'?'Acima do piso':'Abaixo do piso'; }
+function semTxt(s){ return s==='ok'?'Meta de lucro atingida':s==='bad'?'Prejuízo estimado':'Abaixo da meta de lucro'; }
 function editarCarroForte(){
-  var c=CF(), v={lucroMeta:c.lucroMeta,lucroMin:c.lucroMin,comissao:c.comissao,gas:c.gas,cons:c.cons,pessoas:c.pessoas,alim:c.alim,hotel:c.hotel,kmLocal:c.kmLocal}, campos=[
-    {k:'lucroMeta',rot:'Meta de lucro líquido por sistema (R$)',tipo:'number',meia:1},{k:'lucroMin',rot:'Piso de lucro (R$)',tipo:'number',meia:1},
+  var c=CF(), v={lucroMeta:c.lucroMeta,metaSistemas:c.metaSistemas||10,comissao:c.comissao,gas:c.gas,cons:c.cons,pessoas:c.pessoas,alim:c.alim,hotel:c.hotel,kmLocal:c.kmLocal}, campos=[
+    {k:'lucroMeta',rot:'Meta de lucro líquido por sistema (R$)',tipo:'number',meia:1},{k:'metaSistemas',rot:'Meta mensal de sistemas vendidos',tipo:'number',meia:1},
     {k:'comissao',rot:'Comissão embutida no preço (% do total)',tipo:'number',meia:1},{k:'pessoas',rot:'Pessoas na equipe de obra',tipo:'number',meia:1},
     {k:'gas',rot:'Gasolina (R$/litro)',tipo:'number',meia:1},{k:'cons',rot:'Consumo do veículo (km/litro)',tipo:'number',meia:1},
     {k:'alim',rot:'Alimentação (R$/pessoa/dia)',tipo:'number',meia:1},{k:'hotel',rot:'Hotel (R$/pessoa/noite)',tipo:'number',meia:1},
@@ -5704,7 +5704,7 @@ function editarCarroForte(){
     campos.push({k:'kit'+k,rot:k+' kWh — kit (R$, usado se a faixa não tiver cotação)',tipo:'number',meia:1},{k:'ins'+k,rot:k+' kWh — insumos (R$)',tipo:'number',meia:1},
       {k:'mmin'+k,rot:k+' kWh — mercado mínimo (R$)',tipo:'number',meia:1},{k:'mmed'+k,rot:k+' kWh — mercado médio (R$)',tipo:'number',meia:1}); });
   abrirForm('Premissas do Carro-forte','Kit, projeto, material e mão de obra vêm da Tabela de preços; aqui ficam só as metas e o que é próprio destes 4 sistemas',campos,v,function(d){
-    ['lucroMeta','lucroMin','comissao','gas','cons','pessoas','alim','hotel','kmLocal'].forEach(function(k){ c[k]=d[k]; });
+    ['lucroMeta','metaSistemas','comissao','gas','cons','pessoas','alim','hotel','kmLocal'].forEach(function(k){ c[k]=d[k]; }); c.lucroMin=0;
     KITS.forEach(function(k){ var K=c.kits[k]; K.kit=d['kit'+k]; K.insumos=d['ins'+k]; K.merMin=d['mmin'+k]; K.merMed=d['mmed'+k]; });
     salvarCfg('Premissas do Carro-forte salvas.'); desenhar(); });
 }
@@ -5729,7 +5729,7 @@ function pgCarroForte(el){
     ['Combustível',function(r){ return r.ds.gas; }],['Alimentação',function(r){ return r.ds.alim; }],['Hotel',function(r){ return r.ds.hotel; }],['Seguro',function(r){ return r.seg; }],
     ['CUSTO TOTAL',function(r){ return r.kf+r.cs; },null,1],['Comissão ('+nf(c.comissao)+'% do total)',function(r){ return r.com; }],['Simples ('+pctTxt(R[0].ali,2)+')',function(r){ return r.imp; }],
     ['PREÇO RECOMENDADO',function(r){ return r.rec; },null,1],['LUCRO LÍQUIDO',function(r){ return r.lucro; },null,1],
-    ['Preço para a meta de '+brl(c.lucroMeta),function(r){ return r.pMeta; }],['Preço piso (lucro '+brl(c.lucroMin)+')',function(r){ return r.pPiso; }],
+    ['Preço para a meta de '+brl(c.lucroMeta),function(r){ return r.pMeta; }],
     ['Preço atual da Tabela (Rio Branco)',function(r){ return r.pTab; }],['Lucro no preço atual da Tabela',function(r){ return r.lucroTab; }],
     ['Mercado — mínimo',function(r){ return r.k.merMin; }],['Mercado — médio',function(r){ return r.k.merMed; }]];
   var tb='<div class="tw"><table><thead><tr><th>Composição</th>'+R.map(function(r){ return '<th class="r">'+nf(r.k.f?r.k.f.kwh:0)+' kWh</th>'; }).join('')+'</tr></thead><tbody>'+
@@ -6223,8 +6223,8 @@ function auditoria(){
   if(!c.bvConf) L.push(['wait','Comercial','Taxa e CET do BV não confirmados pelo banco',1,'atendimento']);
   KITS.forEach(function(k){ var x=cfKit(k); if(x.divKwp) L.push(['wait','Comercial','Kit '+k+' kWh: kWp da faixa ('+kwpTxt(x.kwpDecl)+') diferente da composição ('+kwpTxt(x.kwpReal)+')',1,'precos']);
     if(!(x.f&&n0(x.f.kit)>0)) L.push(['wait','Comercial','Kit '+k+' kWh sem cotação atual na Tabela de preços (usa a da V10)',1,'carroforte']); });
-  var cfB=KITS.map(function(k){ return cfCalc(k,locSede()); }).filter(function(r){ return r.pTab&&r.lucroTab<n0(c.lucroMin); });
-  cfB.forEach(function(r){ L.push(['bad','Comercial','Preço atual do '+nf(r.k.f.kwh)+' kWh dá lucro '+brl(r.lucroTab)+', abaixo do piso',1,'carroforte']); });
+  var cfB=KITS.map(function(k){ return cfCalc(k,locSede()); }).filter(function(r){ return r.pTab&&r.lucroTab<n0(c.lucroMeta); });
+  cfB.forEach(function(r){ L.push(['wait','Comercial','Preço atual do '+nf(r.k.f.kwh)+' kWh dá lucro '+brl(r.lucroTab)+', abaixo da meta',1,'carroforte']); });
   var m=addMes(mesAtual(),-1); if(m>=inicioAtiv()&&!fechamentoDe(m)) L.push(['wait','Financeiro','Mês anterior ('+mesTxt(m)+') ainda não fechado',1,'contabil']);
   var est=S.estoque.map(estSit).filter(function(s){ return s.k==='bad'&&s.co!==null; }); if(est.length) L.push(['bad','Estoque','Insumos zerados necessários às obras',est.length,'estoque']);
   var j=(S.juridico||[]).filter(function(x){ var d=diasAte(x.prazo); return x.status!=='Aprovado'&&x.status!=='Rejeitado'&&d!==null&&d<0; }); if(j.length) L.push(['bad','Jurídico','Itens jurídicos com prazo vencido',j.length,'juridico']);
@@ -6445,9 +6445,8 @@ function alcada(){ var a=CFG.alcada||{}; return {n1:vazioN(a.n1)?ALCADA_PAD.n1:n
 function pgVendedor(el){
   if(!TV.loc) TV.loc=locSede().id||''; var L=locDe(TV.loc), r=cfCalc(Number(TV.kwh),L), A=alcada(), c=CF();
   var preco=Math.max(0,r.rec-n0(TV.desc)), lucro=preco-r.kf-r.cs-r.comP*preco-r.ali*(r.serv?Math.max(0,preco-r.kf):preco), mgP=preco-r.kf>0?lucro/(preco-r.kf):0;
-  var nivel, k; if(lucro<n0(c.lucroMin)){ nivel='Nível 3 — Eduardo + Wendel (abaixo do piso de lucro)'; k='bad'; }
-    else if(n0(TV.desc)<=A.n1&&mgP*100>=A.mg1){ nivel='Livre — você decide'; k='ok'; } else if(n0(TV.desc)<=A.n2){ nivel='Nível 2 — Wendel aprova'; k='wait'; } else { nivel='Nível 3 — Eduardo + Wendel'; k='bad'; }
-  var piso=r.pPiso, descMax=Math.max(0,r.rec-piso);
+  var nivel, k; if(lucro<0){ nivel='Nível 3 — Eduardo + Wendel (prejuízo estimado)'; k='bad'; } else if(n0(TV.desc)<=A.n1&&mgP*100>=A.mg1){ nivel='Livre — você decide'; k='ok'; } else if(n0(TV.desc)<=A.n2){ nivel='Nível 2 — Wendel aprova'; k='wait'; } else { nivel='Nível 3 — Eduardo + Wendel'; k='bad'; }
+  var descMax=Math.max(0,r.rec-r.pPiso);
   var vend=TV.vend||(EU.owner?'':pessoaEu()), mes=mesAtual(), vm=vend?vendasVendMes(vend,mes):0, tot=vm+preco, pc=pctEscala(tot), base=preco-r.ali*Math.max(0,preco-r.kf), com=base*pc;
   var E=c.escala, prox=null; for(var i=0;i<E.length;i++) if(E[i].ate!=null&&tot<=n0(E[i].ate)){ prox={falta:n0(E[i].ate)+0.01-tot,p:(E[i+1]||E[i]).p}; break; }
   var vs=vendedores().map(function(p){ return p.nome; });
@@ -6458,7 +6457,7 @@ function pgVendedor(el){
     '<div class="fld"><span>Desconto pedido (R$)</span><input type="number" id="tv-desc" value="'+esc(TV.desc)+'"></div>'+
     '<div class="fld"><span>Vendedor</span><select id="tv-vend"><option value="">—</option>'+vs.map(function(n){ return '<option'+(n===vend?' selected':'')+'>'+esc(n)+'</option>'; }).join('')+'</select></div></div></div></div>';
   h+=faixa([{r:'Preço de tabela',v:moeda2(r.rec),d:nf(TV.kwh)+' kWh · '+esc(L.nome)},{r:'Preço final',v:moeda2(preco),d:n0(TV.desc)?'desconto de '+moeda2(TV.desc):'sem desconto'},
-    {r:'Quem aprova',v:nivel.split(' — ')[0],d:nivel.split(' — ')[1]||'',alerta:k==='bad'},{r:'Desconto máximo sem Nível 3',v:moeda2(descMax),d:'abaixo disso fica sem lucro mínimo'}]);
+    {r:'Quem aprova',v:nivel.split(' — ')[0],d:nivel.split(' — ')[1]||'',alerta:k==='bad'},{r:'Desconto livre antes de aprovação',v:moeda2(Math.min(descMax,A.n1)),d:'acima de R$ '+nf(A.n1)+' exige aprovação'}]);
   h+=bloco('Sua comissão nesta venda','escala do mês: '+E.map(function(e){ return nf(e.p)+'%'; }).join(' / '),'<div class="bl-b">'+faixa([
     {r:'Vendas no mês com esta',v:brl(tot),d:vend?'já lançadas: '+brl(vm):'escolha o vendedor'},{r:'Faixa',v:pctTxt(pc,0)},{r:'Comissão estimada',v:moeda2(com),d:'base: venda − imposto do serviço'},
     {r:'Para a próxima faixa',v:prox?brl(prox.falta):'—',d:prox?'passa a '+nf(prox.p)+'% no mês':'faixa máxima'}])+'</div>');
@@ -6566,8 +6565,8 @@ function metasCalc(){
   var R=KITS.map(function(k){ return cfCalc(k,locSede()); }), mt=soma(KITS,function(k){ return n0(m.mix[k]); })||1;
   var lucroMed=0, precoMed=0, kwpMed=0;
   R.forEach(function(r,i){ var w=n0(m.mix[KITS[i]])/mt; lucroMed+=r.lucro*w; precoMed+=r.rec*w; kwpMed+=r.k.kwp*w; });
-  var nMeta=lucroMed>0?Math.ceil(cobrir/lucroMed):0, nPiso=n0(c.lucroMin)>0?Math.ceil(cobrir/n0(c.lucroMin)):0, nEq=lucroMed>0?Math.ceil(Math.max(0,fix-rec)/lucroMed):0;
-  return {fix:fix,giro:n0(m.giro),nec:nec,mrr:mrr,rec:rec,cobrir:cobrir,lucroMed:lucroMed,precoMed:precoMed,kwpMed:kwpMed,nMeta:nMeta,nPiso:nPiso,nEq:nEq,metaRs:cima100(nMeta*precoMed),folha:folhaMes()};
+  var nMeta=Math.max(1,Math.ceil(n0(c.metaSistemas)||10)), nPiso=0, nNec=lucroMed>0?Math.ceil(cobrir/lucroMed):null, nEq=lucroMed>0?Math.ceil(Math.max(0,fix-rec)/lucroMed):0;
+  return {fix:fix,giro:n0(m.giro),nec:nec,mrr:mrr,rec:rec,cobrir:cobrir,lucroMed:lucroMed,precoMed:precoMed,kwpMed:kwpMed,nMeta:nMeta,nPiso:nPiso,nNec:nNec,nEq:nEq,metaRs:cima100(nMeta*precoMed),folha:folhaMes()};
 }
 function vendasMes(m){ return soma(S.contratos.filter(function(c){ return ctrValido(c)&&mesDe(dataCtr(c))===m; }),function(c){ return c.valor; })+soma((S.os||[]).filter(function(o){ return o.status==='Concluída'&&mesDe(o.exec)===m; }),function(o){ return o.valor; }); }
 function fluxoSemanas(){
@@ -6631,7 +6630,7 @@ pgContabil=function(el){
   h+=abasCT();
   if(CT_ABA==='metas'){
     var m=metasCalc(), M=METAS();
-    h+=faixa([{r:'Necessidade mensal',v:brl(m.nec),d:'despesas fixas '+brl(m.fix)+' + reserva '+brl(m.giro)},{r:'Sistemas por mês (meta)',v:String(m.nMeta),d:'lucro médio '+brl(m.lucroMed)+' por sistema'},
+    h+=faixa([{r:'Necessidade mensal',v:brl(m.nec),d:'despesas fixas '+brl(m.fix)+' + reserva '+brl(m.giro)},{r:'Sistemas por mês (meta)',v:String(m.nMeta),d:'necessidade estimada: '+(m.nNec===null?'sem margem positiva':m.nNec+' sistemas')+' · lucro médio '+brl(m.lucroMed)},
       {r:'Meta de vendas',v:brl(m.metaRs),d:nf(m.nMeta*m.kwpMed,1)+' kWp/mês'},{r:'Ponto de equilíbrio',v:m.nEq+' sistemas',d:'só pagar as fixas'}]);
     h+=bloco('Premissas','retiradas, despesas e o mix de sistemas (hipótese)','<div class="bl-b"><div class="fr">'+
       [['ret1','Retirada Eduardo'],['ret2','Retirada Wendel'],['esposas','Esposas dos sócios (a definir)'],['demais','Demais despesas fixas'],['giro','Reserva mensal para girar']].map(function(x){ return '<div class="fld"><span>'+x[1]+' (R$/mês)</span><input type="number" id="mt-'+x[0]+'" value="'+esc(M[x[0]])+'"></div>'; }).join('')+'</div><div class="fr">'+
@@ -6766,18 +6765,18 @@ function pgDash(el){
     h+=bloco('Receita de serviços por mês','OS concluídas',svgBarras(ms.map(mesCurto),ms.map(function(m){ return soma(conc.filter(function(o){ return mesDe(o.exec)===m; }),function(o){ return o.valor; }); }),function(v){ return v?nf(v,0):''; },'var(--verde)'));
   } else {
     var L=cts.map(function(c){ return {c:c,l:lucroCtr(c)}; });
-    h+=faixa([{r:'Lucro estimado dos contratos',v:brl(soma(L,function(x){ return x.l.lucro; }))},{r:'Margem média',v:L.length?pctTxt(soma(L,function(x){ return x.l.mg; })/L.length):'—'},{r:'Abaixo do piso',v:String(L.filter(function(x){ return x.l.lucro<n0(CF().lucroMin); }).length),alerta:L.some(function(x){ return x.l.lucro<n0(CF().lucroMin); })}]);
+    h+=faixa([{r:'Lucro estimado dos contratos',v:brl(soma(L,function(x){ return x.l.lucro; }))},{r:'Margem média',v:L.length?pctTxt(soma(L,function(x){ return x.l.mg; })/L.length):'—'},{r:'Abaixo da meta',v:String(L.filter(function(x){ return x.l.lucro<n0(CF().lucroMeta); }).length),alerta:L.some(function(x){ return x.l.lucro<n0(CF().lucroMeta); })}]);
     h+=bloco('Lucro por contrato','valor − kit − custos lançados na obra − comissão − Simples · kit real quando lançado em Custos',tabela([
       {t:'Contrato',v:function(x){ return '<b>'+esc(x.c.cliente)+'</b><div class="sub">'+esc(dmy(dataCtr(x.c)))+'</div>'; }},{t:'Valor',r:1,v:function(x){ return '<span class="tn">'+brl(x.c.valor)+'</span>'; }},
       {t:'Kit',r:1,v:function(x){ return '<span class="tn">'+brl(x.l.kit)+'</span><div class="sub">'+(x.l.kitReal?'real':'estimado')+'</div>'; }},{t:'Outros custos',r:1,v:function(x){ return '<span class="tn">'+brl(x.l.outros)+'</span>'; }},
-      {t:'Lucro',r:1,v:function(x){ return '<b class="tn">'+brl(x.l.lucro)+'</b><div class="sub">'+pctTxt(x.l.mg)+'</div>'; }},{t:'',v:function(x){ return x.l.lucro>=n0(CF().lucroMeta)?selo('meta','ok'):x.l.lucro>=n0(CF().lucroMin)?selo('acima do piso','wait'):selo('abaixo do piso','bad'); }}],L,false));
+      {t:'Lucro',r:1,v:function(x){ return '<b class="tn">'+brl(x.l.lucro)+'</b><div class="sub">'+pctTxt(x.l.mg)+'</div>'; }},{t:'',v:function(x){ return x.l.lucro>=n0(CF().lucroMeta)?selo('meta','ok'):selo('abaixo da meta','wait'); }}],L,false));
   }
   el.innerHTML=h; ligaAbas(el,'ds',function(a){ DS_ABA=a; desenhar(); });
 }
 
 /* ---------- PARÂMETROS: tudo o que é editável num lugar só ---------- */
 var PAR_GR=[
-  ['Lucro e comissão',function(){ var c=CF(); return [[c,'lucroMeta','Meta de lucro líquido por sistema (R$)'],[c,'lucroMin','Piso de lucro (R$)'],[c,'comissao','Comissão embutida no preço (%)'],[c,'metaVend','Mínimo mensal do vendedor (R$)'],[c,'diaPg1','Dia de pagamento 1'],[c,'diaPg2','Dia de pagamento 2 (quinzenal)']]; }],
+  ['Lucro e comissão',function(){ var c=CF(); return [[c,'lucroMeta','Meta de lucro líquido por sistema (R$)'],[c,'metaSistemas','Meta mensal de sistemas vendidos'],[c,'comissao','Comissão embutida no preço (%)'],[c,'metaVend','Mínimo mensal do vendedor (R$)'],[c,'diaPg1','Dia de pagamento 1'],[c,'diaPg2','Dia de pagamento 2 (quinzenal)']]; }],
   ['Alçada de desconto',function(){ CFG.alcada=Object.assign({},ALCADA_PAD,CFG.alcada||{}); var a=CFG.alcada; return [[a,'n1','Vendedor decide até (R$)'],[a,'mg1','…com margem mínima (%)'],[a,'n2','Wendel aprova até (R$)']]; }],
   ['Logística e viagem',function(){ var c=CF(); return [[c,'gas','Gasolina (R$/litro)'],[c,'cons','Consumo do veículo (km/l)'],[c,'pessoas','Pessoas na obra'],[c,'alim','Alimentação (R$/pessoa/dia)'],[c,'hotel','Hotel (R$/pessoa/noite)'],[c,'kmLocal','Km na cidade por obra'],[c,'capMes','Capacidade de instalações por mês']]; }],
   ['Marketing',function(){ var c=CF(); return [[c,'mkVerba','Verba livre de tráfego pago (R$/mês)']]; }],
@@ -7172,16 +7171,16 @@ function v10Mun(L){ var n=String(L.nome||'').replace(/\s*\(sede\)\s*$/i,''); ret
 function precoPrincipal(r){ var d=1-r.comP-r.ali; return d>0?cima100((r.kf+r.cs+n0(CF().lucroMeta))/d):0; }
 function pgTabLoc(el){
   var k=TL_KIT, base=impBaseCfg()==='servico'?'venda − kit':'venda total', c=CF();
-  var h=cabecalho('Preço por localidade','cada sistema em cada localidade: preço, piso, lucro e mercado · muda sozinho com a cotação do kit, o frete e a distância',[]);
+  var h=cabecalho('Preço por localidade','cada sistema em cada localidade: preço, meta de lucro, lucro e mercado · muda sozinho com a cotação do kit, o frete e a distância',[]);
   h+=abasPg(KITS.map(function(x){ return [String(x),x+' kWh']; }),String(k),'tl');
   var L=locs().filter(function(l){ return !vazioN(l.km); }), R=L.map(function(l){ var r=cfCalc(k,l); return {l:l,r:r,v:v10Mun(l)}; });
   var r0=cfCalc(k,locSede());
-  h+=faixa([{r:'Kit (Rio Branco)',v:brl(r0.k.kit),d:r0.k.origem},{r:'Preço em Rio Branco',v:brl(r0.rec),d:'lucro '+brl(r0.lucro)},{r:'Piso em Rio Branco',v:brl(r0.pPiso),d:'lucro de '+brl(c.lucroMin)},
+  h+=faixa([{r:'Kit (Rio Branco)',v:brl(r0.k.kit),d:r0.k.origem},{r:'Preço em Rio Branco',v:brl(r0.rec),d:'lucro '+brl(r0.lucro)},{r:'Equilíbrio em Rio Branco',v:brl(r0.pPiso),d:'cobre os custos estimados'},
     {r:'Mercado (média RB)',v:r0.k.merMed?brl(r0.k.merMed):'—',d:r0.k.merMed?(r0.rec>r0.k.merMed?'estamos '+brl(r0.rec-r0.k.merMed)+' acima':'estamos abaixo da média'):'sem pesquisa'}]);
   h+='<div class="nt">Simples usado: '+pctTxt(aliqUsada(),2)+' sobre '+esc(base)+'. A V10 usava 12,87% sobre o total (cenário "principal"), por isso os preços dela saem mais altos. A coluna "Se o Simples for sobre o total" mostra esse cenário com a alíquota de hoje. Quem decide o cenário é o contador (Plano tributário).</div>';
   h+=bloco('Tabela de '+k+' kWh','preço recomendado garante a meta de lucro ('+brl(c.lucroMeta)+'); piso garante o mínimo ('+brl(c.lucroMin)+')',tabela([
     {t:'Localidade',v:function(x){ return '<b>'+esc(x.l.nome)+'</b><div class="sub">'+esc(nf(x.l.km)+' km · '+(zonaDe?('zona '+zonaDe(x.l)):''))+'</div>'; }},
-    {t:'Preço',r:1,v:function(x){ return '<b class="tn">'+brl(x.r.rec)+'</b>'; }},{t:'Piso',r:1,v:function(x){ return '<span class="tn">'+brl(x.r.pPiso)+'</span><div class="sub">desconto máx. '+brl(Math.max(0,x.r.rec-x.r.pPiso))+'</div>'; }},
+    {t:'Preço',r:1,v:function(x){ return '<b class="tn">'+brl(x.r.rec)+'</b>'; }},{t:'Meta',r:1,v:function(x){ return '<span class="tn">'+brl(x.r.pMeta)+'</span><div class="sub">preço de referência do lucro-alvo</div>'; }},
     {t:'Lucro',r:1,v:function(x){ return '<span class="tn">'+brl(x.r.lucro)+'</span><div class="sub">'+pctTxt(x.r.mg)+'</div>'; }},
     {t:'Se o Simples for sobre o total',r:1,v:function(x){ return x.r.serv?'<span class="tn sub">'+brl(precoPrincipal(x.r))+'</span>':'<span class="sub">já é o atual</span>'; }},
     {t:'V10',r:1,v:function(x){ return x.v?'<span class="tn sub">'+brl(x.v[String(k)][0])+'</span><div class="sub">piso '+brl(x.v[String(k)][1])+'</div>':'—'; }}],R,false));
@@ -7302,7 +7301,7 @@ pgMarketing=function(el){
   h+=bloco('1) Onde estamos no preço','Rio Branco · preço recomendado de hoje × concorrentes pesquisados (atualize em Concorrência)',tabela([{t:'Sistema',v:function(x){ return '<b>'+x.k+' kWh</b>'; }},{t:'Nosso',r:1,v:function(x){ return '<b class="tn">'+brl(x.p)+'</b>'; }},
     {t:'Mercado mín.',r:1,v:function(x){ return '<span class="tn">'+(x.mn?brl(x.mn):'—')+'</span>'; }},{t:'Média',r:1,v:function(x){ return '<span class="tn">'+(x.md?brl(x.md):'—')+'</span>'; }},{t:'Máx.',r:1,v:function(x){ return '<span class="tn">'+(x.mx?brl(x.mx):'—')+'</span>'; }},
     {t:'Posição',v:function(x){ if(x.rel===null) return '—'; return x.rel>0.05?selo(pctTxt(x.rel,0)+' acima: venda o diferencial','wait'):x.rel<-0.05?selo(pctTxt(-x.rel,0)+' abaixo: pode subir','ok'):selo('na média','ok'); }}],pos,false)+
-    '<div class="bl-b sub">Acima do mercado não se resolve baixando abaixo do piso: venda garantia, pós-venda, prazo e homologação, ou reduza custo (kit, deslocamento).</div>');
+    '<div class="bl-b sub">Acima do mercado não se resolve reduzindo o lucro: venda garantia, pós-venda, prazo e homologação, ou reduza custo (kit, deslocamento).</div>');
   var P=V10D.pil.map(function(x,i){ var o=E.p[i]||{}; return {x:x,i:i,meta:o.meta||x[3],sit:o.sit||x[5]}; });
   h+=xLista('ep','2) Pilares','cada pilar com meta de 12 meses, indicador e dono · toque para atualizar',P,[{t:'Pilar',v:function(p){ return '<b>'+esc(p.x[0])+'</b><div class="sub">'+esc(p.x[1])+'</div>'; }},
     {t:'Meta',v:function(p){ return '<span class="sub">'+esc(p.meta)+'</span><div class="sub">'+esc(p.x[2])+'</div>'; }},{t:'Dono',v:function(p){ return esc(p.x[4]); }},{t:'',v:function(p){ return selo(p.sit,p.sit==='Concluído'?'ok':p.sit==='Em andamento'?'wait':'neu'); }}]);
@@ -7430,7 +7429,7 @@ pgCarroForte=function(el){ var a=CF_LIG; CF_LIG=CF_LIG_SEL; try{ _pgCF5(el); } f
 /* Tabela do vendedor: vendedor não vê lucro; sócio vê lucro com desconto */
 var _pgTV5=pgVendedor;
 pgVendedor=function(el){ _pgTV5(el); if(!podeVerCustos()) return; var L=locDe(TV.loc), r=cfCalc(Number(TV.kwh),L), p=Math.max(0,r.rec-n0(TV.desc)), l=lucroCom(r,p), c=CF();
-  var d=document.createElement('div'); d.innerHTML=bloco('Só para sócios: lucro com este desconto','o vendedor não vê este bloco','<div class="bl-b">'+faixa([{r:'Lucro líquido',v:brl(l),d:pctTxt(p?l/p:0)+' da venda',alerta:l<n0(c.lucroMin)},{r:'Contra a meta',v:brl(l-n0(c.lucroMeta)),d:'meta '+brl(c.lucroMeta)},{r:'Contra o piso',v:brl(l-n0(c.lucroMin)),d:'piso '+brl(c.lucroMin)}])+'</div>');
+  var d=document.createElement('div'); d.innerHTML=bloco('Só para sócios: lucro com este desconto','o vendedor não vê este bloco','<div class="bl-b">'+faixa([{r:'Lucro líquido',v:brl(l),d:pctTxt(p?l/p:0)+' da venda',alerta:l<n0(c.lucroMeta)},{r:'Contra a meta',v:brl(l-n0(c.lucroMeta)),d:'meta '+brl(c.lucroMeta)},{r:'Equilíbrio',v:brl(r.pPiso),d:'preço para cobrir custos'}])+'</div>');
   var ph=el.querySelector('.bl:nth-of-type(2)')||el.querySelector('.bl'); if(ph) ph.parentNode.insertBefore(d.firstChild,ph.nextSibling); };
 
 /* Catálogo: vendedor não vê custo nem lucro */
@@ -7631,7 +7630,7 @@ function pgProposta(el){
     '<div class="fld"><span>Desconto (R$)</span><input type="number" id="pi-desc" value="'+esc(PI.desc)+'"></div><div class="fld"><span>Entrada (R$)</span><input type="number" id="pi-ent" value="'+esc(PI.ent)+'"></div>'+
     '<div class="fld"><span>Prazo do financiamento</span><select id="pi-prazo">'+opt([24,36,48,60,72,84],PI.prazo)+'</select></div></div></div>'+
     faixa([{r:'Preço final',v:moeda2(a.preco),d:n0(PI.desc)?'desconto de '+moeda2(PI.desc):'sem desconto'},{r:'Parcela estimada',v:moeda2(bvParcela(Math.max(0,a.preco-n0(PI.ent)),n0(PI.prazo))),d:PI.prazo+'× · taxa '+nf(a.c.bvTaxa,2)+'% '+a.c.bvUnid+' (simulação)'},
-      {r:'CAPISOL+',v:moeda2(a.as.C.mensal)+'/mês',d:'limpezas, revisão e monitoramento'}].concat(ver?[{r:'Lucro (só sócios)',v:brl(a.lucro),d:pctTxt(a.preco?a.lucro/a.preco:0)+' · meta '+brl(a.c.lucroMeta),alerta:a.lucro<n0(a.c.lucroMin)}]:[]))+
+      {r:'CAPISOL+',v:moeda2(a.as.C.mensal)+'/mês',d:'limpezas, revisão e monitoramento'}].concat(ver?[{r:'Lucro (só sócios)',v:brl(a.lucro),d:pctTxt(a.preco?a.lucro/a.preco:0)+' · meta '+brl(a.c.lucroMeta),alerta:a.lucro<n0(a.c.lucroMeta)}]:[]))+
     (a.precisa?'<div class="nt bad" style="margin:0 16px 16px">'+(a.precisa==='socios'?'Abaixo do menor valor: só Eduardo e Wendel aprovam.':'Desconto acima da alçada do vendedor: precisa de aprovação.')+' <button class="b b-pri b-xs" id="pi-pedir" type="button">Pedir desconto</button></div>':''));
   el.innerHTML=h;
   acoes(el,[piSalvar,function(){ piPDF(piCalc()); }]);
@@ -8210,7 +8209,7 @@ function pgEscritorio(el){
     h+=bloco('Cotador de venda','preço competitivo com lucro à vista nos dois cenários de imposto',escCotador());
   } else {
     var P=(S.parceiros||[]).slice().sort(function(a,b){ return String(a.linha+a.parceiro).localeCompare(String(b.linha+b.parceiro)); });
-    h+='<div class="nt">Preço de venda = custo do parceiro + 4%. Negociação até +2% (piso). Abaixo de 2%, só com o sim de um sócio. Os preços vêm da tabela que o parceiro mandar: nada inventado.</div>';
+    h+='<div class="nt">Preço de venda = custo do parceiro + 4% como referência comercial. O desconto segue alçada de aprovação e o lucro realizado é acompanhado no DRE. Os preços vêm da tabela que o parceiro mandar: nada inventado.</div>';
     h+=bloco('Tabela dos parceiros',P.length+' itens',tabela([{t:'Item',v:function(p){ return '<b>'+esc(p.item)+'</b><div class="sub">'+esc(p.linha)+' · '+esc(p.parceiro)+(p.unidade?' · '+esc(p.unidade):'')+'</div>'; }},
       {t:'Custo parceiro',r:1,v:function(p){ return brl(p.custo); }},{t:'Vender (4%)',r:1,v:function(p){ return '<b>'+brl(n0(p.custo)*(1+ESC_MG))+'</b>'; }},{t:'Mínimo (2%)',r:1,v:function(p){ return brl(n0(p.custo)*(1+ESC_MG_MIN)); }},
       {t:'Tabela de',v:function(p){ return '<span class="sub">'+esc(p.atualizado||'')+'</span>'; }}],P,true),[{t:'+ Item de parceiro'}]);
@@ -8408,4 +8407,4 @@ atualizarPip();
 })();
 </script>
 
-</body></html>
+<a href="saas/" style="position:fixed;right:16px;bottom:16px;z-index:9999;background:#1677b9;color:#fff;padding:11px 14px;border-radius:10px;text-decoration:none;font-weight:800;box-shadow:0 5px 18px #0b1f3340">Gestão SaaS integrada</a></body></html>

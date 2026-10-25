@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { unlink } from 'node:fs/promises';
 import { integrationStatus, executeJob } from '../src/adapters.mjs';
-import { enqueue, listQueue } from '../src/queue.mjs';
+import { enqueue, listQueue, claim, update, publicItem } from '../src/queue.mjs';
 
 process.env.GATEWAY_MODE = 'demo';
 process.env.ALLOW_LIVE_PUBLISH = 'false';
@@ -29,4 +29,25 @@ test('enqueue is idempotent', async () => {
 test('demo execution never calls a provider', async () => {
   const result = await executeJob({provider: 'instagram', payload: {mediaUrl: 'https://example.com/a.jpg'}});
   assert.equal(result.status, 'dry_run');
+});
+
+test('concurrent enqueues preserve every item and one idempotent job', async () => {
+  const results = await Promise.all(Array.from({length: 20}, (_, i) => enqueue({id: `parallel-${i % 10}`, payload: {}})));
+  assert.equal(results.filter(x => !x.duplicate).length, 10);
+  assert.equal((await listQueue()).filter(x => x.id.startsWith('parallel-')).length, 10);
+});
+test('only one caller can claim a job and accepted sends cannot replay', async () => {
+  await enqueue({id: 'claim-once', payload: {}});
+  const claims = await Promise.all(Array.from({length: 8}, () => claim('claim-once')));
+  assert.equal(claims.filter(x => x.claimed).length, 1);
+  await update('claim-once', {status: 'accepted'});
+  assert.equal((await claim('claim-once')).claimed, false);
+  await update('claim-once', {status: 'uncertain'});
+  assert.equal((await claim('claim-once')).claimed, false);
+});
+test('responses recursively redact credentials without revealing fragments', () => {
+  const result = publicItem({payload: {nested: [{apiKey: 'secret', token: 'abcd123456789'}]}, status: 'accepted'});
+  assert.equal(result.payload.nested[0].apiKey, '[REDACTED]');
+  assert.equal(result.payload.nested[0].token, '[REDACTED]');
+  assert.equal(result.status, 'accepted');
 });
