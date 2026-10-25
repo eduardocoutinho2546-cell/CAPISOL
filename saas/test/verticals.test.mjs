@@ -53,3 +53,16 @@ test('72 setores permanecem navegáveis e classificados por ramo',()=>{
  assert.equal(sectorApplicability(58,{industry:'services'}).level,'optional');
  assert.throws(()=>sectorApplicability(73,{industry:'services'}),/setor_invalido/);
 });
+
+import {CHANNELS,validatePublicationDraft} from '../channel-capabilities.mjs';
+test('8 canais reais nao sao conectados por simples cadastro de plataforma',()=>{
+ assert.equal(Object.keys(CHANNELS).length,8);
+ assert.ok(Object.values(CHANNELS).every(c=>c.enabled===false));
+});
+test('nenhum rascunho é publicado sem OAuth, direitos e revisão',()=>{
+ const draft={workspaceId:'tenant-a',platform:'tiktok',text:'Conteúdo da empresa',originalRightsConfirmed:true,humanApproved:true};
+ const unauthorized=validatePublicationDraft(draft,{workspaceId:'tenant-b',officialAccount:true,oauthValid:true,apiPermissionApproved:true});
+ assert.ok(unauthorized.problems.includes('official_account_not_verified_for_tenant'));
+ const allowed=validatePublicationDraft(draft,{workspaceId:'tenant-a',officialAccount:true,oauthValid:true,apiPermissionApproved:true,providerAuditComplete:true});
+ assert.equal(allowed.readyForAuthorizedAdapter,true);assert.equal(allowed.hasRealPublisher,false);
+});
