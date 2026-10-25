@@ -23,6 +23,8 @@ async function load(){
  ...(moduleAllowed('media')?{mediaJobs:'capisol_media_jobs',tracks:'capisol_content_tracks'}:{})};
  const results=await Promise.all(Object.entries(tables).map(async([key,table])=>[key,await list(table)]));data=Object.fromEntries(results);
  const members=await db.rpc('capisol_office_members',{p_workspace:workspace.id});if(members.error)throw members.error;data.members=members.data;
+ const invites=await db.rpc('capisol_my_pending_workspace_invites');data.invites=invites.error?[]:(invites.data||[]);
+ if(role==='admin'){const g=await db.from('capisol_workspace_scopes').select('user_id,scope,active').eq('workspace_id',workspace.id);data.grants=g.error?[]:(g.data||[]);}
  if(financial()){const insights=await db.rpc('capisol_office_legacy_insights',{p_workspace:workspace.id});data.legacy=insights.error?null:insights.data;try{provider=await api('status');}catch(e){provider=null;notice('Cadastros disponíveis; não foi possível verificar as integrações: '+explain(e),true);}}
  if(results.some(([,rows])=>rows.length===500))notice('Exibindo até 500 registros por módulo. Use a gestão original para consultar o histórico completo.');
 }
@@ -232,6 +234,46 @@ async function renderAudit(){
 }
 function renderAccess(){
  $('content').innerHTML=`<section class="card"><h2>Equipe da empresa</h2><p class="muted">Sócios administram os acessos. Gestores acompanham os dados do escritório; operadores veem e editam tarefas atribuídas a eles; observadores apenas consultam suas tarefas.</p>${role==='admin'?'<button id="add-member" class="primary">Cadastrar acesso</button>':''}</section>${table(['Conta','Perfil','Acesso'],data.members.map(x=>[esc(memberName(x.user_id)),esc(x.role),x.active===false?'Revogado':role==='admin'&&x.role!=='admin'?`<button data-revoke-member="${x.user_id}">Revogar</button>`:'Ativo']))}<section class="card" style="margin-top:20px"><h2>Acesso individual</h2><p class="muted">Cada pessoa utiliza sua conta. Para receber acesso, a conta precisa estar cadastrada e com e-mail confirmado na gestão. Este painel não altera as permissões do CRM anterior.</p><a href="../" class="button">Abrir cadastro e acesso da gestão ↗</a></section>`;
+
+ if(role==='admin'){
+  $('content').insertAdjacentHTML('beforeend',`<section class="card" style="margin-top:20px"><h2>Permissões por módulo</h2>
+  <p class="muted">Conceder apenas a pessoas já vinculadas a esta empresa. Permissões rurais e de mídia não alteram automaticamente o acesso financeiro.</p>
+  <button id="grant-scope" class="primary">Configurar permissão</button>
+  ${table(['Membro','Permissão','Situação'],(data.grants||[]).map(g=>[esc(memberName(g.user_id)),esc(g.scope),g.active?'Ativa':'Revogada']))}</section>`);
+  $('grant-scope').onclick=()=>showForm('Acesso específico',[
+    ['user_id','Membro da empresa','member'],['scope','Permissão (ex.: rural.read, rural.write, media.read, media.write, crm.read)','text'],
+    ['state','Digite ATIVAR ou REVOGAR','text']
+  ],{},async v=>{
+    if(!['ATIVAR','REVOGAR'].includes(v.state))throw Error('Digite ATIVAR ou REVOGAR.');
+    const r=await db.rpc('capisol_grant_scope',{p_workspace:workspace.id,p_user:v.user_id,p_scope:v.scope,p_active:v.state==='ATIVAR'});
+    if(r.error)throw r.error;await load();render();notice('Permissão atualizada somente nesta empresa.');
+  });
+ }
+ if(role==='admin'&&workspace.cnpj==='66360677000149'){
+  $('content').insertAdjacentHTML('beforeend',`<section class="card" style="margin-top:20px"><h2>Convidar outra empresa</h2>
+  <p class="muted">A pessoa convidada precisa ter conta e e-mail confirmados. Ela será administradora dos próprios dados; a CAPISOL não recebe acesso automático.</p>
+  <button id="tenant-invite" class="primary">Criar convite multiempresa</button></section>`);
+  $('tenant-invite').onclick=()=>showForm('Convidar empresa / produtor rural',[
+   ['name','Nome da empresa ou produtor','text'],['email','E-mail confirmado do titular','email'],
+   ['kind','Tipo: company, rural_producer, cooperative, association','text'],
+   ['industry','Atividade: solar, agriculture, commerce, services, manufacturing, logistics, construction, hospitality, education, health','text'],
+   ['cnpj','CNPJ (14 dígitos; opcional)','text']
+  ],{kind:'company',industry:'services'},async v=>{
+   if(!['company','rural_producer','cooperative','association'].includes(v.kind))throw Error('Tipo de ambiente inválido.');
+   const r=await db.rpc('capisol_invite_new_workspace',{p_name:v.name,p_owner_email:v.email,p_kind:v.kind,p_industry:v.industry,p_cnpj:v.cnpj||null});
+   if(r.error)throw r.error;notice('Convite criado. O titular verá o convite ao entrar com a própria conta.');
+  });
+ }
+ if((data.invites||[]).length){
+  $('content').insertAdjacentHTML('beforeend',`<section class="card"><h2>Convites para sua conta</h2>${(data.invites||[]).map(i=>
+    `<div class="bar"><span>${esc(i.workspace_name)} · ${esc(i.industry_code)}</span>
+    <button data-accept-invite="${esc(i.invitation_id)}">Aceitar</button></div>`).join('')}</section>`);
+  $('content').querySelectorAll('[data-accept-invite]').forEach(b=>b.onclick=e=>run(e.target,async()=>{
+   const r=await db.rpc('capisol_accept_workspace_invitation',{p_invitation:b.dataset.acceptInvite});
+   if(r.error)throw r.error;await initialize();notice('Acesso habilitado para a empresa convidada.');
+  }));
+ }
+
  document.querySelectorAll('[data-revoke-member]').forEach(b=>b.onclick=()=>run(b,async()=>{const r=await db.rpc('capisol_office_revoke_member',{p_workspace:workspace.id,p_user:b.dataset.revokeMember});if(r.error)throw r.error;await load();render();notice('Acesso ao escritório revogado. As tarefas e evidências foram preservadas.');}));
  if($('add-member'))$('add-member').onclick=()=>showForm('Cadastrar acesso',[['email','E-mail da conta já confirmada','email'],['role','Perfil: manager, operator ou viewer','text']],{role:'operator'},async v=>{if(!['manager','operator','viewer'].includes(v.role))throw new Error('Perfil inválido.');const r=await db.rpc('capisol_office_add_member',{p_workspace:workspace.id,p_email:v.email,p_role:v.role});if(r.error)throw r.error;await load();render();notice('Acesso atualizado.');});
 }
@@ -240,7 +282,20 @@ async function initialize(){
  if(!user){$('content').innerHTML=`<section class="card login"><span class="eyebrow">ACESSO INDIVIDUAL</span><h2>Entre no escritório</h2><p class="muted">Use a mesma conta da gestão CAPISOL.</p><form id="login"><label for="email">E-mail</label><input id="email" type="email" autocomplete="username" required><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required><button class="primary">Entrar</button></form><p class="muted"><a href="../">Criar conta ou recuperar senha na gestão ↗</a></p></section>`;$('login').onsubmit=e=>{e.preventDefault();run(e.submitter,async()=>{const r=await db.auth.signInWithPassword({email:$('email').value,password:$('password').value});if(r.error)throw new Error('E-mail ou senha não conferem. Use a recuperação na gestão se necessário.');notice();await initialize();});};return;}
  $('logout').hidden=false;$('logout').onclick=e=>run(e.target,async()=>{const r=await db.auth.signOut();if(r.error)throw r.error;location.reload();});
  const response=await db.from('capisol_workspaces').select('*').order('name');if(response.error)throw response.error;workspaces=response.data;
- if(!workspaces.length){$('content').innerHTML=empty('Sua conta ainda não tem acesso ao escritório','Solicite a um sócio o vínculo à empresa. Seu cadastro da gestão permanece disponível.');return;}
+ if(!workspaces.length){
+ const inv=await db.rpc('capisol_my_pending_workspace_invites');
+ const pend=inv.error?[]:(inv.data||[]);
+ $('content').innerHTML=pend.length?
+ `<section class="card"><h2>Convite para escritório</h2><p>Uma empresa enviou um convite para você administrar seus dados. Só aceite se reconhecer o convite.</p>
+ ${pend.map(x=>`<div class="bar"><span>${esc(x.workspace_name)} · ${esc(x.industry_code)} · válido até ${esc(new Date(x.expires_at).toLocaleDateString('pt-BR'))}</span>
+ <button data-accept-invite="${esc(x.invitation_id)}" class="primary">Aceitar convite</button></div>`).join('')}</section>`:
+ empty('Sua conta ainda não tem acesso ao escritório','Solicite a um administrador um convite para sua empresa. Seu cadastro da gestão permanece disponível.');
+ $('content').querySelectorAll('[data-accept-invite]').forEach(b=>b.onclick=e=>run(e.target,async()=>{
+  const r=await db.rpc('capisol_accept_workspace_invitation',{p_invitation:b.dataset.acceptInvite});if(r.error)throw r.error;
+  await initialize();notice('Convite aceito. Você agora administra apenas os dados desta empresa.');
+ }));
+ return;
+}
  workspace=workspaces[0];$('workspace').hidden=false;$('workspace').innerHTML=workspaces.map(w=>`<option value="${w.id}">${esc(w.name)}</option>`).join('');
  const activate=async()=>{workspace=workspaces.find(w=>w.id===$('workspace').value)||workspace;const r=await db.rpc('capisol_workspace_role',{p_workspace:workspace.id});if(r.error)throw r.error;role=r.data;const grants=await db.from('capisol_workspace_scopes').select('scope').eq('workspace_id',workspace.id).eq('user_id',user.id).eq('active',true);accessScopes=grants.error?[]:(grants.data||[]).map(g=>g.scope);await load();render();};
  $('workspace').onchange=()=>run(null,activate);$('refresh').hidden=false;$('refresh').onclick=e=>run(e.target,async()=>{notice();await load();render();});
