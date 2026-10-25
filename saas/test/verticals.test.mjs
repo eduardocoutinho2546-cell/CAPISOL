@@ -37,7 +37,7 @@ test('compactar conhecimento prioriza evidência, não aumenta janela de tokens'
  assert.ok(p.dropped.includes('baixo'));assert.ok(tokensEstimated('x')>0);
  assert.throws(()=>contextPack([],{maxEstimatedTokens:10}),/limite_de_contexto/);
 });
-test('SQL exige workspace RLS e não abre cadastro público multiempresa',()=>{
+test('SQL exige workspace RLS e não abre cadastro público multiempresa',async()=>{
  const sql=await import('node:fs').then(fs=>fs.readFileSync(new URL('../../docs/sql/office-multiempresa-rural-editorial.sql',import.meta.url),'utf8'));
  assert.match(sql,/alter table public\.capisol_rural_producers enable row level security/);
  assert.match(sql,/foreign key\(workspace_id,producer_id\)/);
