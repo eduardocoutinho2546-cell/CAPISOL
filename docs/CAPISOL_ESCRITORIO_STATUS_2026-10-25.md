@@ -37,7 +37,7 @@ O healthcheck retornou **false** para Pluggy, Focus homologação, Focus produç
 | IA de setores | `ANTHROPIC_API_KEY` e `MODELO_IA` válidos; homologar uma análise e conferir custos/qualidade antes de rotina contínua |
 | Segundo sócio | Conta própria com e-mail confirmado e vínculo administrativo verificado; não criar conta compartilhada nem elevar automaticamente outra pessoa |
 | Cobrança SaaS/recorrência | Provedor de pagamentos, contrato e homologação; controle de assinaturas existe, cobrança automática não |
-| Operação 24 horas | Worker/scheduler monitorado, limites, alertas, retenção e recuperação testados; os 191 perfis anteriores não comprovam execução contínua |
+| Operação 24 horas | Worker/scheduler monitorado, limites, alertas, retenção e recuperação testados; os 190 perfis do escritório não comprovam execução contínua |
 
 Cadastrar segredos somente no painel seguro do provedor. Não inserir tokens em HTML, GitHub, campos de cadastro nem no chat.
 
@@ -81,3 +81,14 @@ node tools/test-office-ui.mjs
 - Focus autenticação: https://doc.focusnfe.com.br/reference/autenticacao
 
 A conclusão de homologação externa deve ser registrada com resultado real, referência do provedor e responsável, e não apenas com presença de credenciais.
+
+## Fechamento adicional — alertas e crescimento
+
+- A versão do novo escritório foi integrada na main pelo PR #19; auditoria e publicação Pages concluíram com sucesso. URL: https://eduardocoutinho2546-cell.github.io/CAPISOL/saas/
+- No repositório do escritório, o PR #30 sincronizou a função de cotações com a versão 4 implantada. Foram aprovados 18 testes locais, incluindo sócios, funcionários, usuário externo, JSON inválido e payload excessivo. Os três workflows do PR passaram. Após integração, as execuções na main 40231159829 (cotações) e 40231159752 (CAPISOL 4.0) também concluíram com sucesso. Os workflows de cotações e validação CAPISOL 4.0 agora executam também nos pushes à main.
+- O alerta sobre `capisol_tabela_fornecedor` precisava de correção: o objeto é uma VIEW com `security_invoker=true`, não uma tabela sem RLS. A tentativa de habilitar RLS na visão foi recusada e revertida. A migração `capisol_supplier_view_least_privilege`, em `docs/sql/supplier-table-security.sql`, preservou security_invoker, removeu todos os privilégios de anon/authenticated e concedeu somente SELECT a authenticated. A consulta posterior confirmou anon sem leitura e authenticated sem INSERT/UPDATE/DELETE/TRUNCATE. As tabelas de origem têm políticas de acesso; nenhuma cotação real foi criada para este teste.
+- Proteção de branches não foi configurada: o conector não oferece essa escrita administrativa e o navegador não estava autenticado. Configurar exigência de PR, testes aprovados e bloqueio de force push/exclusão com conta administrativa. No CAPISOL, exigir os checks de integridade e interface; no escritório, cotações e validação 4.0. Confirmar os nomes exatos exibidos no GitHub antes de salvar a regra.
+- Plano comercial em `docs/PLANO_REDES_E_FRANQUIAS.md`: produto para franqueadora e unidade, piloto regional, qualificação de contatos, precificação por custo, parceiros e indicadores. É proposta de execução; não houve prospecção enviada ou contratos firmados.
+- Links de arquivos do Manus fornecidos no fechamento não disponibilizaram conteúdo legível pela consulta realizada. Não se afirma que esses três arquivos foram revisados. Os anexos acessíveis da conversa foram usados na entrega anterior.
+
+A plataforma tem uma base publicada e melhorias verificadas, mas não está homologada para operar 100% da empresa. Permanecem as dependências externas acima, a migração do CRM legado, o teste comercial ponta a ponta com usuários reais, recuperação de backup e operação monitorada. Não é possível consultar o saldo de créditos desta conversa; este registro preserva o ponto de continuidade sem afirmar que o saldo está próximo de acabar.
