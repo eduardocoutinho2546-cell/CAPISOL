@@ -42,6 +42,16 @@ export function integrationStatus() {
       configured: Boolean(process.env.RESPOND_IO_TOKEN && process.env.RESPOND_IO_CHANNEL_ID),
       capability: 'respond_io_message',
       note: 'Requires a connected Respond.io channel and recipient opt-in.'
+    },
+    whatsappCloud: {
+      configured: Boolean(process.env.WHATSAPP_CLOUD_ACCESS_TOKEN && process.env.WHATSAPP_CLOUD_PHONE_NUMBER_ID),
+      capability: 'official_meta_cloud_api',
+      note: 'Outbound messages require opt-in and an approved template outside the 24-hour service window.'
+    },
+    tiktokContent: {
+      configured: Boolean(process.env.TIKTOK_CONTENT_ACCESS_TOKEN && process.env.TIKTOK_CONTENT_OPEN_ID),
+      capability: 'official_content_posting_api',
+      note: 'Requires registered app, approved video.publish scope, authorized creator and verified media URL/domain.'
     }
   };
 }
@@ -52,7 +62,9 @@ export async function executeJob(job) {
   }
   if (job.provider === 'instagram') return publishInstagram(job);
   if (job.provider === 'whatsapp') return sendRespondIo(job);
+  if (job.provider === 'whatsapp_cloud') return sendWhatsAppCloud(job);
   if (job.provider === 'tiktok_ads') return createTikTokAd(job);
+  if (job.provider === 'tiktok_content') return publishTikTokContent(job);
   throw new Error(`unsupported_provider_${job.provider}`);
 }
 
@@ -82,6 +94,26 @@ async function sendRespondIo(job) {
   return { status: 'sent', provider: 'respond_io', providerId: result.id || result.messageId || null };
 }
 
+async function sendWhatsAppCloud(job) {
+  if (!process.env.WHATSAPP_CLOUD_ACCESS_TOKEN || !process.env.WHATSAPP_CLOUD_PHONE_NUMBER_ID) throw new Error('whatsapp_cloud_not_configured');
+  if (!job.payload?.to) throw new Error('whatsapp_recipient_required');
+  const body = { messaging_product: 'whatsapp', recipient_type: 'individual', to: job.payload.to };
+  if (job.payload.inServiceWindow === true) {
+    if (!job.payload.text) throw new Error('whatsapp_service_text_required');
+    body.type = 'text';
+    body.text = { preview_url: Boolean(job.payload.previewUrl), body: job.payload.text };
+  } else {
+    if (!job.payload.templateName || !job.payload.languageCode) throw new Error('whatsapp_approved_template_required');
+    body.type = 'template';
+    body.template = { name: job.payload.templateName, language: { code: job.payload.languageCode }, components: job.payload.components || [] };
+  }
+  const version = process.env.WHATSAPP_CLOUD_API_VERSION || 'v26.0';
+  const result = await requestJson(`https://graph.facebook.com/${version}/${process.env.WHATSAPP_CLOUD_PHONE_NUMBER_ID}/messages`, {
+    method: 'POST', headers: { 'content-type': 'application/json', Authorization: `Bearer ${process.env.WHATSAPP_CLOUD_ACCESS_TOKEN}` }, body: JSON.stringify(body)
+  });
+  return { status: 'accepted', provider: 'whatsapp_cloud', providerId: result?.messages?.[0]?.id || null, delivery: 'confirm via webhook' };
+}
+
 async function createTikTokAd(job) {
   if (!process.env.TIKTOK_ACCESS_TOKEN || !process.env.TIKTOK_ADVERTISER_ID) throw new Error('tiktok_ads_not_configured');
   if (!job.payload?.adgroupId || !Array.isArray(job.payload?.creatives)) throw new Error('tiktok_adgroup_and_creatives_required');
@@ -90,4 +122,18 @@ async function createTikTokAd(job) {
     body: JSON.stringify({ advertiser_id: process.env.TIKTOK_ADVERTISER_ID, adgroup_id: job.payload.adgroupId, creatives: job.payload.creatives })
   });
   return { status: 'submitted', provider: 'tiktok_ads', providerId: result?.data?.request_id || null };
+}
+
+async function publishTikTokContent(job) {
+  if (!process.env.TIKTOK_CONTENT_ACCESS_TOKEN || !process.env.TIKTOK_CONTENT_OPEN_ID) throw new Error('tiktok_content_not_configured');
+  if (!job.payload?.mediaUrl || !job.payload?.title) throw new Error('tiktok_media_url_and_title_required');
+  const authHeaders = { 'content-type': 'application/json', Authorization: `Bearer ${process.env.TIKTOK_CONTENT_ACCESS_TOKEN}` };
+  const creator = await requestJson('https://open.tiktokapis.com/v2/post/publish/creator_info/query/', { method: 'POST', headers: authHeaders, body: '{}' });
+  const privacy = job.payload.privacyLevel || 'SELF_ONLY';
+  if (creator?.data?.privacy_level_options && !creator.data.privacy_level_options.includes(privacy)) throw new Error('tiktok_privacy_level_not_allowed');
+  const result = await requestJson('https://open.tiktokapis.com/v2/post/publish/video/init/', {
+    method: 'POST', headers: authHeaders,
+    body: JSON.stringify({ post_info: { title: job.payload.title, privacy_level: privacy, disable_comment: Boolean(job.payload.disableComment) }, source_info: { source: 'PULL_FROM_URL', video_url: job.payload.mediaUrl } })
+  });
+  return { status: 'submitted', provider: 'tiktok_content', providerId: result?.data?.publish_id || null, note: 'Check status endpoint/webhook for processing result.' };
 }

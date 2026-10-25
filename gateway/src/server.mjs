@@ -62,7 +62,7 @@ async function route(request, response) {
 
   if (request.method === 'POST' && url.pathname === '/v1/queue') {
     const payload = await body(request);
-    if (!['instagram', 'tiktok_ads', 'whatsapp'].includes(payload.provider)) return json(response, 400, {error: 'unsupported_provider'});
+    if (!['instagram', 'tiktok_ads', 'tiktok_content', 'whatsapp', 'whatsapp_cloud'].includes(payload.provider)) return json(response, 400, {error: 'unsupported_provider'});
     if (!payload.payload || typeof payload.payload !== 'object') return json(response, 400, {error: 'payload_required'});
     const job = { id: idempotency(request, payload), provider: payload.provider, payload: payload.payload, approvedAt: payload.approvedAt || null };
     const result = await enqueue(job);
