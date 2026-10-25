@@ -1,5 +1,5 @@
 import {money,statuses,summarize,reviewSector,validateFiscal} from './domain.mjs';
-import {tenantMode,validateRural,generateEditorialTracks,CONTENT_PILLARS} from './verticals.mjs';
+import {tenantMode,validateRural,generateEditorialTracks,CONTENT_PILLARS,sectorApplicability} from './verticals.mjs';
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const db=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co','sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv');
 let user,workspace,workspaces=[],role,tab='overview',sectors=[],data={},provider=null,accessScopes=[];
@@ -135,7 +135,7 @@ function issue(doc){
 }
 function renderSectors(){
  $('content').innerHTML=`<div class="bar"><p class="muted">72 procedimentos de revisão. O resultado é um rascunho até a validação do responsável.</p><input id="sector-search" aria-label="Buscar setor" placeholder="Buscar setor ou rotina…"></div><div id="sector-list" class="grid sectors"></div>`;
- const draw=()=>{const q=$('sector-search').value.toLocaleLowerCase('pt-BR');$('sector-list').innerHTML=sectors.filter(s=>(s.name+' '+s.routine).toLocaleLowerCase('pt-BR').includes(q)).map(s=>`<article class="card"><span class="eyebrow">SETOR ${String(s.sector).padStart(2,'0')}</span><h3>${esc(s.name)}</h3><p class="muted">${esc(s.routine)}</p><details><summary>Etapas e indicador</summary><ol>${s.steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><p class="muted">${esc(s.metric)}</p></details><button data-sector="${s.sector}">Iniciar revisão</button></article>`).join('');$('sector-list').querySelectorAll('button').forEach(b=>b.onclick=()=>sectorForm(sectors.find(s=>s.sector===Number(b.dataset.sector))));};$('sector-search').oninput=draw;draw();
+ const draw=()=>{const q=$('sector-search').value.toLocaleLowerCase('pt-BR');$('sector-list').innerHTML=sectors.filter(s=>(s.name+' '+s.routine).toLocaleLowerCase('pt-BR').includes(q)).map(s=>`<article class="card"><span class="eyebrow">SETOR ${String(s.sector).padStart(2,'0')}</span><h3>${esc(s.name)}</h3><p class="muted">${esc(s.routine)}</p><p class="muted">Aplicação: ${esc(sectorApplicability(s.sector,tenantMode(workspace)).level)} · ${esc(sectorApplicability(s.sector,tenantMode(workspace)).reason)}</p><details><summary>Etapas e indicador</summary><ol>${s.steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><p class="muted">${esc(s.metric)}</p></details><button data-sector="${s.sector}">Iniciar revisão</button></article>`).join('');$('sector-list').querySelectorAll('button').forEach(b=>b.onclick=()=>sectorForm(sectors.find(s=>s.sector===Number(b.dataset.sector))));};$('sector-search').oninput=draw;draw();
 }
 function sectorForm(sector){
  showForm(sector.routine,sector.inputs.map((x,i)=>[`input${i}`,x,'textarea']),{},async values=>{
