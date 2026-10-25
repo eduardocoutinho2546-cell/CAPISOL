@@ -5,6 +5,8 @@ const db=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co'
 let user,workspace,workspaces=[],role,tab='overview',sectors=[],data={},provider=null,accessScopes=[];
 const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos'],['rural','Produtores rurais'],['content','Estúdio de conteúdo'],['media','Vídeos e cortes']];
 const financial=()=>['admin','manager'].includes(role);
+const isCapisol=()=>workspace?.cnpj==='66360677000149';
+const menuLabel=(id,label)=>id==='subscriptions'&&!isCapisol()?'Assinaturas':label;
 const moduleAllowed=type=>financial()||accessScopes.includes(type+'.read')||accessScopes.includes(type+'.write');
 const moduleWritable=type=>financial()||accessScopes.includes(type+'.write');
 function notice(message='',error=false){$('notice').textContent=message;$('notice').className=error?'error':'';}
@@ -25,7 +27,8 @@ async function load(){
  const members=await db.rpc('capisol_office_members',{p_workspace:workspace.id});if(members.error)throw members.error;data.members=members.data;
  const invites=await db.rpc('capisol_my_pending_workspace_invites');data.invites=invites.error?[]:(invites.data||[]);
  if(role==='admin'){const g=await db.from('capisol_workspace_scopes').select('user_id,scope,active').eq('workspace_id',workspace.id);data.grants=g.error?[]:(g.data||[]);}
- if(financial()){const insights=await db.rpc('capisol_office_legacy_insights',{p_workspace:workspace.id});data.legacy=insights.error?null:insights.data;try{provider=await api('status');}catch(e){provider=null;notice('Cadastros disponíveis; não foi possível verificar as integrações: '+explain(e),true);}}
+ if(financial()){if(isCapisol()){const insights=await db.rpc('capisol_office_legacy_insights',{p_workspace:workspace.id});data.legacy=insights.error?null:insights.data;}
+ try{provider=await api('status');}catch(e){provider=null;notice('Cadastros disponíveis; não foi possível verificar as integrações: '+explain(e),true);}}
  if(results.some(([,rows])=>rows.length===500))notice('Exibindo até 500 registros por módulo. Use a gestão original para consultar o histórico completo.');
 }
 function pill(status){return `<span class="pill ${['done','active','authorized','synced','won','completed'].includes(status)?'good':['uncertain','rejected','blocked','failed'].includes(status)?'bad':'warn'}">${esc(statuses[status]||status)}</span>`;}
@@ -34,9 +37,9 @@ function table(headers,rows){return rows.length?`<div class="table-wrap"><table>
 function memberName(id){if(!id)return 'Sem responsável';if(id===user.id)return 'Você';return data.members.find(m=>m.user_id===id)?.display_name||id.slice(0,8);}
 function navigate(next){tab=next;render();}
 function render(){
- $('title').textContent=nav.find(x=>x[0]===tab)?.[1]||'Escritório';
- $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):financial()||['overview','tasks','sectors'].includes(id))
- .map(([id,label])=>`<button data-nav="${id}" class="${id===tab?'active':''}">${label}</button>`).join('');
+ $('title').textContent=menuLabel(tab,nav.find(x=>x[0]===tab)?.[1]||'Escritório');
+ $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):['quality','bank','fiscal'].includes(id)?isCapisol()&&financial():financial()||['overview','tasks','sectors'].includes(id))
+ .map(([id,label])=>`<button data-nav="${id}" class="${id===tab?'active':''}">${esc(menuLabel(id,label))}</button>`).join('');
  $('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
  const content=$('content');content.innerHTML='';
  if(tab==='overview')renderOverview();
@@ -113,7 +116,7 @@ function showForm(title,fields,values,onSave){
 }
 function edit(key,row={}){
  const d=definitions[key];const defaults=key==='tasks'?{sector:1,status:'planned',priority:2,assignee_id:user.id}:key==='fiscal'?{environment:'homologation',payload:{cnpj_prestador:workspace.cnpj}}:{status:'draft'};
- showForm(`${row.id?'Editar':'Novo'} · ${d.title}`,d.fields,{...defaults,...row},async values=>{
+ showForm(`${row.id?'Editar':'Novo'} · ${key==='subscriptions'&&!isCapisol()?'Assinatura':d.title}`,d.fields,{...defaults,...row},async values=>{
   if(key==='tasks'){values.assignee_id=values.assignee_id||null;values.due_date=values.due_date||null;if(values.status==='done'&&values.evidence.trim().length<10)throw new Error('Descreva a evidência da conclusão (mínimo 10 caracteres).');}
   if(key==='fiscal'){values.payload.valor_servico=values.amount;values.payload.descricao_servico=values.description;}
   if(key==='proposals'&&values.price<values.estimated_cost&&['approved','won'].includes(values.status)&&role!=='admin')throw new Error('Uma proposta com prejuízo estimado precisa de revisão dos sócios.');
@@ -297,7 +300,7 @@ async function initialize(){
  return;
 }
  workspace=workspaces[0];$('workspace').hidden=false;$('workspace').innerHTML=workspaces.map(w=>`<option value="${w.id}">${esc(w.name)}</option>`).join('');
- const activate=async()=>{workspace=workspaces.find(w=>w.id===$('workspace').value)||workspace;const r=await db.rpc('capisol_workspace_role',{p_workspace:workspace.id});if(r.error)throw r.error;role=r.data;const grants=await db.from('capisol_workspace_scopes').select('scope').eq('workspace_id',workspace.id).eq('user_id',user.id).eq('active',true);accessScopes=grants.error?[]:(grants.data||[]).map(g=>g.scope);await load();render();};
+ const activate=async()=>{workspace=workspaces.find(w=>w.id===$('workspace').value)||workspace;document.querySelectorAll('.aside-bottom a').forEach(a=>{a.hidden=workspace.cnpj!=='66360677000149';});const r=await db.rpc('capisol_workspace_role',{p_workspace:workspace.id});if(r.error)throw r.error;role=r.data;const grants=await db.from('capisol_workspace_scopes').select('scope').eq('workspace_id',workspace.id).eq('user_id',user.id).eq('active',true);accessScopes=grants.error?[]:(grants.data||[]).map(g=>g.scope);await load();render();};
  $('workspace').onchange=()=>run(null,activate);$('refresh').hidden=false;$('refresh').onclick=e=>run(e.target,async()=>{notice();await load();render();});
  const r=await fetch('../biblioteca/setores-operacionais.json',{signal:AbortSignal.timeout(10000)});if(!r.ok)throw new Error('Biblioteca de setores indisponível.');sectors=(await r.json()).sectors;await activate();
 }
