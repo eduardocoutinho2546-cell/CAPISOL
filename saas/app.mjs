@@ -1,9 +1,12 @@
 import {money,statuses,summarize,reviewSector,validateFiscal} from './domain.mjs';
+import {tenantMode,validateRural,generateEditorialTracks,CONTENT_PILLARS} from './verticals.mjs';
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const db=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co','sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv');
-let user,workspace,workspaces=[],role,tab='overview',sectors=[],data={},provider=null;
-const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos']];
+let user,workspace,workspaces=[],role,tab='overview',sectors=[],data={},provider=null,accessScopes=[];
+const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos'],['rural','Produtores rurais'],['content','Estúdio de conteúdo'],['media','Vídeos e cortes']];
 const financial=()=>['admin','manager'].includes(role);
+const moduleAllowed=type=>financial()||accessScopes.includes(type+'.read')||accessScopes.includes(type+'.write');
+const moduleWritable=type=>financial()||accessScopes.includes(type+'.write');
 function notice(message='',error=false){$('notice').textContent=message;$('notice').className=error?'error':'';}
 const errors={max_three_active_priorities:'Conclua ou pause uma prioridade antes de iniciar a quarta.',task_execution_requires_plan:'Para iniciar a tarefa, informe responsável, prazo e objetivo.',confirmed_account_required:'Esta conta precisa existir e confirmar o e-mail antes de receber acesso.',session_required:'Entre novamente para continuar.',manager_required:'Este módulo exige acesso de gestor.',pluggy_credentials_missing:'Cadastre as credenciais da Pluggy no backend para conectar uma conta.',focus_homologation_credentials_missing:'Falta a credencial de homologação da Focus NFe no backend.',fiscal_production_not_validated:'A emissão real aguarda configuração e validação fiscal.',ai_credentials_or_model_missing:'A análise por IA aguarda chave e modelo válidos no backend. A revisão de entradas continua disponível.',daily_limit_or_reservation_failed:'O limite diário da análise por IA foi atingido ou a reserva não pôde ser feita.',already_submitted_poll_status:'Esta nota já foi enviada. Consulte o resultado antes de qualquer nova tentativa.',bank_connection_requires_attention:'A conexão bancária precisa de atualização ou confirmação no provedor.',operation_failed:'A operação não foi confirmada. Confira o estado antes de tentar novamente.'};
 function explain(e){return errors[e.message]||e.message||'Não foi possível concluir a operação.';}
@@ -15,7 +18,9 @@ async function api(action,body={}){
 }
 async function list(table){const {data,error}=await db.from(table).select('*').eq('workspace_id',workspace.id).order('created_at',{ascending:false}).limit(500);if(error)throw error;return data;}
 async function load(){
- const tables={tasks:'capisol_tasks',...(financial()?{suppliers:'capisol_suppliers',proposals:'capisol_proposals',subscriptions:'capisol_subscriptions',fiscal:'capisol_fiscal_documents',bank:'capisol_bank_connections',transactions:'capisol_bank_transactions',runs:'capisol_agent_runs'}:{})};
+ const tables={tasks:'capisol_tasks',...(financial()?{suppliers:'capisol_suppliers',proposals:'capisol_proposals',subscriptions:'capisol_subscriptions',fiscal:'capisol_fiscal_documents',bank:'capisol_bank_connections',transactions:'capisol_bank_transactions',runs:'capisol_agent_runs'}:{}),
+ ...(moduleAllowed('rural')?{ruralProducers:'capisol_rural_producers',ruralProperties:'capisol_rural_properties'}:{}),
+ ...(moduleAllowed('media')?{mediaJobs:'capisol_media_jobs',tracks:'capisol_content_tracks'}:{})};
  const results=await Promise.all(Object.entries(tables).map(async([key,table])=>[key,await list(table)]));data=Object.fromEntries(results);
  const members=await db.rpc('capisol_office_members',{p_workspace:workspace.id});if(members.error)throw members.error;data.members=members.data;
  if(financial()){const insights=await db.rpc('capisol_office_legacy_insights',{p_workspace:workspace.id});data.legacy=insights.error?null:insights.data;try{provider=await api('status');}catch(e){provider=null;notice('Cadastros disponíveis; não foi possível verificar as integrações: '+explain(e),true);}}
@@ -28,7 +33,8 @@ function memberName(id){if(!id)return 'Sem responsável';if(id===user.id)return 
 function navigate(next){tab=next;render();}
 function render(){
  $('title').textContent=nav.find(x=>x[0]===tab)?.[1]||'Escritório';
- $('nav').innerHTML=nav.filter(([id])=>financial()||['overview','tasks','sectors'].includes(id)).map(([id,label])=>`<button data-nav="${id}" class="${id===tab?'active':''}">${label}</button>`).join('');
+ $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):financial()||['overview','tasks','sectors'].includes(id))
+ .map(([id,label])=>`<button data-nav="${id}" class="${id===tab?'active':''}">${label}</button>`).join('');
  $('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
  const content=$('content');content.innerHTML='';
  if(tab==='overview')renderOverview();
@@ -36,6 +42,9 @@ function render(){
  else if(tab==='sectors')renderSectors();
  else if(tab==='bank')renderBank();
  else if(tab==='audit')run(null,renderAudit);
+ else if(tab==='rural')renderRural();
+ else if(tab==='content')renderContentStudio();
+ else if(tab==='media')renderMediaStudio();
  else if(tab==='access')renderAccess();
  else renderRecords();
 }
@@ -160,7 +169,7 @@ async function initialize(){
  const response=await db.from('capisol_workspaces').select('*').order('name');if(response.error)throw response.error;workspaces=response.data;
  if(!workspaces.length){$('content').innerHTML=empty('Sua conta ainda não tem acesso ao escritório','Solicite a um sócio o vínculo à empresa. Seu cadastro da gestão permanece disponível.');return;}
  workspace=workspaces[0];$('workspace').hidden=false;$('workspace').innerHTML=workspaces.map(w=>`<option value="${w.id}">${esc(w.name)}</option>`).join('');
- const activate=async()=>{workspace=workspaces.find(w=>w.id===$('workspace').value)||workspace;const r=await db.rpc('capisol_workspace_role',{p_workspace:workspace.id});if(r.error)throw r.error;role=r.data;await load();render();};
+ const activate=async()=>{workspace=workspaces.find(w=>w.id===$('workspace').value)||workspace;const r=await db.rpc('capisol_workspace_role',{p_workspace:workspace.id});if(r.error)throw r.error;role=r.data;const grants=await db.from('capisol_workspace_scopes').select('scope').eq('workspace_id',workspace.id).eq('user_id',user.id).eq('active',true);accessScopes=grants.error?[]:(grants.data||[]).map(g=>g.scope);await load();render();};
  $('workspace').onchange=()=>run(null,activate);$('refresh').hidden=false;$('refresh').onclick=e=>run(e.target,async()=>{notice();await load();render();});
  const r=await fetch('../biblioteca/setores-operacionais.json',{signal:AbortSignal.timeout(10000)});if(!r.ok)throw new Error('Biblioteca de setores indisponível.');sectors=(await r.json()).sectors;await activate();
 }
