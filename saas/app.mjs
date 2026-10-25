@@ -143,6 +143,79 @@ function sectorForm(sector){
   if($('ai-run'))$('ai-run').onclick=e=>run(e.target,async()=>{const response=await api('analyze_sector',{sector:sector.sector,inputs});$('analysis').textContent=response.output;notice('Rascunho da IA salvo na auditoria. Revise antes de usar.');});
  });
 }
+
+function renderRural(){
+ if(!tenantMode(workspace).rural||!moduleAllowed('rural')){navigate('overview');return;}
+ const producers=data.ruralProducers||[],properties=data.ruralProperties||[];
+ $('content').innerHTML=`<section class="hero"><div><span class="eyebrow">GESTÃO RURAL • EMPRESA SEPARADA</span><h2>Produtores e propriedades</h2>
+ <p>Cadastros privados desta empresa. Informe somente os 4 últimos dígitos do documento; cadastro não prova titularidade.</p></div></section>
+ <div class="bar"><h2>Produtores</h2><button id="new-producer" class="primary">Cadastrar produtor</button></div>
+ ${table(['Nome','Município','Atividade','Estado'],producers.map(x=>[esc(x.display_name),esc(x.municipality+' / '+x.state_code),esc(x.main_activity),esc(x.verification_state)]))}
+ <div class="bar"><h2>Propriedades</h2><button id="new-property" class="primary">Cadastrar propriedade</button></div>
+ ${table(['Propriedade','Produtor','Área (ha)','Município'],properties.map(x=>[esc(x.name),esc(producers.find(p=>p.id===x.producer_id)?.display_name||'Não encontrado'),esc(x.hectares??'Não informada'),esc(x.municipality)]))}
+ <p class="muted">CADASTRO em rascunho. Para CAR, CCIR, documentos completos e regularidade agrária é obrigatório processo privado e conferência profissional.</p>`;
+ $('new-producer').disabled=!moduleWritable('rural');
+ $('new-property').disabled=!moduleWritable('rural')||!producers.length;
+ $('new-producer').onclick=()=>showForm('Novo produtor rural',[
+ ['display_name','Nome ou razão social','text'],['municipality','Município','text'],['state_code','UF','text'],
+ ['document_last4','4 últimos dígitos CPF/CNPJ (opcional)','text'],['main_activity','Atividade: crops, livestock, agroforestry, aquaculture, mixed, other','text']
+ ],{state_code:'AC',main_activity:'mixed'},async v=>{
+  const errors=validateRural('producer',v);if(errors.length)throw Error(errors.join(' · '));
+  const row={...v,workspace_id:workspace.id,kind:'person',verification_state:'draft',consent_confirmed:false};
+  if(!row.document_last4)delete row.document_last4;
+  const r=await db.from('capisol_rural_producers').insert(row).select('id');if(r.error)throw r.error;
+  await load();render();notice('Produtor incluído, aguardando conferência.');
+ });
+ $('new-property').onclick=()=>showForm('Nova propriedade rural',[
+ ['producer_id','ID do produtor cadastrado','text'],['name','Nome da propriedade','text'],['municipality','Município','text'],
+ ['state_code','UF','text'],['hectares','Hectares','number'],['activity','Atividade: crops, livestock, agroforestry, aquaculture, mixed, other','text']
+ ],{producer_id:producers[0]?.id,state_code:'AC',activity:'mixed'},async v=>{
+  const errors=validateRural('property',v);if(errors.length)throw Error(errors.join(' · '));
+  if(!producers.some(p=>p.id===v.producer_id))throw Error('Produtor de outra empresa ou inexistente.');
+  v.hectares=Number(v.hectares);
+  const r=await db.from('capisol_rural_properties').insert({...v,workspace_id:workspace.id}).select('id');if(r.error)throw r.error;
+  await load();render();notice('Propriedade incluída para conferência.');
+ });
+}
+function renderContentStudio(){
+ if(!moduleAllowed('media')){navigate('overview');return;}
+ const tracks=data.tracks||[];
+ $('content').innerHTML=`<section class="hero"><div><span class="eyebrow">CONTEÚDO AUTÊNTICO • PLANEJAMENTO INTERNO</span>
+ <h2>12 pilares e cinco formatos por pilar</h2><p>60 vertentes editoriais, não 60 contas falsas. Nenhuma publicação automática configurada.</p></div></section>
+ <div class="bar"><p>${tracks.length} pauta(s) registradas nesta empresa.</p>
+ <button id="seed-tracks" class="primary">Cadastrar 60 pautas internas</button></div>
+ <div class="grid sectors">${CONTENT_PILLARS.map((p,i)=>`<article class="card"><span class="eyebrow">PILAR ${String(i+1).padStart(2,'0')}</span><h3>${esc(p)}</h3>
+ <p class="muted">Curtos, entrevistas, artigos, vídeo longo e carrossel.</p></article>`).join('')}</div>
+ <p class="muted">Publicação externa precisa de conta oficial, direitos, aprovação humana, API homologada e métricas próprias.</p>`;
+ $('seed-tracks').disabled=tracks.length>0||!moduleWritable('media');
+ $('seed-tracks').onclick=e=>run(e.target,async()=>{
+  const rows=generateEditorialTracks(workspace.id).map(({workspace_id,cluster_no,strand_no,label,platform,status,public_account_authorized})=>
+   ({workspace_id,cluster_no,strand_no,label,platform,status,public_account_authorized}));
+  const r=await db.from('capisol_content_tracks').insert(rows).select('id');if(r.error)throw r.error;
+  await load();render();notice('60 pautas internas cadastradas; nenhuma conta ou post criado.');
+ });
+}
+function renderMediaStudio(){
+ if(!moduleAllowed('media')){navigate('overview');return;}
+ const rows=data.mediaJobs||[];
+ $('content').innerHTML=`<section class="hero"><div><span class="eyebrow">VÍDEOS BRUTOS E CLIPAGEM</span><h2>Fila de pós-produção</h2>
+ <p>Os videomakers entregam o bruto. Clipadores/IA preparam cortes com revisão; nenhum post sai automaticamente.</p></div></section>
+ <div class="bar"><p>${rows.length} trabalho(s) registrados.</p><button id="new-media" class="primary">Cadastrar vídeo bruto</button></div>
+ ${table(['Material','Tipo','Estado','Direitos'],rows.map(x=>[esc(x.title),esc(x.media_kind),pill(x.state),x.rights_confirmed?'Confirmados':'Pendentes']))}
+ <p class="muted">O cadastro de arquivo privado organiza a fila, mas não executa FFmpeg nem envia a redes sociais.</p>`;
+ $('new-media').disabled=!moduleWritable('media');
+ $('new-media').onclick=()=>showForm('Registrar arquivo original',[
+ ['title','Título','text'],['original_storage_path','Caminho em armazenamento privado','text'],
+ ['instructions','Instruções de corte e legendagem','textarea'],['confirmation','Digite TENHO AUTORIZACAO (direitos do vídeo)','text']
+ ],{},async v=>{
+  if(v.confirmation!=='TENHO AUTORIZACAO')throw Error('Confirme autorização de uso de imagem e direitos.');
+  if(!/^[A-Za-z0-9_./-]{4,800}$/.test(v.original_storage_path)||v.original_storage_path.includes('..'))throw Error('Informe caminho privado válido, não URL pública.');
+  const r=await db.from('capisol_media_jobs').insert({workspace_id:workspace.id,title:v.title,
+    original_storage_path:v.original_storage_path,instructions:v.instructions,rights_confirmed:true,media_kind:'video',state:'draft'}).select('id');
+  if(r.error)throw r.error;await load();render();notice('Arquivo cadastrado para revisão. Edição ainda não executada.');
+ });
+}
+
 function renderBank(){
  $('content').innerHTML=`<section class="card"><h2>Contas conectadas com consentimento</h2><p class="muted">Consulta de transações efetivadas de contas bancárias nos últimos 90 dias. A sincronização é manual; não inicia pagamentos nem transferências.</p><button id="connect" class="primary">Conectar conta pela Pluggy</button><p class="muted">${provider?.open_finance.configured?'Credenciais configuradas. O titular confirma o consentimento no ambiente da Pluggy.':'Aguardando credenciais da Pluggy no backend.'}</p></section><div id="connections">${table(['Conexão','Estado','Última sincronização','Ações'],(data.bank||[]).map(x=>[esc(x.provider_item_id),pill(x.status),esc(x.synced_at?new Date(x.synced_at).toLocaleString('pt-BR'):'Ainda não sincronizada'),`<div class="actions"><button data-sync="${x.id}" ${x.revoked_at?'disabled':''}>Sincronizar</button><button data-revoke="${x.id}" ${x.status==='revoked'?'disabled':''}>Revogar</button></div>`]))}</div><h2 style="margin-top:28px">Transações importadas</h2><p class="muted">Importação para conferência. Não representa conciliação contábil automática.</p>${table(['Data','Descrição','Valor','Moeda'],(data.transactions||[]).map(x=>[esc(x.date),esc(x.description),money(x.amount),esc(x.currency)]))}`;
  $('connect').onclick=e=>run(e.target,async()=>{
