@@ -1,9 +1,14 @@
 import {money,statuses,summarize,reviewSector,validateFiscal} from './domain.mjs';
+import {tenantMode,validateRural,generateEditorialTracks,CONTENT_PILLARS,sectorApplicability} from './verticals.mjs';
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const db=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co','sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv');
-let user,workspace,workspaces=[],role,tab='overview',sectors=[],data={},provider=null;
-const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos']];
+let user,workspace,workspaces=[],role,tab='overview',sectors=[],data={},provider=null,accessScopes=[];
+const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos'],['rural','Produtores rurais'],['content','Estúdio de conteúdo'],['media','Vídeos e cortes']];
 const financial=()=>['admin','manager'].includes(role);
+const isCapisol=()=>workspace?.cnpj==='66360677000149';
+const menuLabel=(id,label)=>id==='subscriptions'&&!isCapisol()?'Assinaturas':label;
+const moduleAllowed=type=>financial()||accessScopes.includes(type+'.read')||accessScopes.includes(type+'.write');
+const moduleWritable=type=>financial()||accessScopes.includes(type+'.write');
 function notice(message='',error=false){$('notice').textContent=message;$('notice').className=error?'error':'';}
 const errors={max_three_active_priorities:'Conclua ou pause uma prioridade antes de iniciar a quarta.',task_execution_requires_plan:'Para iniciar a tarefa, informe responsável, prazo e objetivo.',confirmed_account_required:'Esta conta precisa existir e confirmar o e-mail antes de receber acesso.',session_required:'Entre novamente para continuar.',manager_required:'Este módulo exige acesso de gestor.',pluggy_credentials_missing:'Cadastre as credenciais da Pluggy no backend para conectar uma conta.',focus_homologation_credentials_missing:'Falta a credencial de homologação da Focus NFe no backend.',fiscal_production_not_validated:'A emissão real aguarda configuração e validação fiscal.',ai_credentials_or_model_missing:'A análise por IA aguarda chave e modelo válidos no backend. A revisão de entradas continua disponível.',daily_limit_or_reservation_failed:'O limite diário da análise por IA foi atingido ou a reserva não pôde ser feita.',already_submitted_poll_status:'Esta nota já foi enviada. Consulte o resultado antes de qualquer nova tentativa.',bank_connection_requires_attention:'A conexão bancária precisa de atualização ou confirmação no provedor.',operation_failed:'A operação não foi confirmada. Confira o estado antes de tentar novamente.'};
 function explain(e){return errors[e.message]||e.message||'Não foi possível concluir a operação.';}
@@ -15,10 +20,15 @@ async function api(action,body={}){
 }
 async function list(table){const {data,error}=await db.from(table).select('*').eq('workspace_id',workspace.id).order('created_at',{ascending:false}).limit(500);if(error)throw error;return data;}
 async function load(){
- const tables={tasks:'capisol_tasks',...(financial()?{suppliers:'capisol_suppliers',proposals:'capisol_proposals',subscriptions:'capisol_subscriptions',fiscal:'capisol_fiscal_documents',bank:'capisol_bank_connections',transactions:'capisol_bank_transactions',runs:'capisol_agent_runs'}:{})};
+ const tables={tasks:'capisol_tasks',...(financial()?{suppliers:'capisol_suppliers',proposals:'capisol_proposals',subscriptions:'capisol_subscriptions',fiscal:'capisol_fiscal_documents',bank:'capisol_bank_connections',transactions:'capisol_bank_transactions',runs:'capisol_agent_runs'}:{}),
+ ...(moduleAllowed('rural')?{ruralProducers:'capisol_rural_producers',ruralProperties:'capisol_rural_properties'}:{}),
+ ...(moduleAllowed('media')?{mediaJobs:'capisol_media_jobs',tracks:'capisol_content_tracks'}:{})};
  const results=await Promise.all(Object.entries(tables).map(async([key,table])=>[key,await list(table)]));data=Object.fromEntries(results);
  const members=await db.rpc('capisol_office_members',{p_workspace:workspace.id});if(members.error)throw members.error;data.members=members.data;
- if(financial()){const insights=await db.rpc('capisol_office_legacy_insights',{p_workspace:workspace.id});data.legacy=insights.error?null:insights.data;try{provider=await api('status');}catch(e){provider=null;notice('Cadastros disponíveis; não foi possível verificar as integrações: '+explain(e),true);}}
+ const invites=await db.rpc('capisol_my_pending_workspace_invites');data.invites=invites.error?[]:(invites.data||[]);
+ if(role==='admin'){const g=await db.from('capisol_workspace_scopes').select('user_id,scope,active').eq('workspace_id',workspace.id);data.grants=g.error?[]:(g.data||[]);}
+ if(financial()){if(isCapisol()){const insights=await db.rpc('capisol_office_legacy_insights',{p_workspace:workspace.id});data.legacy=insights.error?null:insights.data;}
+ try{provider=await api('status');}catch(e){provider=null;notice('Cadastros disponíveis; não foi possível verificar as integrações: '+explain(e),true);}}
  if(results.some(([,rows])=>rows.length===500))notice('Exibindo até 500 registros por módulo. Use a gestão original para consultar o histórico completo.');
 }
 function pill(status){return `<span class="pill ${['done','active','authorized','synced','won','completed'].includes(status)?'good':['uncertain','rejected','blocked','failed'].includes(status)?'bad':'warn'}">${esc(statuses[status]||status)}</span>`;}
@@ -27,8 +37,9 @@ function table(headers,rows){return rows.length?`<div class="table-wrap"><table>
 function memberName(id){if(!id)return 'Sem responsável';if(id===user.id)return 'Você';return data.members.find(m=>m.user_id===id)?.display_name||id.slice(0,8);}
 function navigate(next){tab=next;render();}
 function render(){
- $('title').textContent=nav.find(x=>x[0]===tab)?.[1]||'Escritório';
- $('nav').innerHTML=nav.filter(([id])=>financial()||['overview','tasks','sectors'].includes(id)).map(([id,label])=>`<button data-nav="${id}" class="${id===tab?'active':''}">${label}</button>`).join('');
+ $('title').textContent=menuLabel(tab,nav.find(x=>x[0]===tab)?.[1]||'Escritório');
+ $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):['quality','bank','fiscal'].includes(id)?isCapisol()&&financial():financial()||['overview','tasks','sectors'].includes(id))
+ .map(([id,label])=>`<button data-nav="${id}" class="${id===tab?'active':''}">${esc(menuLabel(id,label))}</button>`).join('');
  $('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
  const content=$('content');content.innerHTML='';
  if(tab==='overview')renderOverview();
@@ -36,6 +47,9 @@ function render(){
  else if(tab==='sectors')renderSectors();
  else if(tab==='bank')renderBank();
  else if(tab==='audit')run(null,renderAudit);
+ else if(tab==='rural')renderRural();
+ else if(tab==='content')renderContentStudio();
+ else if(tab==='media')renderMediaStudio();
  else if(tab==='access')renderAccess();
  else renderRecords();
 }
@@ -88,8 +102,8 @@ function showForm(title,fields,values,onSave){
  $('fields').innerHTML=fields.map(([key,label,type])=>{
   const v=values[key]??'';let input;
   if(type==='textarea'||type==='json')input=`<textarea id="field-${key}" name="${key}" ${type==='json'?'rows="12"':''}>${esc(type==='json'?JSON.stringify(v||{},null,2):v)}</textarea>`;
-  else if(options[type]||type==='sector'||type==='member'){
-   const opts=type==='sector'?sectors.map(s=>[s.sector,`${s.sector}. ${s.name}`]):type==='member'?[['','Sem responsável'],...data.members.filter(m=>m.active!==false).map(m=>[m.user_id,memberName(m.user_id)])]:options[type].map(x=>[x,statuses[x]||({homologation:'Homologação (teste)',production:'Produção (nota real)'}[x])||x]);
+  else if(options[type]||type==='sector'||type==='member'||type==='producer'){
+   const opts=type==='sector'?sectors.map(s=>[s.sector,`${s.sector}. ${s.name}`]):type==='member'?[['','Sem responsável'],...data.members.filter(m=>m.active!==false).map(m=>[m.user_id,memberName(m.user_id)])]:type==='producer'?(data.ruralProducers||[]).map(p=>[p.id,p.display_name]):options[type].map(x=>[x,statuses[x]||({homologation:'Homologação (teste)',production:'Produção (nota real)'}[x])||x]);
    input=`<select id="field-${key}" name="${key}">${opts.map(([k,l])=>`<option value="${esc(k)}" ${String(k)===String(v)?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
   }else input=`<input id="field-${key}" name="${key}" type="${type}" value="${esc(v)}" ${type==='number'?'min="0" step="0.01"':''} ${['title','name','customer','plan','valid_until','next_due','price','amount'].includes(key)?'required':''}>`;
   return `<label for="field-${key}">${esc(label)}</label>${input}`;
@@ -102,7 +116,7 @@ function showForm(title,fields,values,onSave){
 }
 function edit(key,row={}){
  const d=definitions[key];const defaults=key==='tasks'?{sector:1,status:'planned',priority:2,assignee_id:user.id}:key==='fiscal'?{environment:'homologation',payload:{cnpj_prestador:workspace.cnpj}}:{status:'draft'};
- showForm(`${row.id?'Editar':'Novo'} · ${d.title}`,d.fields,{...defaults,...row},async values=>{
+ showForm(`${row.id?'Editar':'Novo'} · ${key==='subscriptions'&&!isCapisol()?'Assinatura':d.title}`,d.fields,{...defaults,...row},async values=>{
   if(key==='tasks'){values.assignee_id=values.assignee_id||null;values.due_date=values.due_date||null;if(values.status==='done'&&values.evidence.trim().length<10)throw new Error('Descreva a evidência da conclusão (mínimo 10 caracteres).');}
   if(key==='fiscal'){values.payload.valor_servico=values.amount;values.payload.descricao_servico=values.description;}
   if(key==='proposals'&&values.price<values.estimated_cost&&['approved','won'].includes(values.status)&&role!=='admin')throw new Error('Uma proposta com prejuízo estimado precisa de revisão dos sócios.');
@@ -121,7 +135,7 @@ function issue(doc){
 }
 function renderSectors(){
  $('content').innerHTML=`<div class="bar"><p class="muted">72 procedimentos de revisão. O resultado é um rascunho até a validação do responsável.</p><input id="sector-search" aria-label="Buscar setor" placeholder="Buscar setor ou rotina…"></div><div id="sector-list" class="grid sectors"></div>`;
- const draw=()=>{const q=$('sector-search').value.toLocaleLowerCase('pt-BR');$('sector-list').innerHTML=sectors.filter(s=>(s.name+' '+s.routine).toLocaleLowerCase('pt-BR').includes(q)).map(s=>`<article class="card"><span class="eyebrow">SETOR ${String(s.sector).padStart(2,'0')}</span><h3>${esc(s.name)}</h3><p class="muted">${esc(s.routine)}</p><details><summary>Etapas e indicador</summary><ol>${s.steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><p class="muted">${esc(s.metric)}</p></details><button data-sector="${s.sector}">Iniciar revisão</button></article>`).join('');$('sector-list').querySelectorAll('button').forEach(b=>b.onclick=()=>sectorForm(sectors.find(s=>s.sector===Number(b.dataset.sector))));};$('sector-search').oninput=draw;draw();
+ const draw=()=>{const q=$('sector-search').value.toLocaleLowerCase('pt-BR');$('sector-list').innerHTML=sectors.filter(s=>(s.name+' '+s.routine).toLocaleLowerCase('pt-BR').includes(q)).map(s=>`<article class="card"><span class="eyebrow">SETOR ${String(s.sector).padStart(2,'0')}</span><h3>${esc(s.name)}</h3><p class="muted">${esc(s.routine)}</p><p class="muted">Aplicação: ${esc(sectorApplicability(s.sector,tenantMode(workspace)).level)} · ${esc(sectorApplicability(s.sector,tenantMode(workspace)).reason)}</p><details><summary>Etapas e indicador</summary><ol>${s.steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><p class="muted">${esc(s.metric)}</p></details><button data-sector="${s.sector}">Iniciar revisão</button></article>`).join('');$('sector-list').querySelectorAll('button').forEach(b=>b.onclick=()=>sectorForm(sectors.find(s=>s.sector===Number(b.dataset.sector))));};$('sector-search').oninput=draw;draw();
 }
 function sectorForm(sector){
  showForm(sector.routine,sector.inputs.map((x,i)=>[`input${i}`,x,'textarea']),{},async values=>{
@@ -134,6 +148,79 @@ function sectorForm(sector){
   if($('ai-run'))$('ai-run').onclick=e=>run(e.target,async()=>{const response=await api('analyze_sector',{sector:sector.sector,inputs});$('analysis').textContent=response.output;notice('Rascunho da IA salvo na auditoria. Revise antes de usar.');});
  });
 }
+
+function renderRural(){
+ if(!tenantMode(workspace).rural||!moduleAllowed('rural')){navigate('overview');return;}
+ const producers=data.ruralProducers||[],properties=data.ruralProperties||[];
+ $('content').innerHTML=`<section class="hero"><div><span class="eyebrow">GESTÃO RURAL • EMPRESA SEPARADA</span><h2>Produtores e propriedades</h2>
+ <p>Cadastros privados desta empresa. Informe somente os 4 últimos dígitos do documento; cadastro não prova titularidade.</p></div></section>
+ <div class="bar"><h2>Produtores</h2><button id="new-producer" class="primary">Cadastrar produtor</button></div>
+ ${table(['Nome','Município','Atividade','Estado'],producers.map(x=>[esc(x.display_name),esc(x.municipality+' / '+x.state_code),esc(x.main_activity),esc(x.verification_state)]))}
+ <div class="bar"><h2>Propriedades</h2><button id="new-property" class="primary">Cadastrar propriedade</button></div>
+ ${table(['Propriedade','Produtor','Área (ha)','Município'],properties.map(x=>[esc(x.name),esc(producers.find(p=>p.id===x.producer_id)?.display_name||'Não encontrado'),esc(x.hectares??'Não informada'),esc(x.municipality)]))}
+ <p class="muted">CADASTRO em rascunho. Para CAR, CCIR, documentos completos e regularidade agrária é obrigatório processo privado e conferência profissional.</p>`;
+ $('new-producer').disabled=!moduleWritable('rural');
+ $('new-property').disabled=!moduleWritable('rural')||!producers.length;
+ $('new-producer').onclick=()=>showForm('Novo produtor rural',[
+ ['display_name','Nome ou razão social','text'],['municipality','Município','text'],['state_code','UF','text'],
+ ['document_last4','4 últimos dígitos CPF/CNPJ (opcional)','text'],['main_activity','Atividade: crops, livestock, agroforestry, aquaculture, mixed, other','text']
+ ],{state_code:'AC',main_activity:'mixed'},async v=>{
+  const errors=validateRural('producer',v);if(errors.length)throw Error(errors.join(' · '));
+  const row={...v,workspace_id:workspace.id,kind:'person',verification_state:'draft',consent_confirmed:false};
+  if(!row.document_last4)delete row.document_last4;
+  const r=await db.from('capisol_rural_producers').insert(row).select('id');if(r.error)throw r.error;
+  await load();render();notice('Produtor incluído, aguardando conferência.');
+ });
+ $('new-property').onclick=()=>showForm('Nova propriedade rural',[
+ ['producer_id','Produtor responsável','producer'],['name','Nome da propriedade','text'],['municipality','Município','text'],
+ ['state_code','UF','text'],['hectares','Hectares','number'],['activity','Atividade: crops, livestock, agroforestry, aquaculture, mixed, other','text']
+ ],{producer_id:producers[0]?.id,state_code:'AC',activity:'mixed'},async v=>{
+  const errors=validateRural('property',v);if(errors.length)throw Error(errors.join(' · '));
+  if(!producers.some(p=>p.id===v.producer_id))throw Error('Produtor de outra empresa ou inexistente.');
+  v.hectares=Number(v.hectares);
+  const r=await db.from('capisol_rural_properties').insert({...v,workspace_id:workspace.id}).select('id');if(r.error)throw r.error;
+  await load();render();notice('Propriedade incluída para conferência.');
+ });
+}
+function renderContentStudio(){
+ if(!moduleAllowed('media')){navigate('overview');return;}
+ const tracks=data.tracks||[];
+ $('content').innerHTML=`<section class="hero"><div><span class="eyebrow">CONTEÚDO AUTÊNTICO • PLANEJAMENTO INTERNO</span>
+ <h2>12 pilares e cinco formatos por pilar</h2><p>60 vertentes editoriais, não 60 contas falsas. Nenhuma publicação automática configurada.</p></div></section>
+ <div class="bar"><p>${tracks.length} pauta(s) registradas nesta empresa.</p>
+ <button id="seed-tracks" class="primary">Cadastrar 60 pautas internas</button></div>
+ <div class="grid sectors">${CONTENT_PILLARS.map((p,i)=>`<article class="card"><span class="eyebrow">PILAR ${String(i+1).padStart(2,'0')}</span><h3>${esc(p)}</h3>
+ <p class="muted">Curtos, entrevistas, artigos, vídeo longo e carrossel.</p></article>`).join('')}</div>
+ <p class="muted">Publicação externa precisa de conta oficial, direitos, aprovação humana, API homologada e métricas próprias.</p>`;
+ $('seed-tracks').disabled=tracks.length>0||!moduleWritable('media');
+ $('seed-tracks').onclick=e=>run(e.target,async()=>{
+  const rows=generateEditorialTracks(workspace.id).map(({workspace_id,cluster_no,strand_no,label,platform,status,public_account_authorized})=>
+   ({workspace_id,cluster_no,strand_no,label,platform,status,public_account_authorized}));
+  const r=await db.from('capisol_content_tracks').insert(rows).select('id');if(r.error)throw r.error;
+  await load();render();notice('60 pautas internas cadastradas; nenhuma conta ou post criado.');
+ });
+}
+function renderMediaStudio(){
+ if(!moduleAllowed('media')){navigate('overview');return;}
+ const rows=data.mediaJobs||[];
+ $('content').innerHTML=`<section class="hero"><div><span class="eyebrow">VÍDEOS BRUTOS E CLIPAGEM</span><h2>Fila de pós-produção</h2>
+ <p>Os videomakers entregam o bruto. Clipadores/IA preparam cortes com revisão; nenhum post sai automaticamente.</p></div></section>
+ <div class="bar"><p>${rows.length} trabalho(s) registrados.</p><button id="new-media" class="primary">Cadastrar vídeo bruto</button></div>
+ ${table(['Material','Tipo','Estado','Direitos'],rows.map(x=>[esc(x.title),esc(x.media_kind),pill(x.state),x.rights_confirmed?'Confirmados':'Pendentes']))}
+ <p class="muted">O cadastro de arquivo privado organiza a fila, mas não executa FFmpeg nem envia a redes sociais.</p>`;
+ $('new-media').disabled=!moduleWritable('media');
+ $('new-media').onclick=()=>showForm('Registrar arquivo original',[
+ ['title','Título','text'],['original_storage_path','Caminho em armazenamento privado','text'],
+ ['instructions','Instruções de corte e legendagem','textarea'],['confirmation','Digite TENHO AUTORIZACAO (direitos do vídeo)','text']
+ ],{},async v=>{
+  if(v.confirmation!=='TENHO AUTORIZACAO')throw Error('Confirme autorização de uso de imagem e direitos.');
+  if(!/^[A-Za-z0-9_./-]{4,800}$/.test(v.original_storage_path)||v.original_storage_path.includes('..'))throw Error('Informe caminho privado válido, não URL pública.');
+  const r=await db.from('capisol_media_jobs').insert({workspace_id:workspace.id,title:v.title,
+    original_storage_path:v.original_storage_path,instructions:v.instructions,rights_confirmed:true,media_kind:'video',state:'draft'}).select('id');
+  if(r.error)throw r.error;await load();render();notice('Arquivo cadastrado para revisão. Edição ainda não executada.');
+ });
+}
+
 function renderBank(){
  $('content').innerHTML=`<section class="card"><h2>Contas conectadas com consentimento</h2><p class="muted">Consulta de transações efetivadas de contas bancárias nos últimos 90 dias. A sincronização é manual; não inicia pagamentos nem transferências.</p><button id="connect" class="primary">Conectar conta pela Pluggy</button><p class="muted">${provider?.open_finance.configured?'Credenciais configuradas. O titular confirma o consentimento no ambiente da Pluggy.':'Aguardando credenciais da Pluggy no backend.'}</p></section><div id="connections">${table(['Conexão','Estado','Última sincronização','Ações'],(data.bank||[]).map(x=>[esc(x.provider_item_id),pill(x.status),esc(x.synced_at?new Date(x.synced_at).toLocaleString('pt-BR'):'Ainda não sincronizada'),`<div class="actions"><button data-sync="${x.id}" ${x.revoked_at?'disabled':''}>Sincronizar</button><button data-revoke="${x.id}" ${x.status==='revoked'?'disabled':''}>Revogar</button></div>`]))}</div><h2 style="margin-top:28px">Transações importadas</h2><p class="muted">Importação para conferência. Não representa conciliação contábil automática.</p>${table(['Data','Descrição','Valor','Moeda'],(data.transactions||[]).map(x=>[esc(x.date),esc(x.description),money(x.amount),esc(x.currency)]))}`;
  $('connect').onclick=e=>run(e.target,async()=>{
@@ -150,6 +237,46 @@ async function renderAudit(){
 }
 function renderAccess(){
  $('content').innerHTML=`<section class="card"><h2>Equipe da empresa</h2><p class="muted">Sócios administram os acessos. Gestores acompanham os dados do escritório; operadores veem e editam tarefas atribuídas a eles; observadores apenas consultam suas tarefas.</p>${role==='admin'?'<button id="add-member" class="primary">Cadastrar acesso</button>':''}</section>${table(['Conta','Perfil','Acesso'],data.members.map(x=>[esc(memberName(x.user_id)),esc(x.role),x.active===false?'Revogado':role==='admin'&&x.role!=='admin'?`<button data-revoke-member="${x.user_id}">Revogar</button>`:'Ativo']))}<section class="card" style="margin-top:20px"><h2>Acesso individual</h2><p class="muted">Cada pessoa utiliza sua conta. Para receber acesso, a conta precisa estar cadastrada e com e-mail confirmado na gestão. Este painel não altera as permissões do CRM anterior.</p><a href="../" class="button">Abrir cadastro e acesso da gestão ↗</a></section>`;
+
+ if(role==='admin'){
+  $('content').insertAdjacentHTML('beforeend',`<section class="card" style="margin-top:20px"><h2>Permissões por módulo</h2>
+  <p class="muted">Conceder apenas a pessoas já vinculadas a esta empresa. Permissões rurais e de mídia não alteram automaticamente o acesso financeiro.</p>
+  <button id="grant-scope" class="primary">Configurar permissão</button>
+  ${table(['Membro','Permissão','Situação'],(data.grants||[]).map(g=>[esc(memberName(g.user_id)),esc(g.scope),g.active?'Ativa':'Revogada']))}</section>`);
+  $('grant-scope').onclick=()=>showForm('Acesso específico',[
+    ['user_id','Membro da empresa','member'],['scope','Permissão: rural.read, rural.write, media.read, media.write','text'],
+    ['state','Digite ATIVAR ou REVOGAR','text']
+  ],{},async v=>{
+    if(!['ATIVAR','REVOGAR'].includes(v.state))throw Error('Digite ATIVAR ou REVOGAR.');
+    const r=await db.rpc('capisol_grant_scope',{p_workspace:workspace.id,p_user:v.user_id,p_scope:v.scope,p_active:v.state==='ATIVAR'});
+    if(r.error)throw r.error;await load();render();notice('Permissão atualizada somente nesta empresa.');
+  });
+ }
+ if(role==='admin'&&workspace.cnpj==='66360677000149'){
+  $('content').insertAdjacentHTML('beforeend',`<section class="card" style="margin-top:20px"><h2>Convidar outra empresa</h2>
+  <p class="muted">A pessoa convidada precisa ter conta e e-mail confirmados. Ela será administradora dos próprios dados; a CAPISOL não recebe acesso automático.</p>
+  <button id="tenant-invite" class="primary">Criar convite multiempresa</button></section>`);
+  $('tenant-invite').onclick=()=>showForm('Convidar empresa / produtor rural',[
+   ['name','Nome da empresa ou produtor','text'],['email','E-mail confirmado do titular','email'],
+   ['kind','Tipo: company, rural_producer, cooperative, association','text'],
+   ['industry','Atividade: solar, agriculture, commerce, services, manufacturing, logistics, construction, hospitality, education, health','text'],
+   ['cnpj','CNPJ (14 dígitos; opcional)','text']
+  ],{kind:'company',industry:'services'},async v=>{
+   if(!['company','rural_producer','cooperative','association'].includes(v.kind))throw Error('Tipo de ambiente inválido.');
+   const r=await db.rpc('capisol_invite_new_workspace',{p_name:v.name,p_owner_email:v.email,p_kind:v.kind,p_industry:v.industry,p_cnpj:v.cnpj||null});
+   if(r.error)throw r.error;notice('Convite criado. O titular verá o convite ao entrar com a própria conta.');
+  });
+ }
+ if((data.invites||[]).length){
+  $('content').insertAdjacentHTML('beforeend',`<section class="card"><h2>Convites para sua conta</h2>${(data.invites||[]).map(i=>
+    `<div class="bar"><span>${esc(i.workspace_name)} · ${esc(i.industry_code)}</span>
+    <button data-accept-invite="${esc(i.invitation_id)}">Aceitar</button></div>`).join('')}</section>`);
+  $('content').querySelectorAll('[data-accept-invite]').forEach(b=>b.onclick=e=>run(e.target,async()=>{
+   const r=await db.rpc('capisol_accept_workspace_invitation',{p_invitation:b.dataset.acceptInvite});
+   if(r.error)throw r.error;await initialize();notice('Acesso habilitado para a empresa convidada.');
+  }));
+ }
+
  document.querySelectorAll('[data-revoke-member]').forEach(b=>b.onclick=()=>run(b,async()=>{const r=await db.rpc('capisol_office_revoke_member',{p_workspace:workspace.id,p_user:b.dataset.revokeMember});if(r.error)throw r.error;await load();render();notice('Acesso ao escritório revogado. As tarefas e evidências foram preservadas.');}));
  if($('add-member'))$('add-member').onclick=()=>showForm('Cadastrar acesso',[['email','E-mail da conta já confirmada','email'],['role','Perfil: manager, operator ou viewer','text']],{role:'operator'},async v=>{if(!['manager','operator','viewer'].includes(v.role))throw new Error('Perfil inválido.');const r=await db.rpc('capisol_office_add_member',{p_workspace:workspace.id,p_email:v.email,p_role:v.role});if(r.error)throw r.error;await load();render();notice('Acesso atualizado.');});
 }
@@ -158,9 +285,22 @@ async function initialize(){
  if(!user){$('content').innerHTML=`<section class="card login"><span class="eyebrow">ACESSO INDIVIDUAL</span><h2>Entre no escritório</h2><p class="muted">Use a mesma conta da gestão CAPISOL.</p><form id="login"><label for="email">E-mail</label><input id="email" type="email" autocomplete="username" required><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required><button class="primary">Entrar</button></form><p class="muted"><a href="../">Criar conta ou recuperar senha na gestão ↗</a></p></section>`;$('login').onsubmit=e=>{e.preventDefault();run(e.submitter,async()=>{const r=await db.auth.signInWithPassword({email:$('email').value,password:$('password').value});if(r.error)throw new Error('E-mail ou senha não conferem. Use a recuperação na gestão se necessário.');notice();await initialize();});};return;}
  $('logout').hidden=false;$('logout').onclick=e=>run(e.target,async()=>{const r=await db.auth.signOut();if(r.error)throw r.error;location.reload();});
  const response=await db.from('capisol_workspaces').select('*').order('name');if(response.error)throw response.error;workspaces=response.data;
- if(!workspaces.length){$('content').innerHTML=empty('Sua conta ainda não tem acesso ao escritório','Solicite a um sócio o vínculo à empresa. Seu cadastro da gestão permanece disponível.');return;}
+ if(!workspaces.length){
+ const inv=await db.rpc('capisol_my_pending_workspace_invites');
+ const pend=inv.error?[]:(inv.data||[]);
+ $('content').innerHTML=pend.length?
+ `<section class="card"><h2>Convite para escritório</h2><p>Uma empresa enviou um convite para você administrar seus dados. Só aceite se reconhecer o convite.</p>
+ ${pend.map(x=>`<div class="bar"><span>${esc(x.workspace_name)} · ${esc(x.industry_code)} · válido até ${esc(new Date(x.expires_at).toLocaleDateString('pt-BR'))}</span>
+ <button data-accept-invite="${esc(x.invitation_id)}" class="primary">Aceitar convite</button></div>`).join('')}</section>`:
+ empty('Sua conta ainda não tem acesso ao escritório','Solicite a um administrador um convite para sua empresa. Seu cadastro da gestão permanece disponível.');
+ $('content').querySelectorAll('[data-accept-invite]').forEach(b=>b.onclick=e=>run(e.target,async()=>{
+  const r=await db.rpc('capisol_accept_workspace_invitation',{p_invitation:b.dataset.acceptInvite});if(r.error)throw r.error;
+  await initialize();notice('Convite aceito. Você agora administra apenas os dados desta empresa.');
+ }));
+ return;
+}
  workspace=workspaces[0];$('workspace').hidden=false;$('workspace').innerHTML=workspaces.map(w=>`<option value="${w.id}">${esc(w.name)}</option>`).join('');
- const activate=async()=>{workspace=workspaces.find(w=>w.id===$('workspace').value)||workspace;const r=await db.rpc('capisol_workspace_role',{p_workspace:workspace.id});if(r.error)throw r.error;role=r.data;await load();render();};
+ const activate=async()=>{workspace=workspaces.find(w=>w.id===$('workspace').value)||workspace;document.querySelectorAll('.aside-bottom a').forEach(a=>{a.hidden=workspace.cnpj!=='66360677000149';});const r=await db.rpc('capisol_workspace_role',{p_workspace:workspace.id});if(r.error)throw r.error;role=r.data;const grants=await db.from('capisol_workspace_scopes').select('scope').eq('workspace_id',workspace.id).eq('user_id',user.id).eq('active',true);accessScopes=grants.error?[]:(grants.data||[]).map(g=>g.scope);await load();render();};
  $('workspace').onchange=()=>run(null,activate);$('refresh').hidden=false;$('refresh').onclick=e=>run(e.target,async()=>{notice();await load();render();});
  const r=await fetch('../biblioteca/setores-operacionais.json',{signal:AbortSignal.timeout(10000)});if(!r.ok)throw new Error('Biblioteca de setores indisponível.');sectors=(await r.json()).sectors;await activate();
 }
