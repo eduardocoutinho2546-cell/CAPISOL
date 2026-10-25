@@ -16,6 +16,18 @@ export function tenantMode(workspace){
  const kind=['company','rural_producer','cooperative','association'].includes(workspace?.kind)?workspace.kind:'company';
  return {industry,kind,label:INDUSTRIES[industry].label,rural:kind==='rural_producer'||kind==='cooperative'||industry==='agriculture'||industry==='solar'};
 }
+// 72 áreas continuam consultáveis. Relevância NÃO equivale a habilitação operacional.
+export function sectorApplicability(sectorNumber,tenant){
+ if(!Number.isInteger(sectorNumber)||sectorNumber<1||sectorNumber>72)throw Error('setor_invalido');
+ const industry=tenant?.industry??'services';
+ if(sectorNumber>=23&&sectorNumber<=33 && !['solar','construction'].includes(industry))
+  return {level:'optional',reason:'Especialidade energética: só aplicar quando o cliente prestar esse serviço.'};
+ if(sectorNumber===58&&industry!=='agriculture'&&tenant?.kind!=='rural_producer')
+  return {level:'optional',reason:'Agronegócio: usar somente com operação rural.'};
+ if([43,44,49,59].includes(sectorNumber))
+  return {level:'conditional',reason:'Área de expansão ou obrigação específica; confirmar aplicabilidade.'};
+ return {level:'core',reason:'Procedimento geral; atividade e responsável precisam de revisão.'};
+}
 export const REGIONAL_UF=['AC','AM','RO','RR','PA','AP','TO','MT','MS','GO','DF','SP','RJ','MG','ES','PR','SC','RS','BA','PE','CE','RN','PB','AL','SE','PI','MA'];
 export function validateRural(kind, data){
  const errors=[];
