@@ -1,0 +1,22 @@
+{
+  "version":"2026-10-24",
+  "regra":"usar fonte primária, registrar data de consulta e encaminhar interpretação final ao profissional habilitado",
+  "fontes":[
+    {"id":"planalto-legislacao","area":"juridico","nome":"Portal da Legislação do Planalto","url":"https://www4.planalto.gov.br/legislacao","tipo":"legislacao_federal","periodicidade":"consultar antes de decisão"},
+    {"id":"lexml","area":"juridico","nome":"LexML — metadados de normas","url":"https://projeto.lexml.gov.br/","tipo":"catalogo_normas","periodicidade":"consultar e cachear metadados"},
+    {"id":"camara-api","area":"juridico","nome":"Dados Abertos da Câmara","url":"https://dadosabertos.camara.leg.br/swagger/api.html","tipo":"api_legislativa","limite":"até 100 itens por requisição; atualização diária"},
+    {"id":"senado-api","area":"juridico","nome":"Dados Abertos do Senado","url":"https://legis.senado.leg.br/dadosabertos/docs/index.html","tipo":"api_legislativa","limite":"mais de 10 requisições por segundo pode gerar HTTP 429"},
+    {"id":"oab-estatuto","area":"juridico","nome":"Estatuto e legislação da OAB","url":"https://www.oab.org.br/leisnormas/estatuto","tipo":"normas_profissao"},
+    {"id":"oab-etica","area":"juridico","nome":"Código de Ética e Disciplina da OAB","url":"https://www.oab.org.br/publicacoes/AbrirPDF?LivroId=0000004085","tipo":"etica_profissional"},
+    {"id":"cfc-nbc","area":"contabil","nome":"Normas Brasileiras de Contabilidade — CFC","url":"https://cfc.org.br/tecnica/normas-brasileiras-de-contabilidade/","tipo":"normas_contabeis"},
+    {"id":"cfc-completas","area":"contabil","nome":"Normas completas do CFC","url":"https://cfc.org.br/tecnica/normas-brasileiras-de-contabilidade/normas-completas/","tipo":"normas_contabeis"},
+    {"id":"receita","area":"tributario","nome":"Receita Federal","url":"https://www.gov.br/receitafederal/pt-br","tipo":"obrigacoes_fiscais"},
+    {"id":"nfse","area":"fiscal","nome":"APIs da NFS-e","url":"https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/apis-prod-restrita-e-producao","tipo":"emissao_fiscal"},
+    {"id":"confea-normativos","area":"engenharia","nome":"Normativos CONFEA","url":"https://normativos.confea.org.br/","tipo":"normas_profissionais"},
+    {"id":"crea","area":"engenharia","nome":"Sistema CREA/CONFEA","url":"https://www.confea.org.br/","tipo":"registro_responsabilidade_tecnica"},
+    {"id":"aneel-gd","area":"energia","nome":"ANEEL — geração distribuída","url":"https://www.gov.br/aneel/pt-br/assuntos/geracao-distribuida","tipo":"regulacao_energia"},
+    {"id":"lei-14300","area":"energia","nome":"Lei 14.300","url":"https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/l14300.htm","tipo":"marco_legal_gd"},
+    {"id":"anpd-lgpd","area":"privacidade","nome":"ANPD — LGPD","url":"https://www.gov.br/anpd/pt-br","tipo":"protecao_de_dados"},
+    {"id":"consumidor","area":"consumidor","nome":"Código de Defesa do Consumidor","url":"https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm","tipo":"relacao_consumo"}
+  ]
+}

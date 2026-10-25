@@ -1,0 +1,14 @@
+{
+  "version":"2026-10-24",
+  "alertas":[
+    {"id":"whatsapp-sem-api","severidade":"bloqueio","gatilho":"WHATSAPP_CLOUD_ACCESS_TOKEN ou PHONE_NUMBER_ID ausente","responsavel":"Guardião","acao":"manter envio real desligado e orientar criação oficial da conta Meta"},
+    {"id":"template-whatsapp-pendente","severidade":"alto","gatilho":"mensagem fora da janela sem template aprovado","responsavel":"Marketing + sócio","acao":"manter como rascunho e abrir aprovação no WhatsApp Manager"},
+    {"id":"publicacao-sem-conta","severidade":"alto","gatilho":"adapter sem credencial ou recibo do provedor","responsavel":"Guardião","acao":"permitir download, bloquear publicação"},
+    {"id":"desconto-alto","severidade":"alto","gatilho":"desconto acima de R$ 500 ou piso configurado","responsavel":"Gerente + sócios","acao":"exigir aprovação registrada"},
+    {"id":"sem-optin","severidade":"bloqueio","gatilho":"lead sem opt-in ou base documentada","responsavel":"Prospecção","acao":"não enfileirar mensagem e registrar motivo"},
+    {"id":"backup-nao-testado","severidade":"alto","gatilho":"backup sem teste de restauração dentro do prazo","responsavel":"Guardião","acao":"notificar sócios e bloquear expansão de dados"},
+    {"id":"fonte-juridica-desatualizada","severidade":"medio","gatilho":"fonte normativa sem revisão na validade definida","responsavel":"Jurídico","acao":"reconsultar fonte primária e pedir validação profissional"},
+    {"id":"margem-abaixo-piso","severidade":"alto","gatilho":"margem calculada menor que piso interno","responsavel":"Financeiro + conselho","acao":"bloquear proposta final"},
+    {"id":"fila-acumulada","severidade":"medio","gatilho":"jobs pendentes acima do limite","responsavel":"Operações","acao":"pausar novas execuções e revisar capacidade"}
+  ]
+}
