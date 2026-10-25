@@ -27,7 +27,7 @@ jobs:
       - name: Auditar runtime, peso, backup e biblioteca
         run: node tools/audit-production.mjs
       - name: Testar fila, setores e cálculos
-        run: node --test gateway/test/*.test.mjs saas/test/*.test.mjs
+        run: node --test gateway/test/*.test.mjs saas/test/*.test.mjs workers/media/*.test.mjs
       - name: Procurar segredos proibidos
         run: |
           if grep -RInE 'service_role=[^[:space:]]|sk-[A-Za-z0-9]{20,}|WHATSAPP_TOKEN=[^[:space:]]|client_secret=[^[:space:]]' --exclude-dir=.git --exclude='*.md' --exclude='auditar-capisol.yml' .; then
