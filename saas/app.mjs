@@ -97,8 +97,8 @@ function showForm(title,fields,values,onSave){
  $('fields').innerHTML=fields.map(([key,label,type])=>{
   const v=values[key]??'';let input;
   if(type==='textarea'||type==='json')input=`<textarea id="field-${key}" name="${key}" ${type==='json'?'rows="12"':''}>${esc(type==='json'?JSON.stringify(v||{},null,2):v)}</textarea>`;
-  else if(options[type]||type==='sector'||type==='member'){
-   const opts=type==='sector'?sectors.map(s=>[s.sector,`${s.sector}. ${s.name}`]):type==='member'?[['','Sem responsável'],...data.members.filter(m=>m.active!==false).map(m=>[m.user_id,memberName(m.user_id)])]:options[type].map(x=>[x,statuses[x]||({homologation:'Homologação (teste)',production:'Produção (nota real)'}[x])||x]);
+  else if(options[type]||type==='sector'||type==='member'||type==='producer'){
+   const opts=type==='sector'?sectors.map(s=>[s.sector,`${s.sector}. ${s.name}`]):type==='member'?[['','Sem responsável'],...data.members.filter(m=>m.active!==false).map(m=>[m.user_id,memberName(m.user_id)])]:type==='producer'?(data.ruralProducers||[]).map(p=>[p.id,p.display_name]):options[type].map(x=>[x,statuses[x]||({homologation:'Homologação (teste)',production:'Produção (nota real)'}[x])||x]);
    input=`<select id="field-${key}" name="${key}">${opts.map(([k,l])=>`<option value="${esc(k)}" ${String(k)===String(v)?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
   }else input=`<input id="field-${key}" name="${key}" type="${type}" value="${esc(v)}" ${type==='number'?'min="0" step="0.01"':''} ${['title','name','customer','plan','valid_until','next_due','price','amount'].includes(key)?'required':''}>`;
   return `<label for="field-${key}">${esc(label)}</label>${input}`;
@@ -167,7 +167,7 @@ function renderRural(){
   await load();render();notice('Produtor incluído, aguardando conferência.');
  });
  $('new-property').onclick=()=>showForm('Nova propriedade rural',[
- ['producer_id','ID do produtor cadastrado','text'],['name','Nome da propriedade','text'],['municipality','Município','text'],
+ ['producer_id','Produtor responsável','producer'],['name','Nome da propriedade','text'],['municipality','Município','text'],
  ['state_code','UF','text'],['hectares','Hectares','number'],['activity','Atividade: crops, livestock, agroforestry, aquaculture, mixed, other','text']
  ],{producer_id:producers[0]?.id,state_code:'AC',activity:'mixed'},async v=>{
   const errors=validateRural('property',v);if(errors.length)throw Error(errors.join(' · '));
