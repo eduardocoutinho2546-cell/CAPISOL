@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {INDUSTRIES,CONTENT_PILLARS,FORMATS,tenantMode,validateRural,generateEditorialTracks,publishingGate} from '../verticals.mjs';
+import {INDUSTRIES,CONTENT_PILLARS,FORMATS,tenantMode,validateRural,generateEditorialTracks,publishingGate,sectorApplicability} from '../verticals.mjs';
 import {contextPack,planModel,tokensEstimated} from '../ai-routing.mjs';
 const wid='11111111-1111-4111-8111-111111111111';
 test('CAPISOL e agro usam núcleo comum sem duplicar tenant',()=>{
@@ -44,4 +44,12 @@ test('SQL exige workspace RLS e não abre cadastro público multiempresa',async(
  assert.match(sql,/public\.capisol_workspace_role\(workspace_id\)/);
  assert.match(sql,/revoke all on public\.capisol_content_tracks from public,anon,authenticated/);
  assert.ok(!/grant insert on public\.capisol_workspaces to anon/.test(sql));
+});
+
+test('72 setores permanecem navegáveis e classificados por ramo',()=>{
+ assert.equal(sectorApplicability(23,{industry:'solar'}).level,'core');
+ assert.equal(sectorApplicability(23,{industry:'commerce'}).level,'optional');
+ assert.equal(sectorApplicability(58,{industry:'agriculture'}).level,'core');
+ assert.equal(sectorApplicability(58,{industry:'services'}).level,'optional');
+ assert.throws(()=>sectorApplicability(73,{industry:'services'}),/setor_invalido/);
 });
