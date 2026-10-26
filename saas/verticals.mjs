@@ -9,12 +9,18 @@ export const INDUSTRIES = Object.freeze({
  construction:{label:'Construção e obras',modules:['media','content','finance','crm','engineering']},
  hospitality:{label:'Hotelaria e turismo',modules:['media','content','finance','crm']},
  education:{label:'Educação e treinamento',modules:['media','content','finance','crm']},
- health:{label:'Saúde e bem-estar (com revisão profissional)',modules:['media','content','finance','crm']}
+ health:{label:'Saúde e bem-estar (com revisão profissional)',modules:['media','content','finance','crm']},
+ mechanics:{label:'Oficinas, mecânica e reparos',modules:['inventory','field','crm','finance']},
+ news_media:{label:'Jornais, jornalismo e comunicação',modules:['media','content','crm','finance']},
+ faith_nonprofit:{label:'Igrejas e organizações sem fins lucrativos',modules:['events','finance','documents','media']},
+ food_service:{label:'Restaurantes e alimentação',modules:['inventory','service','finance','crm']},
+ cooperative:{label:'Cooperativas e associações produtivas',modules:['rural','inventory','finance','crm']},
+ professional:{label:'Profissionais e consultorias',modules:['documents','crm','finance','media']}
 });
 export function tenantMode(workspace){
  const industry=typeof workspace?.industry_code==='string' && INDUSTRIES[workspace.industry_code]?workspace.industry_code:'services';
  const kind=['company','rural_producer','cooperative','association'].includes(workspace?.kind)?workspace.kind:'company';
- return {industry,kind,label:INDUSTRIES[industry].label,rural:kind==='rural_producer'||kind==='cooperative'||industry==='agriculture'||industry==='solar'};
+ return {industry,kind,label:INDUSTRIES[industry].label,rural:kind==='rural_producer'||kind==='cooperative'||industry==='agriculture'||industry==='cooperative'||industry==='solar'};
 }
 // 72 áreas continuam consultáveis. Relevância NÃO equivale a habilitação operacional.
 export function sectorApplicability(sectorNumber,tenant){
