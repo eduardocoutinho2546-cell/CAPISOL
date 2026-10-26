@@ -1,9 +1,10 @@
 import {money,statuses,summarize,reviewSector,validateFiscal} from './domain.mjs';
 import {tenantMode,validateRural,generateEditorialTracks,CONTENT_PILLARS,sectorApplicability} from './verticals.mjs';
+import {MODULES,MODULE_FAMILIES,SCALE_LEVELS,CATALOG_SUMMARY,scaleCheck,listForIndustry} from './module-registry.mjs';
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const db=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co','sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv');
 let user,workspace,workspaces=[],role,tab='overview',sectors=[],data={},provider=null,accessScopes=[];
-const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos'],['rural','Produtores rurais'],['content','Estúdio de conteúdo'],['media','Vídeos e cortes']];
+const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos'],['rural','Produtores rurais'],['content','Estúdio de conteúdo'],['media','Vídeos e cortes'],['modules','Catálogo de módulos'],['workbench','Operações multissetoriais']];
 const financial=()=>['admin','manager'].includes(role);
 const isCapisol=()=>workspace?.cnpj==='66360677000149';
 const menuLabel=(id,label)=>id==='subscriptions'&&!isCapisol()?'Assinaturas':label;
@@ -22,7 +23,10 @@ async function list(table){const {data,error}=await db.from(table).select('*').e
 async function load(){
  const tables={tasks:'capisol_tasks',...(financial()?{suppliers:'capisol_suppliers',proposals:'capisol_proposals',subscriptions:'capisol_subscriptions',fiscal:'capisol_fiscal_documents',bank:'capisol_bank_connections',transactions:'capisol_bank_transactions',runs:'capisol_agent_runs'}:{}),
  ...(moduleAllowed('rural')?{ruralProducers:'capisol_rural_producers',ruralProperties:'capisol_rural_properties'}:{}),
- ...(moduleAllowed('media')?{mediaJobs:'capisol_media_jobs',tracks:'capisol_content_tracks'}:{})};
+ ...(moduleAllowed('media')?{mediaJobs:'capisol_media_jobs',tracks:'capisol_content_tracks'}:{}),
+ ...(financial()?{units:'capisol_org_units',stockItems:'capisol_stock_items',stockMoves:'capisol_stock_moves',
+ cropCycles:'capisol_crop_cycles',cropObservations:'capisol_crop_observations',
+ workOrders:'capisol_work_orders',newsStories:'capisol_newsroom_stories',communityEvents:'capisol_community_events'}:{})};
  const results=await Promise.all(Object.entries(tables).map(async([key,table])=>[key,await list(table)]));data=Object.fromEntries(results);
  const members=await db.rpc('capisol_office_members',{p_workspace:workspace.id});if(members.error)throw members.error;data.members=members.data;
  const invites=await db.rpc('capisol_my_pending_workspace_invites');data.invites=invites.error?[]:(invites.data||[]);
@@ -38,7 +42,7 @@ function memberName(id){if(!id)return 'Sem responsável';if(id===user.id)return 
 function navigate(next){tab=next;render();}
 function render(){
  $('title').textContent=menuLabel(tab,nav.find(x=>x[0]===tab)?.[1]||'Escritório');
- $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):['quality','bank','fiscal'].includes(id)?isCapisol()&&financial():financial()||['overview','tasks','sectors'].includes(id))
+ $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):id==='modules'?true:id==='workbench'?financial():['quality','bank','fiscal'].includes(id)?isCapisol()&&financial():financial()||['overview','tasks','sectors'].includes(id))
  .map(([id,label])=>`<button data-nav="${id}" class="${id===tab?'active':''}">${esc(menuLabel(id,label))}</button>`).join('');
  $('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
  const content=$('content');content.innerHTML='';
@@ -50,6 +54,8 @@ function render(){
  else if(tab==='rural')renderRural();
  else if(tab==='content')renderContentStudio();
  else if(tab==='media')renderMediaStudio();
+ else if(tab==='modules')renderModuleRegistry();
+ else if(tab==='workbench')renderWorkBench();
  else if(tab==='access')renderAccess();
  else renderRecords();
 }
