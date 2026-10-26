@@ -51,7 +51,7 @@ function fillMultiline(g,text,x,y,maxWidth,lineH,lines=3){
   if(line)all.push(line);all.slice(0,lines).forEach((str,i)=>g.fillText(str,x,y+i*lineH,maxWidth));
 }
 function drawFrame(canvas,video,logo,plan,time) {
- const g=canvas.getContext('2d',{alpha:false}),w=canvas.width,h=canvas.height,phase=(time%plan.duration)/plan.duration;
+ const g=canvas.getContext('2d',{alpha:false}),w=canvas.width,h=canvas.height,phase=(Math.max(0,Number(time)||0)%plan.duration)/plan.duration;
  const grad=g.createLinearGradient(0,0,w,h);grad.addColorStop(0,'#022C5E');grad.addColorStop(1,'#041A38');g.fillStyle=grad;g.fillRect(0,0,w,h);
  if(video&&video.readyState>=2){const iw=video.videoWidth,ih=video.videoHeight,scale=Math.max(w/iw,h/ih);if(iw&&ih)g.drawImage(video,(w-iw*scale)/2,(h-ih*scale)/2,iw*scale,ih*scale);}
  else{
@@ -64,7 +64,7 @@ function drawFrame(canvas,video,logo,plan,time) {
  g.fillStyle='#FDB803';g.fillRect(24,36+12*Math.sin(phase*6),84,7);
  if(logo&&logo.complete&&logo.naturalWidth){const scale=Math.min(185/logo.naturalWidth,70/logo.naturalHeight);g.fillStyle='rgba(255,255,255,.94)';g.fillRect(20,53,200,82);g.drawImage(logo,25,59,logo.naturalWidth*scale,logo.naturalHeight*scale);}
  else {g.font='bold 26px Arial';g.fillStyle='#fff';g.fillText('CAPISOL',24,91);}
- const ix=Math.min(plan.frames.length-1,Math.floor(phase*plan.frames.length)),headline=plan.frames[ix];
+ const ix=Math.min(plan.frames.length-1,Math.floor(phase*plan.frames.length)),headline=plan.frames[ix]||plan.title;
  g.font='bold '+(w>500?'39':'32')+'px Arial';g.fillStyle='#fff';g.textAlign='left';
  fillMultiline(g,headline,24,h*.53,w-48,49,4);
  g.fillStyle='#FDB803';g.fillRect(24,h-145,Math.max(64,w*.21),5);
