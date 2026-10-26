@@ -2,6 +2,9 @@ import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {mkdtemp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
 import {chromium} from 'playwright';
 const base=resolve('.');
 const routeFile={'/posts/studio-social.mjs':{path:'posts/studio-social.mjs',mime:'text/javascript'},'/bio/logo.png':{path:'bio/logo.png',mime:'image/png'}};
@@ -13,7 +16,7 @@ const server=createServer(async(req,res)=>{
   const o=routeFile[q];res.writeHead(200,{'content-type':o.mime,'cache-control':'no-store'});res.end(await readFile(join(base,o.path)));
  }catch(e){res.writeHead(500);res.end('Erro');}
 });
-let browser;
+let browser,dir;
 try{
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
  const {port}=server.address();browser=await chromium.launch({headless:true,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
@@ -38,4 +41,27 @@ try{
  assert.equal(result.saved.plan.title,'Limpeza de painéis solares');
  assert.ok(result.hasVideo,'prévia renderizada');
  console.log(JSON.stringify({status:'passou',bytes:result.saved.bytes,ext:result.saved.ext,mode:result.saved.plan.mode}));
-}finally{if(browser)await browser.close();await new Promise(r=>server.close(r));}
+ // Segundo cenário: gravação própria sintética (com faixa de áudio), sem acesso a vídeos reais.
+ dir=await mkdtemp(join(tmpdir(),'capisol-fala-'));
+ const clip=join(dir,'fala.webm');
+ execFileSync('ffmpeg',['-hide_banner','-loglevel','error','-y','-f','lavfi','-i','testsrc2=s=240x420:r=15','-f','lavfi','-i','sine=frequency=400:sample_rate=48000','-t','3','-c:v','libvpx','-b:v','200k','-c:a','libvorbis',clip],{timeout:25000});
+ await page.reload();
+ await page.evaluate(async()=>{
+   const m=await import('/posts/studio-social.mjs');
+   window.__saved=null;
+   m.openStudio({isOwner:true,api:{saveSocial:async(plan,blob,ext)=>{window.__saved={plan,bytes:blob.size,ext};}},reloadPosts:async()=>true});
+ });
+ await page.locator('input[name=title]').fill('Vídeo falando da CAPISOL');
+ await page.locator('textarea[name=idea]').fill('Explicação simples sobre a instalação solar.');
+ await page.locator('input[name=media]').setInputFiles(clip);
+ await page.locator('input[name=rights]').check();
+ await page.locator('select[name=mode]').selectOption('fala');
+ await page.getByRole('button',{name:/Gerar vídeo e enviar/}).click();
+ await page.waitForFunction(()=>window.__saved&&window.__saved.bytes>1000,null,{timeout:35000});
+ const talking=await page.evaluate(()=>window.__saved);
+ assert.equal(talking.plan.mode,'fala');
+ assert.ok(talking.bytes>1000,'gravação talking-head foi exportada');
+ assert.deepEqual(pageErrors,[],'sem erros de JavaScript nos dois modos');
+ console.log(JSON.stringify({status:'fala-validada',bytes:talking.bytes,ext:talking.ext}));
+
+}finally{if(browser)await browser.close();await new Promise(r=>server.close(r));if(dir)await rm(dir,{recursive:true,force:true});}
