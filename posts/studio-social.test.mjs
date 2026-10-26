@@ -21,7 +21,7 @@ test('recusa esquema perigoso, traversal e links locais',()=>{
  }
 });
 test('vídeo enviado exige direitos e formato aceito',()=>{
- assert.throws(()=>buildPlan({title:'Depoimento',idea:'Fale da CAPISOL',mode:'fala',hasVideo:true,rights:false}),/direitos/i);
+ assert.throws(()=>buildPlan({title:'Depoimento',idea:'Fale da CAPISOL',mode:'fala',hasVideo:true,rights:false}),/usar o vídeo/i);
  assert.throws(()=>buildPlan({title:'Depoimento',idea:'Fale da CAPISOL',mode:'fala',hasVideo:false}),/gravação/i);
  assert.throws(()=>verifyFile({type:'application/pdf',size:100}),/MP4/);
  assert.throws(()=>verifyFile({type:'video/mp4',size:90*1024*1024}),/80 MB/);
@@ -40,6 +40,6 @@ test('integração do estúdio aparece nos scripts existentes',()=>{
  const ui=fs.readFileSync(new URL('./posts-ia-ui.js',import.meta.url),'utf8'),bridge=fs.readFileSync(new URL('./posts-ia-bridge.js',import.meta.url),'utf8');
  assert.match(ui,/data-poia-studio/);assert.match(ui,/data-socialpath/);
  assert.match(bridge,/saveSocial:/);assert.match(bridge,/signMedia:/);
- assert.match(bridge,/\\.from\\('arquivos'\\)\\.upload/);
- assert.match(bridge,/\\.from\\('docs'\\)\\.insert/);
+ assert.ok(bridge.includes("from('arquivos').upload"));
+ assert.ok(bridge.includes("from('docs').insert"));
 });
