@@ -84,8 +84,24 @@ export async function montarPainel({sb,root}){
   try{
    const r=await request(sb,"listar");
    const table=E("table");const tr=E("tr");
-   ["Número","Emissão","Validade","kWp","Total","Status"].forEach(x=>tr.append(E("th",x)));table.append(tr);
-   for(const q of r.cotacoes||[]){const row=E("tr");[q.numero,q.emissao,q.validade,q.kwp,brl(q.total),q.situacao].forEach(x=>row.append(E("td",String(x??""))));table.append(row)}
+   ["Número","Emissão","Validade","kWp","Total","Status","Ações"].forEach(x=>tr.append(E("th",x)));table.append(tr);
+   for(const q of r.cotacoes||[]){
+    const row=E("tr");[q.numero,q.emissao,q.validade,q.kwp,brl(q.total),q.situacao].forEach(x=>row.append(E("td",String(x??""))));
+    const cell=E("td");const vencida=q.validade<new Date().toISOString().slice(0,10);
+    if(isOwner&&!vencida&&q.situacao==="pendente_conferencia"){
+      const b=E("button","Conferir PDF",{type:"button"});
+      b.onclick=async()=>{if(!confirm("Conferiu no PDF original o número, validade, produtos, frete, seguro, potência e valor total?"))return;
+       try{await request(sb,"conferir",{cotacao_id:q.id,confirmou_pdf:true,confirmou_custos:true});output.textContent="Cotação conferida internamente. Falta revisar tributação e margem.";list.click();}
+       catch(e){output.textContent=e.message||"Erro ao conferir cotação";}};
+      cell.append(b);
+    }
+    if(isOwner&&!vencida&&q.situacao==="conferida"){
+      const b=E("button","Usar no cálculo",{type:"button"});
+      b.onclick=()=>{selectedQuoteId=q.id;form.elements.namedItem("kit").value=String(q.total);details.open=true;result.textContent="Cotação "+q.numero+" carregada: "+brl(q.total)+". Confirme mão de obra, imposto e margem antes do envio.";details.scrollIntoView({behavior:"smooth",block:"center"});};
+      cell.append(b);
+    }else if(vencida)cell.append(E("span","Histórico — vencida"));
+    row.append(cell);table.append(row);
+   }
    hist.replaceChildren(table);
   }catch(e){hist.textContent=e.message||"Não foi possível consultar"}
  };
@@ -116,6 +132,14 @@ export async function montarPainel({sb,root}){
    qresult.textContent="Pedido "+r.solicitacao.id+" registrado para cotação. Estado: "+r.solicitacao.estado+". Nenhuma compra foi efetuada.";
   }catch(e){qresult.textContent=e.message||"Erro ao solicitar"}
  };
+ const backupInfo=E("p","Alternativa imediata: gere o PDF na conta oficial BelEnergy e importe na seção acima. A fila automatizada só anda após autorização do portal e configuração do executor.");sale.append(backupInfo);
+ const officialLink=E("a","Cadastro e contato comercial BelEnergy",{href:"https://belenergy.com.br/integrador-parceiro/",target:"_blank",rel:"noopener noreferrer"});sale.append(officialLink);
+ const copyVendor=E("button","Copiar pedido ao representante",{type:"button"});
+ copyVendor.onclick=async()=>{
+   const v=Object.fromEntries(qfields.map(([n])=>[n,qform.elements.namedItem(n).value.trim()]));
+   const msg="Olá! Somos da CAPISOL Energia Solar, Rio Branco/AC. Solicitamos cotação atualizada SEM COMPRA: "+v.target_kwh+" kWh/mês, "+v.kwp+" kWp, estrutura "+v.structure_type+", CEP "+v.shipping_zip+", cabo extra "+v.cable_extra_m+" metros. Favor informar produtos, frete, seguro, validade e prazo. Obrigado.";
+   try{await navigator.clipboard.writeText(msg);qresult.textContent="Mensagem copiada para envio pelo canal comercial autorizado.";}catch(e){qresult.textContent="Falha ao copiar mensagem.";}
+ };sale.append(copyVendor);
  const qmenu=E("div","",{class:"cotacoes-actions"});
  const jobsButton=E("button","Ver fila de cotações",{type:"button"});
  const pricesButton=E("button","Tabela atual de custo",{type:"button"});
@@ -145,8 +169,10 @@ export async function montarPainel({sb,root}){
  form.onsubmit=async(ev)=>{
   ev.preventDefault();const parametros={};
   for(const [name] of names)parametros[name]=Number(form.elements.namedItem(name).value);
-  try{const p=await request(sb,"simular",{parametros});
-   result.textContent="Contribuição estimada: "+brl(p.contribuicao)+" | "+(p.bloqueios.join(", ")||"Revisão humana obrigatória")+". Não liberado para envio.";
+  try{
+   if(!selectedQuoteId&&!(parametros.kit>0))throw Error("Informe o custo atual do kit ou selecione cotação conferida.");
+   const p=await request(sb,"simular",{parametros,...(selectedQuoteId?{cotacao_id:selectedQuoteId}:{})});
+   result.textContent="Contribuição estimada: "+brl(p.contribuicao)+" | margem "+p.percentual+"% | custo estimado "+brl(p.custosEstimados)+" | "+(p.bloqueios.join(", ")||"Revisão tributária e comercial obrigatória")+". Não liberado para envio.";
   }catch(e){result.textContent=e.message||"Falha"}
  };
 }
