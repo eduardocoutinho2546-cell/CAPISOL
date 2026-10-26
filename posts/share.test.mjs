@@ -25,11 +25,11 @@ test('aprovador pode abrir compartilhamento nativo sem marcar como publicado',as
  assert.equal(getShared().files.length,1);
  assert.match(getShared().text,/Conteúdo autorizado/);
 });
-test('qualquer pessoa pode obter conteúdo pelo fluxo existente, mas não pode publicar',async()=>{
+test('pessoa não autorizada não consegue compartilhar mídia',async()=>{
  const {api}=setup(false);
- await assert.rejects(api.shareApproved({status:'Aprovado',video:fixture}),/pode baixar os materiais/);
+ await assert.rejects(api.shareApproved({status:'Aprovado',video:fixture}),e=>{assert.match(e.userMessage,/pode baixar os materiais/);return true});
 });
 test('rascunho não é compartilhável mesmo por aprovador',async()=>{
  const {api}=setup(true);
- await assert.rejects(api.shareApproved({status:'Para aprovar',video:fixture}),/Apenas conteúdo aprovado/);
+ await assert.rejects(api.shareApproved({status:'Para aprovar',video:fixture}),e=>{assert.match(e.userMessage,/Apenas conteúdo aprovado/);return true});
 });
