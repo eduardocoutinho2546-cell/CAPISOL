@@ -52,7 +52,7 @@ try{
  await page.locator('#scenario').selectOption('faith_nonprofit');
  await page.getByRole('button',{name:'Operação do segmento'}).click();
  await page.locator('[data-do="event"]').first().click();
- await page.getByText(/nenhum dado externo foi alterado/).waitFor();
+ await page.getByText(/nenhum dado externo foi alterado/i).waitFor();
  await page.setViewportSize({width:390,height:844});
  await page.screenshot({path:'/tmp/capisol-demonstracao-mobile.png',fullPage:true});
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'demo ultrapassa largura no celular');
