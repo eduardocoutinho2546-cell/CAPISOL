@@ -14,7 +14,7 @@ export function selecionarMercado(registros,{kwh=1000,cidade="Rio Branco",hoje=n
   if(a.instaladoCompleto!==true||a.onGrid!==true||a.temBateria===true||a.mesmaModalidade!==true)continue;
   const key=a.empresa.trim().toLowerCase();
   const old=last.get(key);
-  if(!old||old.dt<dt)last.set(key,{empresa:a.empresa,preco,dt,origem:a.fonte});
+  if(!old||old.dt<=dt)last.set(key,{empresa:a.empresa,preco,dt,origem:a.fonte});
  }
  const itens=[...last.values()].sort((a,b)=>a.preco-b.preco);
  const ps=itens.map(x=>x.preco);
