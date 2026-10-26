@@ -18,7 +18,7 @@ try{
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
  const {port}=server.address();browser=await chromium.launch({headless:true,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
  const page=await browser.newPage({viewport:{width:930,height:900}});
- page.on('pageerror',e=>console.error('browser error:',e.message));
+ const pageErrors=[];page.on('pageerror',e=>{pageErrors.push(e.message);console.error('browser error:',e.message);});
  await page.goto('http://127.0.0.1:'+port);
  await page.evaluate(async()=>{
   const m=await import('/posts/studio-social.mjs');
@@ -31,6 +31,7 @@ try{
  await page.getByRole('button',{name:/Gerar vídeo e enviar/}).click();
  await page.waitForFunction(()=>window.__saved&&window.__saved.bytes>1000,null,{timeout:40000});
  const result=await page.evaluate(()=>({saved:window.__saved,status:document.querySelector('[role=status]')?.textContent,hasVideo:!!document.querySelector('.capisol-studio video')}));
+ assert.deepEqual(pageErrors,[],'não deve haver erros de JavaScript no navegador');
  assert.ok(result.saved.bytes>1000,'vídeo renderizado');
  assert.ok(['webm','mp4'].includes(result.saved.ext));
  assert.match(result.status,/Salvo em Posts prontos/);
