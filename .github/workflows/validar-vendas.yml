@@ -1,0 +1,25 @@
+name: Validar venda manual CAPISOL
+on:
+  pull_request:
+    paths:
+      - 'inteligencia/vendas-*.mjs'
+      - 'inteligencia/index.html'
+      - '.github/workflows/validar-vendas.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'inteligencia/vendas-*.mjs'
+      - 'inteligencia/index.html'
+      - '.github/workflows/validar-vendas.yml'
+permissions:
+  contents: read
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check inteligencia/vendas-calculo.mjs && node --check inteligencia/vendas-panel.mjs
+      - run: node --test inteligencia/vendas-calculo.test.mjs
