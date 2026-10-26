@@ -172,7 +172,7 @@ export async function montarPainel({sb,root}){
   try{
    if(!selectedQuoteId&&!(parametros.kit>0))throw Error("Informe o custo atual do kit ou selecione cotação conferida.");
    const p=await request(sb,"simular",{parametros,...(selectedQuoteId?{cotacao_id:selectedQuoteId}:{})});
-   result.textContent="Contribuição estimada: "+brl(p.contribuicao)+" | margem "+p.percentual+"% | custo estimado "+brl(p.custosEstimados)+" | "+(p.bloqueios.join(", ")||"Revisão tributária e comercial obrigatória")+". Não liberado para envio.";
+   result.textContent="Contribuição estimada: "+brl(p.contribuicao)+" | margem "+p.percentual+"% | faltam "+brl(p.faltaParaPiso)+" para o piso configurado | preço mínimo estimado: "+(p.precoMinimoEstimado===null?"taxas incompatíveis":brl(p.precoMinimoEstimado))+" | "+(p.bloqueios.join(", ")||"Revisão tributária e comercial obrigatória")+". VALORES HIPOTÉTICOS enquanto impostos e cotação não forem validados. Não liberado para envio.";
   }catch(e){result.textContent=e.message||"Falha"}
  };
 }
