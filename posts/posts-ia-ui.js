@@ -9,6 +9,24 @@
  function safeLegacy(u){return typeof u==='string'&&(/^(?:posts\/[\w\-/]+\.(?:png|jpg|jpeg)|https:\/\/[\w.\-/]+\.(?:png|jpg|jpeg))$/.test(u));}
  function pathOK(p){return /^posts-ia\/[0-9a-f-]{36}\/[0-4]\.png$/.test(p||'');}
  function humanError(e){return e&&e.userMessage?e.userMessage:'Não foi possível concluir. Confira a configuração do gerador e tente novamente.';}
+ function channelDraft(post,network){
+  if(!Object.prototype.hasOwnProperty.call(channels,network))throw Error('canal_invalido');
+  var title=String(post.titulo||'CAPISOL Energia Solar').trim().slice(0,140);
+  var caption=String(post.legenda||'').trim().slice(0,2200);
+  var hashtags=String(post.hashtags||'').trim().slice(0,220);
+  var script=String(post.roteiro||caption||title).trim().slice(0,1300);
+  var base=caption||title;
+  switch(network){
+   case 'instagram':return 'INSTAGRAM — PARA REVISÃO\\nFormato: Feed 4:5 ou Reels/Stories 9:16 conforme o material original.\\n\\n'+base+'\\n\\n'+hashtags+'\\n\\nCAPISOL Energia Solar | Acre';
+   case 'tiktok':return 'TIKTOK — ROTEIRO, NÃO VÍDEO FINALIZADO\\nFormato sugerido: vertical 9:16, legenda legível.\\nGancho inicial: '+title+'\\nNarração/cenas: '+script+'\\nEncerramento: Conheça a CAPISOL Energia Solar.\\nLegenda: '+base;
+   case 'whatsapp':return 'WHATSAPP — USAR SOMENTE COM DESTINATÁRIO AUTORIZADO\\n\\nOlá! Tudo bem? ☀️\\n'+base+'\\n\\nSe tiver interesse, podemos explicar como funciona.\\nEquipe CAPISOL Energia Solar\\n\\nNão enviar em massa; validar preço/cotação antes de ofertar.';
+   case 'facebook':return 'FACEBOOK — PARA REVISÃO\\n'+title+'\\n\\n'+base+'\\n\\n'+hashtags+'\\n\\nFale com a equipe CAPISOL.';
+   case 'linkedin':return 'LINKEDIN — TOM PROFISSIONAL\\n'+title+'\\n\\n'+base+'\\n\\nConverse com a CAPISOL Energia Solar para avaliar sua operação.';
+   case 'youtube':return 'YOUTUBE — PLANO DE VÍDEO\\nTítulo: '+title+'\\nDescrição: '+base+'\\nRoteiro: '+script+'\\nObservação: preparar capa, direitos de áudio e legendas antes de publicar.';
+   case 'youtube_shorts':return 'YOUTUBE SHORTS — VÍDEO VERTICAL\\nAbertura: '+title+'\\nRoteiro breve: '+script+'\\nLegenda: '+base;
+   case 'google':return 'GOOGLE PERFIL DA EMPRESA — POST PARA REVISÃO\\n'+title+'\\n'+base+'\\nCTA: Converse com a CAPISOL para solicitar avaliação.\\nVerificar conformidade com as regras do Perfil.';
+  }
+ } 
  function redraw(){if(latest&&latest.el.isConnected)render(latest.el,latest.ctx);}
  function remember(job){var i=jobs.findIndex(function(j){return j.id===job.id;});if(i<0)jobs.unshift(job);else jobs[i]=job;}
  async function refresh(ctx){
@@ -90,6 +108,7 @@
    if(p.roteiro)h+='<p class="poia-note"><b>Roteiro:</b> '+esc(p.roteiro)+'</p>';
    if(p.validacao)h+='<p class="poia-note">'+esc(p.validacao)+'</p>';
    if(p.marca)h+='<ul class="poia-note">'+p.marca.map(function(m,k){return '<li><label><input type="checkbox" data-review="'+i+'" data-item="'+k+'" '+(m[1]?'checked ':'')+(!ctx.canApprove?'disabled ':'')+'>'+esc(m[0])+'</label></li>';}).join('')+'</ul>';
+   h+='<div class="poia-actions"><label class="poia-note">Adaptar para <select data-network-select="'+i+'">'+Object.keys(channels).map(function(network){return '<option value="'+network+'"'+(channelOf(p)===network?' selected':'')+'>'+channels[network]+'</option>';}).join('')+'</select></label><button class="b b-sec" data-copy-network="'+i+'">Copiar versão da rede</button></div>';
    h+='<div class="poia-actions"><button class="b b-sec" data-copy="'+i+'">Copiar legenda + hashtags</button>';
    if(ctx.canApprove&&selected==='Para aprovar')h+='<button class="b b-pri" data-post="'+i+'" data-state="Aprovado">Aprovar</button><button class="b b-sec" data-post="'+i+'" data-state="Recusado">Recusar</button>';
    if(ctx.canApprove&&selected==='Aprovado')h+='<button class="b b-pri" data-post="'+i+'" data-state="Postado">Marcar como postado</button>';
@@ -107,6 +126,7 @@
   el.querySelectorAll('[data-tab]').forEach(function(b){b.onclick=function(){selected=b.dataset.tab;redraw();};});
   el.querySelectorAll('[data-channel]').forEach(function(b){b.onclick=function(){selectedChannel=b.dataset.channel;redraw();};});
   el.querySelectorAll('[data-copy]').forEach(function(b){b.onclick=async function(){var p=shown[+b.dataset.copy];try{await navigator.clipboard.writeText((p.legenda||'')+'\n\n'+(p.hashtags||''));b.textContent='Legenda copiada';}catch(e){notice='Selecione a legenda e copie o texto.';redraw();}};});
+  el.querySelectorAll('[data-copy-network]').forEach(function(b){b.onclick=async function(){var i=+b.dataset.copyNetwork,p=shown[i],select=el.querySelector('[data-network-select="'+i+'"]');try{await navigator.clipboard.writeText(channelDraft(p,select?.value||'instagram'));b.textContent='Versão copiada';}catch(e){notice='Não foi possível copiar o texto. Revise sua permissão de área de transferência.';redraw();}};});
   el.querySelectorAll('[data-review]').forEach(function(b){b.onchange=function(){var p=shown[+b.dataset.review],next=(p.marca||[]).map(function(m,k){return[m[0],k===+b.dataset.item?b.checked:m[1]];});notice='';if(ctx.review)ctx.review(p,next);};});
   el.querySelectorAll('[data-post]').forEach(function(b){b.onclick=function(){var p=shown[+b.dataset.post];if(b.dataset.state==='Aprovado'&&(p.marca||[]).some(function(m){return!m[1];})){notice='Confira os itens de revisão antes de aprovar.';redraw();return;}notice='';ctx.approve(p,b.dataset.state);};});
   el.querySelectorAll('[data-resume]').forEach(function(b){b.onclick=async function(){try{var j=await ctx.api.get(b.dataset.resume);remember(j);var uncertain=(j.slides||[]).some(function(s){return s.state==='ambiguous';});if(uncertain&&!root.confirm('A tentativa anterior pode ter consumido créditos. Autoriza tentar novamente somente a imagem pendente?'))return;await run(j,true);}catch(e){notice=humanError(e);redraw();}};});
@@ -116,5 +136,5 @@
   el.querySelectorAll('[data-download]').forEach(function(b){b.onclick=async function(){b.disabled=true;try{await ctx.api.download(b.dataset.download);}catch(e){notice=humanError(e);redraw();}finally{b.disabled=false;}};});
   refresh(ctx);
  }
- root.CAPISOL_POSTS_UI={render:render,openForm:openForm,formats:formats,progress:progress};
+ root.CAPISOL_POSTS_UI={render:render,openForm:openForm,formats:formats,progress:progress,channels:channels,channelDraft:channelDraft};
 })(globalThis);

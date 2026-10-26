@@ -46,6 +46,10 @@ jobs:
         run: npm install --no-save --package-lock=false playwright@1.51.1
       - name: Instalar navegador de teste
         run: npx playwright install --with-deps chromium
+      - name: Verificar versões de posts e estúdio local
+        run: |
+          node --check posts/posts-ia-ui.js
+          node --test posts/canais.test.mjs posts/studio-social.test.mjs
       - name: Testar fluxos do escritório
         run: node tools/test-office-ui.mjs
       - name: Testar demonstração pública isolada

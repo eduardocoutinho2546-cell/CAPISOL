@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import './posts-ia-ui.js';
+const {channelDraft,channels}=globalThis.CAPISOL_POSTS_UI;
+const p={titulo:'Limpeza solar',legenda:'Sujeira pode afetar geração. Solicite avaliação.',hashtags:'#CAPISOL #EnergiaSolar',roteiro:'Mostrar a obra com autorização e explicar benefícios sem prometer porcentagens.'};
+test('não acrescenta módulos: adapta texto a oito canais já disponíveis',()=>assert.deepEqual(Object.keys(channels),['whatsapp','instagram','facebook','tiktok','linkedin','youtube','youtube_shorts','google']));
+test('Instagram mostra formato e preserva legenda original',()=>{const x=channelDraft(p,'instagram');assert.match(x,/4:5/);assert.match(x,/#CAPISOL/);});
+test('TikTok apresenta roteiro sem afirmar renderização',()=>{const x=channelDraft(p,'tiktok');assert.match(x,/9:16/);assert.match(x,/NÃO VÍDEO FINALIZADO/);});
+test('WhatsApp inclui proteção de destinatário e impede preço arbitrário',()=>{const x=channelDraft(p,'whatsapp');assert.match(x,/SOMENTE COM DESTINATÁRIO AUTORIZADO/);assert.match(x,/Não enviar em massa/);assert.doesNotMatch(x,/R\$\s*\d/);});
+test('Facebook e YouTube têm objetivos específicos',()=>{assert.match(channelDraft(p,'facebook'),/FACEBOOK/);assert.match(channelDraft(p,'youtube'),/Roteiro/);});
+test('canal não autorizado é rejeitado',()=>assert.throws(()=>channelDraft(p,'telegram'),/canal_invalido/));
