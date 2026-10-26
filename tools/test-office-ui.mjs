@@ -7,8 +7,20 @@ await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.
 const browser=await chromium.launch({headless:true,...(process.env.CAPISOL_CHROMIUM_PATH?{executablePath:process.env.CAPISOL_CHROMIUM_PATH}:{})});
 const fixture=`
 let loggedIn=false;const owner='11111111-1111-4111-8111-111111111111', wid='22222222-2222-4222-8222-222222222222';
-const tables={capisol_workspaces:[{id:wid,name:'CAPISOL Energia Solar',cnpj:'66360677000149',kind:'company',industry_code:'solar'}],capisol_tasks:[],capisol_suppliers:[],capisol_proposals:[],capisol_subscriptions:[],capisol_fiscal_documents:[],capisol_bank_connections:[],capisol_bank_transactions:[],capisol_agent_runs:[],capisol_office_audit:[],capisol_workspace_scopes:[],capisol_rural_producers:[],capisol_rural_properties:[],capisol_media_jobs:[],capisol_content_tracks:[]};
-window.__tables=tables;window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:loggedIn?{user:{id:owner},access_token:'test-token'}:null}}),signInWithPassword:async()=>{loggedIn=true;return {};},signOut:async()=>{loggedIn=false;return {};}},rpc:async(name)=>({data:name==='capisol_workspace_role'?'admin':name==='capisol_office_legacy_insights'?{counts:{leads:12,clientes:2,propostas:4,contratos:2},quality:{leads_without_phone:2,leads_without_source:3,leads_without_owner:1,accepted_proposals:2},lead_stages:{Contato:12},checked_at:new Date().toISOString()}:name==='capisol_office_members'?[{user_id:owner,role:'admin',active:true,display_name:'Test admin'}]:null}),from:(name)=>{let method='select',value,filters=[];const q={select:()=>q,order:()=>q,limit:()=>q,eq:(k,v)=>{filters.push([k,v]);return q;},insert:v=>{method='insert';value=v;return q;},update:v=>{method='update';value=v;return q;},then:(resolve,reject)=>{try{let rows=tables[name]||[];if(method==='insert'){const values=Array.isArray(value)?value:[value];rows=values.map(x=>({id:crypto.randomUUID(),created_at:new Date().toISOString(),updated_at:new Date().toISOString(),...x}));tables[name].push(...rows);}else{rows=rows.filter(x=>filters.every(([k,v])=>x[k]===v));if(method==='update')rows.forEach(x=>Object.assign(x,value,{updated_at:new Date().toISOString()}));}return Promise.resolve({data:rows}).then(resolve,reject);}catch(e){return Promise.reject(e).then(resolve,reject);}}};return q;}})};`;
+const tables={capisol_workspaces:[{id:wid,name:'CAPISOL Energia Solar',cnpj:'66360677000149',kind:'company',industry_code:'solar'}],capisol_tasks:[],capisol_suppliers:[],capisol_proposals:[],capisol_subscriptions:[],capisol_fiscal_documents:[],capisol_bank_connections:[],capisol_bank_transactions:[],capisol_agent_runs:[],capisol_office_audit:[],capisol_workspace_scopes:[],capisol_rural_producers:[],capisol_rural_properties:[],capisol_media_jobs:[],capisol_content_tracks:[],capisol_org_units:[],capisol_stock_items:[],capisol_stock_moves:[],capisol_crop_cycles:[],capisol_crop_observations:[],capisol_work_orders:[],capisol_newsroom_stories:[],capisol_community_events:[]};
+window.__tables=tables;window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:loggedIn?{user:{id:owner},access_token:'test-token'}:null}}),signInWithPassword:async()=>{loggedIn=true;return {};},signOut:async()=>{loggedIn=false;return {};}},rpc:async(name,args)=>{
+ if(name==='capisol_stock_move'){
+  const item=tables.capisol_stock_items.find(x=>x.id===args.p_item&&x.workspace_id===args.p_workspace);
+  if(!item)return {error:{message:'stock_item_not_found'}};
+  let previous=tables.capisol_stock_moves.find(x=>x.request_id===args.p_request);
+  if(previous)return {data:previous.balance_after};
+  const delta=args.p_type==='in'?args.p_quantity:-args.p_quantity;
+  if((item.quantity||0)+delta<0)return {error:{message:'insufficient_stock'}};
+  item.quantity=(item.quantity||0)+delta;
+  tables.capisol_stock_moves.push({id:crypto.randomUUID(),workspace_id:args.p_workspace,stock_item_id:item.id,request_id:args.p_request,move_type:args.p_type,quantity:args.p_quantity,balance_after:item.quantity,reason:args.p_reason,created_at:new Date().toISOString()});
+  return {data:item.quantity};
+ }
+ return {data:name==='capisol_workspace_role'?'admin':name==='capisol_office_legacy_insights'?{counts:{leads:12,clientes:2,propostas:4,contratos:2},quality:{leads_without_phone:2,leads_without_source:3,leads_without_owner:1,accepted_proposals:2},lead_stages:{Contato:12},checked_at:new Date().toISOString()}:name==='capisol_office_members'?[{user_id:owner,role:'admin',active:true,display_name:'Test admin'}]:null};},from:(name)=>{let method='select',value,filters=[];const q={select:()=>q,order:()=>q,limit:()=>q,eq:(k,v)=>{filters.push([k,v]);return q;},insert:v=>{method='insert';value=v;return q;},update:v=>{method='update';value=v;return q;},then:(resolve,reject)=>{try{let rows=tables[name]||[];if(method==='insert'){const values=Array.isArray(value)?value:[value];rows=values.map(x=>({id:crypto.randomUUID(),created_at:new Date().toISOString(),updated_at:new Date().toISOString(),...x}));tables[name].push(...rows);}else{rows=rows.filter(x=>filters.every(([k,v])=>x[k]===v));if(method==='update')rows.forEach(x=>Object.assign(x,value,{updated_at:new Date().toISOString()}));}return Promise.resolve({data:rows}).then(resolve,reject);}catch(e){return Promise.reject(e).then(resolve,reject);}}};return q;}})};`;
 const errors=[];const context=await browser.newContext();const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
 await page.route('**/vendor/supabase-2.45.4.min.js',r=>r.fulfill({contentType:'text/javascript',body:fixture}));
 await page.route('https://wvgmabqecrlydsranknn.supabase.co/**',r=>r.fulfill({contentType:'application/json',body:JSON.stringify({open_finance:{configured:false},fiscal:{homologation_configured:false,production_enabled:false},ai:{configured:false}})}));
@@ -42,6 +54,37 @@ try{
  await page.getByLabel('Digite TENHO AUTORIZACAO (direitos do vídeo)').fill('TENHO AUTORIZACAO');
  await page.getByRole('button',{name:'Salvar',exact:true}).click();await page.locator('dialog').waitFor({state:'hidden'});
  await page.getByText('Vídeo bruto teste').waitFor();
+ await page.getByRole('button',{name:'Catálogo de módulos',exact:true}).click();
+ await page.getByRole('heading',{name:/240 módulos em 24 núcleos/}).waitFor();
+ await page.getByLabel('Pesquisar módulo').fill('estoque');
+ await page.locator('#catalog-cards .card').first().waitFor();
+ await page.getByLabel('Pesquisar módulo').fill('');
+ await page.getByLabel('Escala').selectOption('global');
+ await page.getByText('operacao_multimoeda_ou_multijurisdicao_nao_homologada',{exact:false}).waitFor();
+ await page.getByRole('button',{name:'Operações multissetoriais',exact:true}).click();
+ await page.getByRole('button',{name:'Novo registro / movimento',exact:true}).click();
+ await page.getByLabel('Nome da unidade').fill('Almoxarifado de teste');
+ await page.getByLabel('Município / cidade').fill('Rio Branco');
+ await page.getByRole('button',{name:'Salvar',exact:true}).click();await page.locator('dialog').waitFor({state:'hidden'});
+ await page.getByText('Almoxarifado de teste',{exact:true}).waitFor();
+ await page.getByLabel('Selecionar operação').selectOption('stockItems');
+ await page.getByRole('button',{name:'Novo registro / movimento',exact:true}).click();
+ await page.getByLabel('Código SKU').fill('SKU-DEMO');
+ await page.getByLabel('Nome do item').fill('Peça de manutenção teste');
+ await page.getByRole('button',{name:'Salvar',exact:true}).click();await page.locator('dialog').waitFor({state:'hidden'});
+ await page.getByText('SKU-DEMO',{exact:true}).waitFor();
+ await page.getByLabel('Selecionar operação').selectOption('stockMoves');
+ await page.getByRole('button',{name:'Novo registro / movimento',exact:true}).click();
+ await page.getByLabel('Quantidade').fill('10');
+ await page.getByLabel('Motivo / documento de origem').fill('Recebimento sintético');
+ await page.getByRole('button',{name:'Salvar',exact:true}).click();await page.locator('dialog').waitFor({state:'hidden'});
+ assert.equal(await page.evaluate(()=>window.__tables.capisol_stock_items[0].quantity),10);
+ await page.getByLabel('Selecionar operação').selectOption('cropCycles');
+ await page.getByRole('button',{name:'Novo registro / movimento',exact:true}).click();
+ await page.getByLabel('Cultura',{exact:true}).fill('Milho');
+ await page.getByLabel('Hectares').fill('8');
+ await page.getByRole('button',{name:'Salvar',exact:true}).click();await page.locator('dialog').waitFor({state:'hidden'});
+ await page.getByText('Milho',{exact:true}).waitFor();
  await page.getByRole('button',{name:'Visão geral',exact:true}).click();await page.setViewportSize({width:390,height:844});await page.screenshot({path:'/tmp/capisol-office-mobile.png',fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'mobile horizontal overflow');
  await page.setViewportSize({width:1440,height:1000});await page.screenshot({path:'/tmp/capisol-office-desktop.png',fullPage:true});assert.deepEqual(errors,[]);console.log('PASS UI: login, task create/update, evidence validation, 72 sectors, review-to-task, 8 modules, mobile overflow, no browser exceptions. Network mocked; no external provider action.');
 }catch(e){console.error('UI debug:',await page.locator('#content').innerText(),errors);await page.screenshot({path:'/tmp/capisol-office-failure.png',fullPage:true});throw e;}finally{await browser.close();server.close();}
