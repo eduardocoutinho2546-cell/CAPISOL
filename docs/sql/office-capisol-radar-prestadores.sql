@@ -33,6 +33,8 @@ revoke all on public.capisol_partner_radar from public,anon,authenticated;
 grant select on public.capisol_partner_radar to authenticated;
 create policy partner_radar_read on public.capisol_partner_radar for select to authenticated
  using(public.capisol_workspace_role(workspace_id) in ('admin','manager'));
+alter table public.capisol_partner_radar
+ add constraint capisol_partner_radar_workspace_id_unique unique(workspace_id,id);
 create table if not exists public.capisol_partner_radar_reviews(
  id uuid primary key default gen_random_uuid(),
  workspace_id uuid not null,
@@ -44,8 +46,7 @@ create table if not exists public.capisol_partner_radar_reviews(
  at timestamptz not null default now(),
  foreign key(workspace_id,candidate_id) references public.capisol_partner_radar(workspace_id,id)
 );
-alter table public.capisol_partner_radar
- add constraint capisol_partner_radar_workspace_id_unique unique(workspace_id,id);
+
 create index if not exists partner_reviews_recent on public.capisol_partner_radar_reviews(workspace_id,at desc);
 alter table public.capisol_partner_radar_reviews enable row level security;
 revoke all on public.capisol_partner_radar_reviews from public,anon,authenticated;
