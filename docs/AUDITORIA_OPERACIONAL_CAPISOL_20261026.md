@@ -10,13 +10,13 @@
 | Site Escritório 4.0 e demo | GitHub Pages/CI verdes, fluxo visual com mock | Publicado; teste em browser de CI | Conferir login e processo com usuário real no navegador |
 | Conta CAPISOL | 1 workspace, 1 membro no escritório | Ativa; gestão não está adotada pela equipe | Cadastrar perfis de sócios/marketing/ADM com contas confirmadas |
 | CRM legado | public.docs possui 70.958 registros; 67.434 são base_rf, não leads | Base existente | Diagnosticar e reconciliar CRM legado com módulo novo, sem duplicar |
-| Leads | 1.263 leads; 1.257 triagens; 108 sem fone, 53 sem origem, 1.263 sem vendedor (campo vendedor) | Dados, não funil em uso pleno | Qualificação humana, responsável, próxima ação, consentimento e deduplicação |
+| Leads | 1.263 leads; 1.257 triagens; 108 sem fone, 53 sem origem, 1.263 sem campo vendedor, mas 1.013 com campo agente preenchido; 1.197 na etapa A contatar | Dados, não funil em uso pleno | Qualificação humana, responsável, próxima ação, consentimento e deduplicação |
 | Comercial do escritório | 0 propostas novas / 0 tarefas | Interface existe mas não adotada | Registrar pelo menos uma jornada real autorizada |
-| Fornecedores | 0 em capisol_suppliers; 17 **tipos de serviço** legados, todos AGUARDANDO_COTACAO | Tabela sem fornecedores homologados | Classificar cotações e contratos/escopos com prestadores |
+| Fornecedores | 0 em capisol_suppliers; 17 **tipos de serviço** legados (todos AC), todos AGUARDANDO_COTACAO | Tabela sem fornecedores homologados | Classificar cotações e contratos/escopos com prestadores |
 | Radar prestadores | 14 empresas candidatas AC/RO identificadas em fontes públicas e inseridas em capisol_partner_radar | Cadastros de candidatos, sem nenhum contato registrado ou contrato | Conferir telefones, serviço, NR-10/NR-35, ART, preço, distância, documentação e seguro |
 | Radar concorrentes | 281 registros de concorrentes; 4 ofertas em coleção legada | Base registrada | Evidência datada, parâmetros comparáveis, decisão comercial com fonte |
 | BelEnergy | Workflow agendado em 26/10 falhou na etapa **Confirmar pré-condições**, sem secrets configurados | **NÃO funcional para cotação automática** | Acesso legítimo BelEnergy, storage_state e workflow autorizados, secret do owner e teste real só com consentimento |
-| Financeiro | 6 registros históricos de contas a pagar, 23 referências de preço, 43 itens de estoque; tabelas novas bancárias sem dados | Dado histórico parcial | Reconciliar contas, caixa 13 semanas, margem, pró-labore, notas e tributação com CFO e contador |
+| Financeiro | 6 registros de contas a pagar somando R$ 1.780 com vencimento informado para 05/11/2026 (sem conciliação), 23 referências de preço (última atualização 16/10), 43 itens históricos de estoque; tabelas novas bancárias sem dados | Dado histórico parcial | Reconciliar contas, caixa 13 semanas, margem, pró-labore, notas e tributação com CFO e contador |
 | Open Finance | 0 conexões/transações | Adapter do código, sem credenciais/consentimento | Homologar Pluggy e importação de 90 dias ou OFX com consentimento |
 | Fiscal | 0 notas no escritório | Pré-validação técnica somente | Regime/CNAE e NFS-e nacional/muncipal confirmadas com contador e provedor |
 | CAPISOL+ | 0 assinaturas no escritório | Modelo ainda não ativo em cobrança | Contrato, entregáveis, calendário, recorrência/cobrança, atendimento e garantias revisadas |
@@ -70,3 +70,10 @@ Só após esses cinco passos mudar cadastro operacional para prestador aprovado,
 - Rotina de testes CI, backup/restauração e acesso revogável.
 
 **Status geral em 26/10/2026: operação tecnológica parcial; CAPISOL não comprovou ainda jornada real completa pelo Escritório 4.0.**
+
+## Fontes históricas e próximos dados para conciliação
+- Banco legado: 1.197 leads em `prospeccao / A contatar`, 13 em `Mensagem pronta`, 47 registros operacionais em `A fazer` e seis em `Concluído`; essas etapas não comprovam envio/consentimento ou conversão.
+- 1.013 registros de lead com `agente` preenchido e **nenhum com `vendedor` preenchido**. Tratar agente como referência técnica, não atribuição humana comprovada.
+- Seis compromissos "A pagar" totalizam R$ 1.780 com data 05/11/2026 na base legada. Confirmar validade, beneficiário, status e documento com o CFO antes de liquidar.
+- A coleta de concorrentes tem 281 cadastros (última alteração 22/10) e quatro ofertas cadastradas, sem observação preenchida no campo consultado. Não afirmar ROAS ou conversão de anúncios.
+- O conjunto de 23 preços do legado tem última alteração em 16/10/2026 e não pode substituir cotação do fornecedor válida hoje.
