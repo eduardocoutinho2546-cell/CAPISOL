@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAPISOL Gestão 4.0 — Demonstração multissetorial</title><meta name="description" content="Ambiente de demonstração isolado para apresentação da CAPISOL Gestão 4.0; dados fictícios">
+<link rel="stylesheet" href="demo.css"><script type="module" src="demo-app.mjs"></script></head>
+<body>
+<header class="top"><a class="wordmark" href="../"><span class="sun">●</span> CAPISOL <small>GESTÃO 4.0</small></a>
+<div class="top-right"><span class="demo-flag">AMBIENTE DEMONSTRATIVO</span><a class="text-link" href="./">Acessar ambiente real</a></div></header>
+<div class="shell"><aside class="side">
+<div class="intro"><span class="eyebrow">EXPERIÊNCIA B2B</span><h1>Um escritório.<br>Vários mercados.</h1><p>Simule o funcionamento de uma empresa sem utilizar dados reais ou serviços externos.</p></div>
+<label for="scenario">Segmento demonstrado</label><select id="scenario"></select>
+<nav aria-label="Áreas do ambiente demonstrativo"><button class="active" data-view="overview">Visão executiva</button><button data-view="operations">Operação do segmento</button><button data-view="modules">Catálogo de 240 módulos</button><button data-view="scale">Expansão geográfica</button><button data-view="report">Resumo da apresentação</button></nav>
+<div class="side-bottom"><button id="reset" class="soft">Reiniciar simulação</button><p>Os registros existem apenas na memória desta página e desaparecem ao recarregá-la. Nenhuma conta, empresa ou cobrança real é criada.</p></div>
+</aside>
+<main><div class="heading"><div><span id="crumb" class="eyebrow">VISÃO EXECUTIVA</span><h2 id="company"></h2><p id="subline"></p></div><div class="heading-actions"><button class="soft" id="print">Imprimir apresentação</button><span class="tag">Dados fictícios</span></div></div>
+<div id="feedback" role="status" aria-live="polite"></div><div id="app"></div>
+<footer>CAPISOL Gestão 4.0 • Simulação local independente • Sem APIs externas, dados de clientes ou transações reais • Etapa de homologação em andamento</footer>
+</main></div></body></html>
