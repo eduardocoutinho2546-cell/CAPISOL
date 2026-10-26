@@ -7,7 +7,8 @@ async function request(sb,action,more={}){
  if(data?.error)throw Error(data.error);
  return data;
 }
-async function pdfSeguro(f){
+async function pdfSeguro(f,valorConferido=""){
+ if(valorConferido&&!/^(?:\d{1,3}(?:\.\d{3})+|\d+),\d{2}$/.test(valorConferido))throw Error("Informe o total no formato 12345,67 ou 12.345,67");
  if(!f||f.size>10*1024*1024||!f.name.toLowerCase().endsWith(".pdf"))throw Error("Selecione PDF com até 10 MB");
  const bytes=new Uint8Array(await f.arrayBuffer());
  const hashBytes=new Uint8Array(await crypto.subtle.digest("SHA-256",bytes));
@@ -28,7 +29,8 @@ async function pdfSeguro(f){
  pick(/\+\s*Total\s+de\s+Produtos\s*:\s*R\$\s*[\d.,]+/i),
  pick(/\+\s*Valor\s+Frete\s*:\s*R\$\s*[\d.,]+/i),
  pick(/\+\s*Valor\s+Seguro\s*:\s*R\$\s*[\d.,]+/i),
- pick(/Valor\s+Total\s*:\s*R\$\s*[\d.,]+/i),
+ pick(/Valor\s+Total\s*:\s*(?:R\$\s*)?\d[\d.]*,\d{2}/i),
+ valorConferido?"TOTAL_CONFERIDO_PELO_OPERADOR: R$ "+valorConferido:"",
  /BelEnergy|Belenus/i.test(text)?"BelEnergy":""
  ].join("\n");
  // Envie SOMENTE os campos comerciais. Os dados pessoais do PDF não saem do navegador.
@@ -46,29 +48,35 @@ export async function montarPainel({sb,root}){
  root.append(E("h2","BelEnergy • importação segura de cotação"),
  E("p","Escolha o PDF do fornecedor. Somente campos comerciais são enviados; nenhuma compra ou proposta será finalizada."));
  const label=E("label","PDF da BelEnergy: ");const inp=E("input","",{type:"file",accept:"application/pdf,.pdf"});label.append(inp);root.append(label);
+ const totalLabel=E("label","Total exato no PDF, se não for localizado automaticamente: ");
+ const totalInput=E("input","",{type:"text",inputmode:"decimal",placeholder:"Ex.: 61.800,34",maxlength:"18"});
+ totalLabel.append(totalInput);root.append(totalLabel);
+ const confirmLabel=E("label","");const confirmInput=E("input","",{type:"checkbox"});
+ confirmLabel.append(confirmInput,document.createTextNode(" Conferi esse valor no PDF oficial, não é uma estimativa."));root.append(confirmLabel);
  const actions=E("div","",{class:"cotacoes-actions"});
  const preview=E("button","Conferir PDF",{type:"button"});
  const save=E("button","Salvar cotação",{type:"button"});save.disabled=true;
  const list=E("button","Listar cotações",{type:"button"});
  const ssw=E("a","Rastreamento oficial SSW",{href:"https://ssw.inf.br/2/rastreamento_pf",target:"_blank",rel:"noopener noreferrer"});
  actions.append(preview,save,list,ssw);root.append(actions);
- if(!isOwner){preview.hidden=true;save.hidden=true;inp.hidden=true;label.hidden=true;}
+ if(!isOwner){preview.hidden=true;save.hidden=true;inp.hidden=true;label.hidden=true;totalLabel.hidden=true;confirmLabel.hidden=true;}
  const output=E("div","Aguardando PDF.",{role:"status",class:"cotacoes-output"});root.append(output);
  const hist=E("div");root.append(hist);
- let payload=null;
+ let payload=null,selectedQuoteId=null;
  preview.onclick=async()=>{
   save.disabled=true;output.textContent="Conferindo valores...";
   try{
-   payload=await pdfSeguro(inp.files?.[0]);
+   if(totalInput.value.trim()&&!confirmInput.checked)throw Error("Confirme que você conferiu o valor no PDF.");
+   payload=await pdfSeguro(inp.files?.[0],totalInput.value.trim());
    const {cotacao:q}=await request(sb,"parse",{texto:payload.texto});
    if(q.erros.length){output.textContent="Campos pendentes: "+q.erros.join(", ");return}
-   output.textContent=q.numero+" | "+q.kwp+" kWp | "+brl(q.total)+" | validade estimada: "+q.validade+". CONFIRA O PDF ORIGINAL antes de salvar.";
+   output.textContent=q.numero+" | "+q.kwp+" kWp | "+brl(q.total)+" | validade: "+q.validade+". "+(q.vencida?"VENCIDA: somente histórico, solicite nova cotação. ":"")+(q.origemTotal==="conferencia_operador"?"Total conferido manualmente, soma validada. ":"")+"Revise os itens no PDF original.";
    save.disabled=false;
   }catch(e){output.textContent=e.message||"Falha ao ler PDF"}
  };
  save.onclick=async()=>{
   if(!payload)return;save.disabled=true;
-  try{const r=await request(sb,"importar",payload);output.textContent="Registrada "+r.registro.numero+" com status pendente de conferência. Não houve compra."}
+  try{const r=await request(sb,"importar",payload);output.textContent="Registrada "+r.registro.numero+" com estado "+r.situacao+". "+(r.situacao==="vencida"?"Somente histórico, não utilizar no preço atual. ":"Pendente de conferência por sócio. ")+"Nenhuma compra realizada.";}
   catch(e){output.textContent=e.message||"Falha ao salvar"}
  };
  list.onclick=async()=>{
