@@ -33,4 +33,4 @@ jobs:
           node --check posts/posts-ia-ui.js
           node --check posts/posts-ia-bridge.js
       - name: Testes de regras do Estúdio Social
-        run: node --test posts/studio-social.test.mjs workers/media/clipper.test.mjs
+        run: node --test posts/studio-social.test.mjs posts/canais.test.mjs posts/share.test.mjs workers/media/clipper.test.mjs
