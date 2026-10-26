@@ -2,7 +2,7 @@
 (function(root){
  'use strict';
  var formats={FeedInstitucional:'Feed institucional (1:1)',FeedServico:'Feed de serviço (1:1)',FeedEconomia:'Feed de economia (1:1)',FeedInvestimento:'Feed de investimento (1:1)',StoryAviso:'Story de aviso (9:16)',StoryResultado:'Story por segmento (9:16)',StoryOrcamento:'Story de orçamento (9:16)',ReelsCapa:'Capa de Reels (9:16)',Carrossel:'Carrossel educativo · 5 lâminas (4:5)'};
- var channels={whatsapp:'WhatsApp',instagram:'Instagram',facebook:'Facebook',tiktok:'TikTok',linkedin:'LinkedIn',youtube:'YouTube',youtube_shorts:'YouTube Shorts',google:'Google Perfil da Empresa'};
+ var channels={whatsapp:'WhatsApp',instagram:'Instagram',facebook:'Facebook',tiktok:'TikTok',linkedin:'LinkedIn',youtube:'YouTube',youtube_shorts:'YouTube Shorts',google:'Google Perfil da Empresa',pinterest:'Pinterest',x:'X / Twitter',threads:'Threads',bluesky:'Bluesky',kwai:'Kwai',telegram:'Telegram',reddit:'Reddit'};
  var selected='Para aprovar',selectedChannel='all',jobs=[],loaded=false,loading=false,busy={},notice='',latest=null,requestId=null;
  function channelOf(p){return String(p.rede||p.canal||p.platform||'instagram').toLowerCase();}
  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -24,6 +24,13 @@
    case 'linkedin':return 'LINKEDIN — TOM PROFISSIONAL\\n'+title+'\\n\\n'+base+'\\n\\nConverse com a CAPISOL Energia Solar para avaliar sua operação.';
    case 'youtube':return 'YOUTUBE — PLANO DE VÍDEO\\nTítulo: '+title+'\\nDescrição: '+base+'\\nRoteiro: '+script+'\\nObservação: preparar capa, direitos de áudio e legendas antes de publicar.';
    case 'youtube_shorts':return 'YOUTUBE SHORTS — VÍDEO VERTICAL\\nAbertura: '+title+'\\nRoteiro breve: '+script+'\\nLegenda: '+base;
+   case 'kwai':return 'KWAI — VÍDEO CURTO PARA REVISÃO\nFormato vertical 9:16. Gancho: '+title+'\nCenas ou fala: '+script+'\nLegenda: '+base+'\n'+hashtags;
+   case 'pinterest':return 'PINTEREST — IDEIA DE PIN\nTítulo: '+title+'\nDescrição: '+base+'\nCriar imagem original vertical. Link: blog ou site oficial CAPISOL.';
+   case 'x':return 'X — POST PARA REVISÃO\n'+title+'\n'+base+'\nConferir limite de caracteres e política da conta antes de enviar manualmente.';
+   case 'threads':return 'THREADS — CONVERSA EDUCATIVA\n'+title+'\n'+base+'\nPergunta final: o que você gostaria de saber sobre energia solar?';
+   case 'bluesky':return ('BLUESKY — POST\n'+title+'\n'+base).slice(0,300);
+   case 'telegram':return 'TELEGRAM — CANAL OFICIAL COM SEGUIDORES QUE OPTARAM POR PARTICIPAR\n'+title+'\n'+base;
+   case 'reddit':return 'REDDIT — CONTRIBUIÇÃO EDUCATIVA\n'+title+'\n'+script+'\nRespeitar regras da comunidade. Não fazer spam promocional.';
    case 'google':return 'GOOGLE PERFIL DA EMPRESA — POST PARA REVISÃO\\n'+title+'\\n'+base+'\\nCTA: Converse com a CAPISOL para solicitar avaliação.\\nVerificar conformidade com as regras do Perfil.';
   }
  } 
@@ -112,6 +119,7 @@
    h+='<div class="poia-actions"><button class="b b-sec" data-copy="'+i+'">Copiar legenda + hashtags</button>';
    if(ctx.canApprove&&selected==='Para aprovar')h+='<button class="b b-pri" data-post="'+i+'" data-state="Aprovado">Aprovar</button><button class="b b-sec" data-post="'+i+'" data-state="Recusado">Recusar</button>';
    if(ctx.canApprove&&selected==='Aprovado')h+='<button class="b b-pri" data-post="'+i+'" data-state="Postado">Marcar como postado</button>';
+   if(ctx.canApprove&&selected==='Aprovado'&&(p.video||(p.assets||[]).length))h+='<button class="b b-pri" data-shareapproved="'+i+'">Compartilhar no aplicativo</button>';
    h+='</div></article>';
   });h+='</section>';el.innerHTML=h;
   var bt=el.querySelector('[data-poia-new]');if(bt)bt.onclick=openForm;
@@ -129,6 +137,12 @@
   el.querySelectorAll('[data-copy-network]').forEach(function(b){b.onclick=async function(){var i=+b.dataset.copyNetwork,p=shown[i],select=el.querySelector('[data-network-select="'+i+'"]');try{await navigator.clipboard.writeText(channelDraft(p,select?.value||'instagram'));b.textContent='Versão copiada';}catch(e){notice='Não foi possível copiar o texto. Revise sua permissão de área de transferência.';redraw();}};});
   el.querySelectorAll('[data-review]').forEach(function(b){b.onchange=function(){var p=shown[+b.dataset.review],next=(p.marca||[]).map(function(m,k){return[m[0],k===+b.dataset.item?b.checked:m[1]];});notice='';if(ctx.review)ctx.review(p,next);};});
   el.querySelectorAll('[data-post]').forEach(function(b){b.onclick=function(){var p=shown[+b.dataset.post];if(b.dataset.state==='Aprovado'&&(p.marca||[]).some(function(m){return!m[1];})){notice='Confira os itens de revisão antes de aprovar.';redraw();return;}notice='';ctx.approve(p,b.dataset.state);};});
+  el.querySelectorAll('[data-shareapproved]').forEach(function(b){b.onclick=async function(){
+    if(b.disabled)return;b.disabled=true;
+    try{var p=shown[+b.dataset.shareapproved],result=await ctx.api.shareApproved(p);notice=result.message;redraw();}
+    catch(err){notice=err.userMessage||err.message||'Compartilhamento não disponível. Baixe o material e abra o aplicativo.';redraw();}
+    finally{if(b.isConnected)b.disabled=false;}
+  };});
   el.querySelectorAll('[data-resume]').forEach(function(b){b.onclick=async function(){try{var j=await ctx.api.get(b.dataset.resume);remember(j);var uncertain=(j.slides||[]).some(function(s){return s.state==='ambiguous';});if(uncertain&&!root.confirm('A tentativa anterior pode ter consumido créditos. Autoriza tentar novamente somente a imagem pendente?'))return;await run(j,true);}catch(e){notice=humanError(e);redraw();}};});
   el.querySelectorAll('[data-asset]').forEach(function(img){ctx.api.sign(img.dataset.asset).then(function(url){if(img.isConnected)img.src=url;},function(){if(img.isConnected)img.alt='Imagem indisponível. Atualize a sessão e tente novamente.';});});
   el.querySelectorAll('[data-socialpath]').forEach(function(video){ctx.api.signMedia(video.dataset.socialpath).then(function(url){if(video.isConnected)video.src=url;},function(){if(video.isConnected)video.outerHTML='<p class="poia-error">Vídeo indisponível. Atualize a sessão.</p>';});});

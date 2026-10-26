@@ -39,6 +39,22 @@
     if(saved.error){await sb.storage.from('arquivos').remove([p]).catch(function(){});throw error('O vídeo foi gerado, mas não foi possível cadastrar o post. Baixe a cópia local.');}
     return {id:id,path:p};
    },
+   shareApproved:async function(post){
+    session();
+    if(!post||post.status!=='Aprovado')throw error('Apenas conteúdo aprovado pode ser enviado a um aplicativo de rede social.');
+    var rights=await sb.rpc('capisol_blog_context');
+    if(rights.error||rights.data?.can_approve!==true)throw error('Este usuário pode baixar os materiais, mas não pode publicar. Apenas um dos três aprovadores pode compartilhar.');
+    var p=(typeof post.video==='string'&&mediaPath(post.video))||(Array.isArray(post.assets)&&post.assets.length?path(post.assets[0]):null);
+    if(!p)throw error('Esta publicação não tem arquivo privado disponível para compartilhar. Faça o download do material.');
+    if(!root.navigator||typeof root.navigator.share!=='function')throw error('Compartilhamento nativo não disponível neste navegador. Baixe o arquivo e abra a rede social manualmente.');
+    var out=await sb.storage.from('arquivos').download(p);
+    if(out.error||!out.data)throw error('Não foi possível buscar a mídia aprovada para compartilhar.');
+    var extension=p.split('.').pop().toLowerCase(),mime=extension==='png'?'image/png':extension==='mp4'?'video/mp4':'video/webm';
+    var file=new File([out.data],'CAPISOL-publicacao.'+extension,{type:mime});
+    if(typeof root.navigator.canShare==='function'&&!root.navigator.canShare({files:[file]}))throw error('Esta rede ou navegador não aceita compartilhar este arquivo. Use Baixar.');
+    await root.navigator.share({files:[file],title:String(post.titulo||'CAPISOL Energia Solar').slice(0,100),text:(String(post.legenda||'')+'\n'+String(post.hashtags||'')).slice(0,1500)});
+    return {opened:true,providerReceipt:false,message:'O aplicativo recebeu o pedido de compartilhamento. A publicação na rede ainda precisa ser confirmada pelo responsável.'};
+   },
    download:async function(p){
     session();var r=await sb.storage.from('arquivos').download(path(p));if(r.error||!r.data)throw error('Não foi possível baixar a imagem.');
     var u=URL.createObjectURL(r.data),a=document.createElement('a');a.href=u;a.download='CAPISOL-'+p.split('/').slice(-2).join('-');document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},5000);
