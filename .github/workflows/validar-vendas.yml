@@ -3,12 +3,14 @@ on:
   pull_request:
     paths:
       - 'inteligencia/vendas-*.mjs'
+      - 'inteligencia/mercado-*.mjs'
       - 'inteligencia/index.html'
       - '.github/workflows/validar-vendas.yml'
   push:
     branches: [main]
     paths:
       - 'inteligencia/vendas-*.mjs'
+      - 'inteligencia/mercado-*.mjs'
       - 'inteligencia/index.html'
       - '.github/workflows/validar-vendas.yml'
 permissions:
@@ -21,5 +23,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --check inteligencia/vendas-calculo.mjs && node --check inteligencia/vendas-panel.mjs
-      - run: node --test inteligencia/vendas-calculo.test.mjs
+      - run: node --check inteligencia/vendas-calculo.mjs && node --check inteligencia/vendas-panel.mjs && node --check inteligencia/mercado-motor.mjs && node --check inteligencia/mercado-painel.mjs
+      - run: node --test inteligencia/vendas-calculo.test.mjs inteligencia/mercado-motor.test.mjs
