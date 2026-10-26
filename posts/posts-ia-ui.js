@@ -81,7 +81,7 @@
    assets.forEach(function(path,k){h+='<div><img data-asset="'+esc(path)+'" alt="'+esc(p.alt||'Imagem CAPISOL para revisão')+'"><button class="b b-sec" data-download="'+esc(path)+'">Baixar imagem '+(k+1)+'</button></div>';});
    legacy.forEach(function(u,k){h+='<div><img src="'+esc(u)+'" alt="'+esc(p.alt||'Imagem CAPISOL')+'"><a class="b b-sec" href="'+esc(u)+'" download target="_blank" rel="noopener">Baixar imagem '+(k+1)+'</a></div>';});
    h+='</div>';
-   if(typeof p.video==='string'&&/^posts-social\\/[0-9a-f-]{36}\\/final\\.(webm|mp4)$/.test(p.video)){
+   if(typeof p.video==='string'&&/^posts-social\/[0-9a-f-]{36}\/final\.(webm|mp4)$/.test(p.video)){
      h+='<div class="poia-images"><div style="flex:1"><video controls playsinline preload="metadata" style="max-width:300px;width:100%;max-height:440px;background:#022C5E;border-radius:10px" data-socialpath="'+esc(p.video)+'"></video><p><button class="b b-sec" data-socialdownload="'+esc(p.video)+'">Baixar vídeo</button></p></div></div>';
    }
    h+='<div class="poia-copy">'+esc(p.legenda||'')+'</div><p class="poia-note">'+esc(p.hashtags||'')+'</p>';
@@ -98,7 +98,7 @@
   var bt=el.querySelector('[data-poia-new]');if(bt)bt.onclick=openForm;
   var studio=el.querySelector('[data-poia-studio]');if(studio)studio.onclick=async function(){
     studio.disabled=true;
-    try{var src=Array.from(document.scripts).find(function(s){return /posts-ia-ui\\.js(?:\\?|$)/.test(s.src);});
+    try{var src=Array.from(document.scripts).find(function(s){return /posts-ia-ui\.js(?:\?|$)/.test(s.src);});
       var url=src?new URL('studio-social.mjs',src.src).href:new URL('posts/studio-social.mjs',document.baseURI).href;
       var module=await import(url);module.openStudio(latest.ctx);
     }catch(e){notice=e.message||'Não foi possível abrir o estúdio.';redraw();}
