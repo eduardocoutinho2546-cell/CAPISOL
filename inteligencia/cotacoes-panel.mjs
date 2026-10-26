@@ -142,7 +142,7 @@ export async function montarPainel({sb,root}){
  };sale.append(copyVendor);
  const qmenu=E("div","",{class:"cotacoes-actions"});
  const jobsButton=E("button","Ver fila de cotações",{type:"button"});
- const pricesButton=E("button","Tabela atual de custo",{type:"button"});
+ const pricesButton=E("button","Tabela completa • 53 faixas",{type:"button"});
  qmenu.append(jobsButton,pricesButton);sale.append(qmenu);
  const qtable=E("div");sale.append(qtable);root.append(sale);
  jobsButton.onclick=async()=>{
@@ -154,9 +154,11 @@ export async function montarPainel({sb,root}){
  };
  pricesButton.onclick=async()=>{
   try{const r=await request(sb,"tabela");const t=E("table");
-   for(const x of r.custos||[]){const tr=E("tr");
-    [x.template_id,x.cotacao_numero,brl(x.custo_total_fornecedor),x.validade,x.situacao_custo].forEach(z=>tr.append(E("td",String(z))));
-    t.append(tr)}qtable.replaceChildren(t);
+   const head=E("tr");["Consumo kWh/mês","Kit","Cotação","Fornecedor + frete","Validade","Situação"].forEach(x=>head.append(E("th",x)));t.append(head);
+   for(const x of r.custos||[]){
+    const tr=E("tr");[x.faixa_kwh,x.template_id,x.cotacao_numero||"—",x.custo_total_fornecedor==null?"Aguardando cotação":brl(x.custo_total_fornecedor),x.validade||"—",x.situacao_custo].forEach(z=>tr.append(E("td",String(z??"—"))));t.append(tr)
+   }
+   qtable.replaceChildren(E("p","53 faixas de 400 a 3.000 kWh, intervalo 50. Não há preço válido sem PDF do fornecedor. Última execução: seg/qua/sex, 05h de Rio Branco."),t);
   }catch(e){qtable.textContent=e.message||"Tabela ainda sem cotação confirmada"}
  };
 
