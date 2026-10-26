@@ -28,6 +28,8 @@ jobs:
         run: node tools/audit-production.mjs
       - name: Testar fila, setores e cálculos
         run: node --test gateway/test/*.test.mjs saas/test/*.test.mjs workers/media/*.test.mjs
+      - name: Conferir blog e scripts da redação
+        run: node tools/test-blog-syntax.mjs
       - name: Procurar segredos proibidos
         run: |
           if grep -RInE 'service_role=[^[:space:]]|sk-[A-Za-z0-9]{20,}|WHATSAPP_TOKEN=[^[:space:]]|client_secret=[^[:space:]]' --exclude-dir=.git --exclude='*.md' --exclude='auditar-capisol.yml' .; then
@@ -56,3 +58,5 @@ jobs:
         run: node tools/test-office-demo.mjs
       - name: Testar Estúdio Social em navegador real
         run: node tools/test-social-studio-ui.mjs
+      - name: Testar blog público em Chromium
+        run: node tools/test-blog-ui.mjs
