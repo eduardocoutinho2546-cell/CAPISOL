@@ -1,0 +1,339 @@
+{
+  "verifiedDate": "2026-10-25",
+  "count": 22,
+  "source": "Metadados da API GitHub; não é auditoria de código nem licença completa",
+  "rule": "Jamais instalar ou ligar ao tenant sem revisão de arquitetura, licença e permissões",
+  "entries": [
+    {
+      "repo": "farmOS/farmOS",
+      "url": "https://github.com/farmOS/farmOS",
+      "families": [
+        "crop",
+        "agribusiness"
+      ],
+      "licenseMetadata": "GPL-2.0",
+      "purpose": "gestão de fazenda e safra",
+      "decision": "estudar_conector",
+      "notes": "Integração por API, regras brasileiras e mapas dependem de teste",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "OpenDroneMap/ODM",
+      "url": "https://github.com/OpenDroneMap/ODM",
+      "families": [
+        "crop",
+        "agribusiness"
+      ],
+      "licenseMetadata": "AGPL-3.0",
+      "purpose": "imagens e mapeamento de áreas",
+      "decision": "avaliar_licenca",
+      "notes": "Drone, licença AGPL e revisão agronômica antes de servir SaaS",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "qgis/QGIS",
+      "url": "https://github.com/qgis/QGIS",
+      "families": [
+        "crop",
+        "construction"
+      ],
+      "licenseMetadata": "GPL-2.0",
+      "purpose": "análise geoespacial",
+      "decision": "piloto_local",
+      "notes": "Uso no desktop por agrônomo; não publicar mapas sensíveis",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "OSGeo/gdal",
+      "url": "https://github.com/OSGeo/gdal",
+      "families": [
+        "crop",
+        "construction"
+      ],
+      "licenseMetadata": "NOASSERTION",
+      "purpose": "conversão e interpretação de geodados",
+      "decision": "avaliar_licenca",
+      "notes": "Verificar licenças por subcomponente",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "FarmBot/farmbot_os",
+      "url": "https://github.com/FarmBot/farmbot_os",
+      "families": [
+        "crop"
+      ],
+      "licenseMetadata": "MIT",
+      "purpose": "hardware agrícola e telemetria",
+      "decision": "pesquisa",
+      "notes": "Apenas fazenda com hardware compatível e autorização",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "frappe/erpnext",
+      "url": "https://github.com/frappe/erpnext",
+      "families": [
+        "governance",
+        "inventory",
+        "finance"
+      ],
+      "licenseMetadata": "GPL-3.0",
+      "purpose": "ERP geral",
+      "decision": "ja_catalogado",
+      "notes": "Não implantar ERP duplicado sem análise de migração",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "Dolibarr/dolibarr",
+      "url": "https://github.com/Dolibarr/dolibarr",
+      "families": [
+        "governance",
+        "retail",
+        "finance"
+      ],
+      "licenseMetadata": "GPL-3.0",
+      "purpose": "ERP/CRM e gestão de PMEs",
+      "decision": "avaliar_piloto",
+      "notes": "Comparar com ERP existente e contabilidade brasileira",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "inventree/InvenTree",
+      "url": "https://github.com/inventree/InvenTree",
+      "families": [
+        "inventory",
+        "mechanics"
+      ],
+      "licenseMetadata": "MIT",
+      "purpose": "peças, lotes, compras e estoque",
+      "decision": "avaliar_piloto",
+      "notes": "Avaliar API e configuração multiempresa",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "grocy/grocy",
+      "url": "https://github.com/grocy/grocy",
+      "families": [
+        "inventory",
+        "food"
+      ],
+      "licenseMetadata": "MIT",
+      "purpose": "estoque e validade em pequenas operações",
+      "decision": "pesquisa",
+      "notes": "Melhor para operação simples; comparar com estoque próprio",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "openboxes/openboxes",
+      "url": "https://github.com/openboxes/openboxes",
+      "families": [
+        "inventory",
+        "logistics"
+      ],
+      "licenseMetadata": "EPL-1.0",
+      "purpose": "armazenagem e cadeia de suprimentos",
+      "decision": "avaliar_piloto",
+      "notes": "Avaliar licenças de dependências e WMS por depósito",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "OCA/field-service",
+      "url": "https://github.com/OCA/field-service",
+      "families": [
+        "field",
+        "mechanics"
+      ],
+      "licenseMetadata": "AGPL-3.0",
+      "purpose": "ordens de campo e Odoo",
+      "decision": "avaliar_licenca",
+      "notes": "Depende de Odoo; obrigações AGPL de SaaS",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "ChurchCRM/CRM",
+      "url": "https://github.com/ChurchCRM/CRM",
+      "families": [
+        "faith"
+      ],
+      "licenseMetadata": "MIT",
+      "purpose": "administração comunitária",
+      "decision": "avaliar_piloto",
+      "notes": "Dados sobre religião são sensíveis; nunca importar membros sem base legal",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "civicrm/civicrm-core",
+      "url": "https://github.com/civicrm/civicrm-core",
+      "families": [
+        "faith",
+        "customer"
+      ],
+      "licenseMetadata": "AGPL-3.0",
+      "purpose": "doações, eventos e associações",
+      "decision": "avaliar_licenca",
+      "notes": "Obrigação de código, privacidade e consentimento",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "TryGhost/Ghost",
+      "url": "https://github.com/TryGhost/Ghost",
+      "families": [
+        "news",
+        "marketing"
+      ],
+      "licenseMetadata": "MIT",
+      "purpose": "redação, site, newsletters",
+      "decision": "avaliar_piloto",
+      "notes": "Publicação por equipe editorial, não por conta inautêntica",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "pkp/pkp-lib",
+      "url": "https://github.com/pkp/pkp-lib",
+      "families": [
+        "news",
+        "education"
+      ],
+      "licenseMetadata": "GPL-3.0",
+      "purpose": "fluxo editorial acadêmico e revistas",
+      "decision": "pesquisa",
+      "notes": "Não é redação jornalística por padrão",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "wagtail/wagtail",
+      "url": "https://github.com/wagtail/wagtail",
+      "families": [
+        "news",
+        "marketing"
+      ],
+      "licenseMetadata": "BSD-3-Clause",
+      "purpose": "CMS editorial com revisões",
+      "decision": "avaliar_piloto",
+      "notes": "Padrões de autorização e multiempresa",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "pretix/pretix",
+      "url": "https://github.com/pretix/pretix",
+      "families": [
+        "faith",
+        "marketing",
+        "food"
+      ],
+      "licenseMetadata": "NOASSERTION",
+      "purpose": "inscrições para eventos",
+      "decision": "avaliar_licenca",
+      "notes": "Verificar licença, gateway e dados de participantes",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "saleor/saleor",
+      "url": "https://github.com/saleor/saleor",
+      "families": [
+        "retail",
+        "commerce"
+      ],
+      "licenseMetadata": "BSD-3-Clause",
+      "purpose": "comércio eletrônico e catálogo",
+      "decision": "avaliar_piloto",
+      "notes": "Integração fiscal e pagamentos brasileiros pendente",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "glpi-project/glpi",
+      "url": "https://github.com/glpi-project/glpi",
+      "families": [
+        "technology",
+        "field"
+      ],
+      "licenseMetadata": "GPL-3.0",
+      "purpose": "ativos, tickets e manutenção",
+      "decision": "avaliar_piloto",
+      "notes": "Não duplicar tickets sem definição de fonte da verdade",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "metabase/metabase",
+      "url": "https://github.com/metabase/metabase",
+      "families": [
+        "finance",
+        "global"
+      ],
+      "licenseMetadata": "NOASSERTION",
+      "purpose": "BI e relatórios corporativos",
+      "decision": "ja_catalogado",
+      "notes": "Verificar licença da edição e isolamento por tenant",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "directus/directus",
+      "url": "https://github.com/directus/directus",
+      "families": [
+        "news",
+        "retail",
+        "technology"
+      ],
+      "licenseMetadata": "NOASSERTION",
+      "purpose": "gestão de conteúdo e dados",
+      "decision": "ja_catalogado",
+      "notes": "Verificar condições de redistribuição e receita",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    },
+    {
+      "repo": "openmrs/openmrs-core",
+      "url": "https://github.com/openmrs/openmrs-core",
+      "families": [
+        "health"
+      ],
+      "licenseMetadata": "NOASSERTION",
+      "purpose": "prontuário e fluxos de saúde",
+      "decision": "nao_prioritario",
+      "notes": "Dados de saúde e habilitação profissional tornam alto risco",
+      "status": "candidato_verificado_gitHub",
+      "installed": false,
+      "authorizedProduction": false
+    }
+  ]
+}

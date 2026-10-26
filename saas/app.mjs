@@ -1,9 +1,10 @@
 import {money,statuses,summarize,reviewSector,validateFiscal} from './domain.mjs';
 import {tenantMode,validateRural,generateEditorialTracks,CONTENT_PILLARS,sectorApplicability} from './verticals.mjs';
+import {MODULES,MODULE_FAMILIES,SCALE_LEVELS,CATALOG_SUMMARY,scaleCheck,listForIndustry} from './module-registry.mjs';
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const db=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co','sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv');
 let user,workspace,workspaces=[],role,tab='overview',sectors=[],data={},provider=null,accessScopes=[];
-const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos'],['rural','Produtores rurais'],['content','Estúdio de conteúdo'],['media','Vídeos e cortes']];
+const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos'],['rural','Produtores rurais'],['content','Estúdio de conteúdo'],['media','Vídeos e cortes'],['modules','Catálogo de módulos'],['workbench','Operações multissetoriais']];
 const financial=()=>['admin','manager'].includes(role);
 const isCapisol=()=>workspace?.cnpj==='66360677000149';
 const menuLabel=(id,label)=>id==='subscriptions'&&!isCapisol()?'Assinaturas':label;
@@ -22,7 +23,10 @@ async function list(table){const {data,error}=await db.from(table).select('*').e
 async function load(){
  const tables={tasks:'capisol_tasks',...(financial()?{suppliers:'capisol_suppliers',proposals:'capisol_proposals',subscriptions:'capisol_subscriptions',fiscal:'capisol_fiscal_documents',bank:'capisol_bank_connections',transactions:'capisol_bank_transactions',runs:'capisol_agent_runs'}:{}),
  ...(moduleAllowed('rural')?{ruralProducers:'capisol_rural_producers',ruralProperties:'capisol_rural_properties'}:{}),
- ...(moduleAllowed('media')?{mediaJobs:'capisol_media_jobs',tracks:'capisol_content_tracks'}:{})};
+ ...(moduleAllowed('media')?{mediaJobs:'capisol_media_jobs',tracks:'capisol_content_tracks'}:{}),
+ ...(financial()?{units:'capisol_org_units',stockItems:'capisol_stock_items',stockMoves:'capisol_stock_moves',
+ cropCycles:'capisol_crop_cycles',cropObservations:'capisol_crop_observations',
+ workOrders:'capisol_work_orders',newsStories:'capisol_newsroom_stories',communityEvents:'capisol_community_events'}:{})};
  const results=await Promise.all(Object.entries(tables).map(async([key,table])=>[key,await list(table)]));data=Object.fromEntries(results);
  const members=await db.rpc('capisol_office_members',{p_workspace:workspace.id});if(members.error)throw members.error;data.members=members.data;
  const invites=await db.rpc('capisol_my_pending_workspace_invites');data.invites=invites.error?[]:(invites.data||[]);
@@ -38,7 +42,7 @@ function memberName(id){if(!id)return 'Sem responsável';if(id===user.id)return 
 function navigate(next){tab=next;render();}
 function render(){
  $('title').textContent=menuLabel(tab,nav.find(x=>x[0]===tab)?.[1]||'Escritório');
- $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):['quality','bank','fiscal'].includes(id)?isCapisol()&&financial():financial()||['overview','tasks','sectors'].includes(id))
+ $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):id==='modules'?true:id==='workbench'?financial():['quality','bank','fiscal'].includes(id)?isCapisol()&&financial():financial()||['overview','tasks','sectors'].includes(id))
  .map(([id,label])=>`<button data-nav="${id}" class="${id===tab?'active':''}">${esc(menuLabel(id,label))}</button>`).join('');
  $('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
  const content=$('content');content.innerHTML='';
@@ -50,6 +54,8 @@ function render(){
  else if(tab==='rural')renderRural();
  else if(tab==='content')renderContentStudio();
  else if(tab==='media')renderMediaStudio();
+ else if(tab==='modules')renderModuleRegistry();
+ else if(tab==='workbench')renderWorkBench();
  else if(tab==='access')renderAccess();
  else renderRecords();
 }
@@ -102,8 +108,8 @@ function showForm(title,fields,values,onSave){
  $('fields').innerHTML=fields.map(([key,label,type])=>{
   const v=values[key]??'';let input;
   if(type==='textarea'||type==='json')input=`<textarea id="field-${key}" name="${key}" ${type==='json'?'rows="12"':''}>${esc(type==='json'?JSON.stringify(v||{},null,2):v)}</textarea>`;
-  else if(options[type]||type==='sector'||type==='member'||type==='producer'){
-   const opts=type==='sector'?sectors.map(s=>[s.sector,`${s.sector}. ${s.name}`]):type==='member'?[['','Sem responsável'],...data.members.filter(m=>m.active!==false).map(m=>[m.user_id,memberName(m.user_id)])]:type==='producer'?(data.ruralProducers||[]).map(p=>[p.id,p.display_name]):options[type].map(x=>[x,statuses[x]||({homologation:'Homologação (teste)',production:'Produção (nota real)'}[x])||x]);
+  else if(options[type]||type==='sector'||type==='member'||type==='producer'||['orgunit','stockitem','cropcycle','ruralproperty'].includes(type)){
+   const opts=type==='sector'?sectors.map(s=>[s.sector,`${s.sector}. ${s.name}`]):type==='member'?[['','Sem responsável'],...data.members.filter(m=>m.active!==false).map(m=>[m.user_id,memberName(m.user_id)])]:type==='producer'?(data.ruralProducers||[]).map(p=>[p.id,p.display_name]):type==='orgunit'?(data.units||[]).map(u=>[u.id,u.name]):type==='stockitem'?(data.stockItems||[]).map(x=>[x.id,x.sku+' · '+x.name]):type==='cropcycle'?(data.cropCycles||[]).map(x=>[x.id,x.culture+' · '+(x.planting_date||'sem data')]):type==='ruralproperty'?(data.ruralProperties||[]).map(x=>[x.id,x.name]):options[type].map(x=>[x,statuses[x]||({homologation:'Homologação (teste)',production:'Produção (nota real)'}[x])||x]);
    input=`<select id="field-${key}" name="${key}">${opts.map(([k,l])=>`<option value="${esc(k)}" ${String(k)===String(v)?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
   }else input=`<input id="field-${key}" name="${key}" type="${type}" value="${esc(v)}" ${type==='number'?'min="0" step="0.01"':''} ${['title','name','customer','plan','valid_until','next_due','price','amount'].includes(key)?'required':''}>`;
   return `<label for="field-${key}">${esc(label)}</label>${input}`;
@@ -218,6 +224,126 @@ function renderMediaStudio(){
   const r=await db.from('capisol_media_jobs').insert({workspace_id:workspace.id,title:v.title,
     original_storage_path:v.original_storage_path,instructions:v.instructions,rights_confirmed:true,media_kind:'video',state:'draft'}).select('id');
   if(r.error)throw r.error;await load();render();notice('Arquivo cadastrado para revisão. Edição ainda não executada.');
+ });
+}
+
+
+let operationMode='units',catalogShowAll=false,catalogLimit=50;
+const operationalDefinitions={
+ units:{label:'Unidades e filiais',table:'capisol_org_units',fields:[['name','Nome da unidade','text'],['unit_type','Tipo: headquarters, branch, warehouse, farm, workshop, newsroom, church, school, clinic, other','text'],['city','Município / cidade','text'],['state_code','UF','text'],['country_code','País (ISO-2)','text']]},
+ stockItems:{label:'Estoque por unidade',table:'capisol_stock_items',fields:[['org_unit_id','Unidade / estoque','orgunit'],['sku','Código SKU','text'],['name','Nome do item','text'],['unit','Unidade (un, kg, g, l, ml, m, m2, box, bag)','text'],['min_quantity','Estoque mínimo','number']]},
+ stockMoves:{label:'Entradas e saídas',table:'capisol_stock_moves',fields:[['stock_item_id','SKU / unidade','stockitem'],['move_type','Movimento: in (entrada) / out (saída)','text'],['quantity','Quantidade','number'],['reason','Motivo / documento de origem','textarea']]},
+ cropCycles:{label:'Culturas e safras',table:'capisol_crop_cycles',fields:[['property_id','Propriedade rural','ruralproperty'],['culture','Cultura','text'],['cultivar','Variedade / cultivar','text'],['planting_date','Data do plantio','date'],['forecast_harvest_date','Previsão de colheita','date'],['area_ha','Hectares','number']]},
+ cropObservations:{label:'Acompanhamento agronômico',table:'capisol_crop_observations',fields:[['crop_cycle_id','Safra registrada','cropcycle'],['observed_on','Data da observação','date'],['growth_stage','Fase da cultura','text'],['risk_flag','Risco: none, pest_suspected, disease_suspected, water_stress, other','text'],['note','Evidência de campo (sem prescrição automática)','textarea']]},
+ workOrders:{label:'Mecânica e ordens de serviço',table:'capisol_work_orders',fields:[['org_unit_id','Unidade / oficina','orgunit'],['sector','Setor: mechanics, solar, field, retail, facility, agriculture, other','text'],['reference','Referência única da OS','text'],['asset_label','Equipamento ou veículo (sem documento pessoal)','text'],['description','Diagnóstico preliminar e serviço solicitado','textarea'],['estimated_cost','Custo estimado (R$)','number']]},
+ newsStories:{label:'Jornalismo e redação',table:'capisol_newsroom_stories',fields:[['title','Título ou pauta','text'],['summary','Resumo para apuração','textarea'],['source_url','Fonte pública (URL, opcional)','text']]},
+ communityEvents:{label:'Igrejas, associações e eventos',table:'capisol_community_events',fields:[['title','Nome do evento','text'],['venue','Local / espaço','text'],['starts_at','Início (data/hora)','datetime-local'],['ends_at','Término (data/hora, opcional)','datetime-local'],['event_kind','Tipo: community, faith, volunteer, education, fundraiser, other','text']]}
+};
+function renderModuleRegistry(){
+ const root=$('content'),industry=tenantMode(workspace).industry;
+ root.innerHTML=`<section class="hero"><div><span class="eyebrow">CATÁLOGO DE CAPACIDADES • NÃO É HOMOLOGAÇÃO</span>
+ <h2>${CATALOG_SUMMARY.moduleCount} módulos em ${CATALOG_SUMMARY.familyCount} núcleos</h2>
+ <p>72 procedimentos anteriores permanecem acessíveis. Cada módulo precisa de responsável, dados, segurança, integração e teste antes de executar.</p></div></section>
+ <div class="bar"><label for="catalog-q">Pesquisar módulo</label><input id="catalog-q" placeholder="Ex.: oficina, plantio, estoque, jornal...">
+ <label for="catalog-scale">Escala</label><select id="catalog-scale">${SCALE_LEVELS.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div>
+ <div class="bar"><label for="catalog-family">Núcleo</label><select id="catalog-family"><option value="">Todos os núcleos</option>${MODULE_FAMILIES.map(f=>`<option value="${f.id}">${esc(f.name)} (${f.count})</option>`).join('')}</select>
+ <label><input type="checkbox" id="catalog-all"> Mostrar também especialidades de outros mercados</label></div>
+ <div id="catalog-scale-info" class="card"></div><p id="catalog-count" class="muted"></p><div id="catalog-cards" class="grid sectors"></div>
+ <button id="catalog-more">Mostrar mais módulos</button>`;
+ const draw=()=>{
+  const q=$('catalog-q').value.toLocaleLowerCase('pt-BR'),family=$('catalog-family').value,scale=$('catalog-scale').value;
+  const list=(catalogShowAll?MODULES:listForIndustry(industry)).filter(m=>(!family||m.family===family)
+     &&(m.name+' '+m.familyName+' '+m.requiredRoles.join(' ')).toLocaleLowerCase('pt-BR').includes(q));
+  const check=scaleCheck(scale);
+  $('catalog-scale-info').innerHTML=`<strong>${esc(SCALE_LEVELS.find(x=>x.id===scale)?.name)}</strong>
+   <p>${esc(check.needs.join(' · '))}</p><p class="muted">Pré-condições ainda não verificadas: ${esc(check.pending.join(', '))}. A escolha aqui não ativa escala de produção.</p>`;
+  $('catalog-count').textContent=`${list.length} capacidades pertinentes à seleção · exibindo ${Math.min(catalogLimit,list.length)}. ${CATALOG_SUMMARY.distinction}`;
+  $('catalog-cards').innerHTML=list.slice(0,catalogLimit).map(m=>`<article class="card"><span class="eyebrow">${esc(m.id)} · ${esc(m.familyName)}</span>
+   <h3>${esc(m.name)}</h3><p class="muted">Profissionais: ${esc(m.requiredRoles.join(', '))}</p>
+   <p><span class="pill warn">Especificado, não conectado</span></p>
+   <p class="muted">Precisa de: ${esc(m.requirements.slice(0,4).join(', '))} e homologação.</p></article>`).join('');
+  $('catalog-more').hidden=list.length<=catalogLimit;
+ };
+ $('catalog-q').oninput=()=>{catalogLimit=50;draw();};
+ $('catalog-family').onchange=()=>{catalogLimit=50;draw();};
+ $('catalog-scale').onchange=draw;
+ $('catalog-all').onchange=()=>{catalogShowAll=$('catalog-all').checked;catalogLimit=50;draw();};
+ $('catalog-more').onclick=()=>{catalogLimit+=50;draw();};
+ draw();
+}
+function renderWorkBench(){
+ if(!financial()){navigate('overview');return;}
+ const root=$('content'),def=operationalDefinitions[operationMode],rows=data[operationMode]||[];
+ const columns={
+ units:['name','unit_type','city','country_code'],
+ stockItems:['sku','name','unit','quantity','min_quantity'],
+ stockMoves:['move_type','quantity','balance_after','reason','created_at'],
+ cropCycles:['culture','cultivar','stage','planting_date','agronomist_review'],
+ cropObservations:['growth_stage','risk_flag','professional_review','observed_on'],
+ workOrders:['reference','sector','asset_label','status','estimated_cost'],
+ newsStories:['title','summary','status','source_checked'],
+ communityEvents:['title','venue','event_kind','status','starts_at']
+ };
+ root.innerHTML=`<section class="hero"><div><span class="eyebrow">MÓDULOS COM PERSISTÊNCIA · AUTOMAÇÃO EXTERNA DESATIVADA</span>
+ <h2>Operações por empresa e unidade</h2><p>Estoque e cultura não acionam compras, defensivos ou máquinas; OS, jornais e eventos não emitem notas nem publicam conteúdos.</p></div></section>
+ <div class="bar"><label for="operation-mode">Selecionar operação</label><select id="operation-mode">${Object.entries(operationalDefinitions).map(([k,v])=>`<option value="${k}" ${k===operationMode?'selected':''}>${esc(v.label)}</option>`).join('')}</select>
+ <button class="primary" id="new-operation">Novo registro / movimento</button></div>
+ ${table(columns[operationMode].map(c=>c.replaceAll('_',' ')),rows.map(x=>columns[operationMode].map(k=>esc(x[k]??'—'))))}
+ <p class="muted">Movimentações de estoque são lançadas via RPC com ID de requisição e bloqueio de saldo negativo. Acessos são protegidos por RLS da empresa. Revisões profissionais continuam necessárias.</p>`;
+ $('operation-mode').onchange=()=>{operationMode=$('operation-mode').value;renderWorkBench();};
+ $('new-operation').onclick=()=>createOperation( operationMode );
+ if(operationMode==='stockItems'&&!data.units?.length)$('new-operation').disabled=true;
+ if(operationMode==='stockMoves'&&!data.stockItems?.length)$('new-operation').disabled=true;
+ if(operationMode==='cropCycles'&&!data.ruralProperties?.length)$('new-operation').disabled=true;
+ if(operationMode==='cropObservations'&&!data.cropCycles?.length)$('new-operation').disabled=true;
+ if(operationMode==='workOrders'&&!data.units?.length)$('new-operation').disabled=true;
+}
+function createOperation(mode){
+ const spec=operationalDefinitions[mode];
+ if(!spec)throw Error('Módulo inválido');
+ const idempotencyKey=crypto.randomUUID();
+ const defaults={country_code:'BR',state_code:'AC',unit:'un',unit_type:'branch',move_type:'in',
+    sector:'mechanics',risk_flag:'none',event_kind:'community'};
+ showForm(spec.label,spec.fields,defaults,async v=>{
+  if(mode==='stockMoves'){
+   if(!['in','out'].includes(v.move_type)||!Number.isFinite(v.quantity)||v.quantity<=0||String(v.reason||'').trim().length<5)
+    throw Error('Informe entrada ou saída, quantidade positiva e motivo com ao menos cinco caracteres.');
+   const r=await db.rpc('capisol_stock_move',{p_workspace:workspace.id,p_item:v.stock_item_id,
+    p_request:idempotencyKey,p_type:v.move_type,p_quantity:v.quantity,p_reason:v.reason});
+   if(r.error)throw r.error;
+   await load();render();notice('Movimentação lançada. Saldo confirmado: '+r.data);
+   return;
+  }
+  if(mode==='units'){
+   if(!['headquarters','branch','warehouse','farm','workshop','newsroom','church','school','clinic','other'].includes(v.unit_type))
+    throw Error('Tipo de unidade inválido');
+   if(!/^[A-Z]{2}$/.test(v.country_code))throw Error('País ISO-2 inválido');
+  }
+  if(mode==='stockItems'){
+   if(!['un','kg','g','l','ml','m','m2','box','bag'].includes(v.unit)||v.min_quantity<0)
+    throw Error('Unidade/quantidade mínima inválida');
+   v.quantity=0;
+  }
+  if(mode==='cropCycles'&&(!v.culture||v.area_ha<0))throw Error('Cultura ou área inválida');
+  if(mode==='cropObservations'){
+   if(!['none','pest_suspected','disease_suspected','water_stress','other'].includes(v.risk_flag))
+    throw Error('Classificação de risco inválida');
+   v.professional_review='pending';
+  }
+  if(mode==='workOrders'){
+   if(!['mechanics','solar','field','retail','facility','agriculture','other'].includes(v.sector))
+     throw Error('Setor da ordem de serviço inválido');
+   v.status='draft';
+  }
+  if(mode==='newsStories')v.status='pitch';
+  if(mode==='communityEvents'){
+   if(!['community','faith','volunteer','education','fundraiser','other'].includes(v.event_kind))throw Error('Tipo de evento inválido');
+   if(!v.ends_at)delete v.ends_at;v.status='draft';
+  }
+  for(const k of Object.keys(v))if(v[k]==='')delete v[k];
+  const r=await db.from(spec.table).insert({...v,workspace_id:workspace.id}).select('id');
+  if(r.error)throw r.error;
+  await load();render();notice('Registro criado na empresa selecionada, aguardando validação operacional.');
  });
 }
 
