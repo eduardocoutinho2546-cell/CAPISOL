@@ -1,10 +1,11 @@
 import {money,statuses,summarize,reviewSector,validateFiscal} from './domain.mjs';
 import {tenantMode,validateRural,generateEditorialTracks,CONTENT_PILLARS,sectorApplicability} from './verticals.mjs';
 import {MODULES,MODULE_FAMILIES,SCALE_LEVELS,CATALOG_SUMMARY,scaleCheck,listForIndustry} from './module-registry.mjs';
+import {RADAR_STAGES,RADAR_CLASSIFICATIONS,groupRadar,filterRadar,reviewInput} from './partner-radar.mjs';
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const db=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co','sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv');
 let user,workspace,workspaces=[],role,tab='overview',sectors=[],data={},provider=null,accessScopes=[];
-const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos'],['rural','Produtores rurais'],['content','Estúdio de conteúdo'],['media','Vídeos e cortes'],['modules','Catálogo de módulos'],['workbench','Operações multissetoriais']];
+const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['partnerRadar','Radar de prestadores AC/RO'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos'],['rural','Produtores rurais'],['content','Estúdio de conteúdo'],['media','Vídeos e cortes'],['modules','Catálogo de módulos'],['workbench','Operações multissetoriais']];
 const financial=()=>['admin','manager'].includes(role);
 const isCapisol=()=>workspace?.cnpj==='66360677000149';
 const menuLabel=(id,label)=>id==='subscriptions'&&!isCapisol()?'Assinaturas':label;
@@ -21,7 +22,7 @@ async function api(action,body={}){
 }
 async function list(table){const {data,error}=await db.from(table).select('*').eq('workspace_id',workspace.id).order('created_at',{ascending:false}).limit(500);if(error)throw error;return data;}
 async function load(){
- const tables={tasks:'capisol_tasks',...(financial()?{suppliers:'capisol_suppliers',proposals:'capisol_proposals',subscriptions:'capisol_subscriptions',fiscal:'capisol_fiscal_documents',bank:'capisol_bank_connections',transactions:'capisol_bank_transactions',runs:'capisol_agent_runs'}:{}),
+ const tables={tasks:'capisol_tasks',...(financial()?{partnerRadar:'capisol_partner_radar',suppliers:'capisol_suppliers',proposals:'capisol_proposals',subscriptions:'capisol_subscriptions',fiscal:'capisol_fiscal_documents',bank:'capisol_bank_connections',transactions:'capisol_bank_transactions',runs:'capisol_agent_runs'}:{}),
  ...(moduleAllowed('rural')?{ruralProducers:'capisol_rural_producers',ruralProperties:'capisol_rural_properties'}:{}),
  ...(moduleAllowed('media')?{mediaJobs:'capisol_media_jobs',tracks:'capisol_content_tracks'}:{}),
  ...(financial()?{units:'capisol_org_units',stockItems:'capisol_stock_items',stockMoves:'capisol_stock_moves',
@@ -42,7 +43,7 @@ function memberName(id){if(!id)return 'Sem responsável';if(id===user.id)return 
 function navigate(next){tab=next;render();}
 function render(){
  $('title').textContent=menuLabel(tab,nav.find(x=>x[0]===tab)?.[1]||'Escritório');
- $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):id==='modules'?true:id==='workbench'?financial():['quality','bank','fiscal'].includes(id)?isCapisol()&&financial():financial()||['overview','tasks','sectors'].includes(id))
+ $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):id==='modules'?true:id==='workbench'?financial():id==='partnerRadar'?financial()&&isCapisol():['quality','bank','fiscal'].includes(id)?isCapisol()&&financial():financial()||['overview','tasks','sectors'].includes(id))
  .map(([id,label])=>`<button data-nav="${id}" class="${id===tab?'active':''}">${esc(menuLabel(id,label))}</button>`).join('');
  $('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
  const content=$('content');content.innerHTML='';
@@ -56,6 +57,7 @@ function render(){
  else if(tab==='media')renderMediaStudio();
  else if(tab==='modules')renderModuleRegistry();
  else if(tab==='workbench')renderWorkBench();
+ else if(tab==='partnerRadar')renderPartnerRadar();
  else if(tab==='access')renderAccess();
  else renderRecords();
 }
@@ -345,6 +347,54 @@ function createOperation(mode){
   if(r.error)throw r.error;
   await load();render();notice('Registro criado na empresa selecionada, aguardando validação operacional.');
  });
+}
+
+
+let radarFilter={uf:'',stage:'',query:''};
+function renderPartnerRadar(){
+ if(!isCapisol()||!financial()){navigate('overview');return;}
+ const rows=data.partnerRadar||[],metrics=groupRadar(rows);
+ const filtered=filterRadar(rows,radarFilter);
+ $('content').innerHTML=`<section class="hero"><div><span class="eyebrow" style="color:#f9cb4d">CAPISOL • PESQUISA DE FORNECEDORES</span>
+ <h2>Radar de prestadores e parcerias AC/RO</h2><p>Candidatos públicos não são prestadores homologados, contratos ou contatos realizados. Nenhuma mensagem é enviada automaticamente.</p></div></section>
+ <div class="grid">${[['Candidatos públicos',metrics.total],['Acre',metrics.ac],['Rondônia',metrics.ro],['Registrados como contatados',metrics.contacted],['Parcerias confirmadas',metrics.approved]].map(([label,value])=>
+ `<article class="card stat"><span class="label">${esc(label)}</span><strong class="value">${value}</strong><span class="muted">Somente este radar</span></article>`).join('')}</div>
+ <div class="bar" style="margin-top:22px"><label for="radar-uf">Estado</label><select id="radar-uf"><option value="">AC e RO</option>
+ <option value="AC" ${radarFilter.uf==='AC'?'selected':''}>Acre</option><option value="RO" ${radarFilter.uf==='RO'?'selected':''}>Rondônia</option></select>
+ <label for="radar-stage">Etapa</label><select id="radar-stage"><option value="">Todas</option>${Object.entries(RADAR_STAGES).map(([key,label])=>
+ `<option value="${key}" ${radarFilter.stage===key?'selected':''}>${esc(label)}</option>`).join('')}</select>
+ <label for="radar-query">Buscar</label><input id="radar-query" value="${esc(radarFilter.query)}" placeholder="Nome, serviço ou município"></div>
+ <p class="muted">${filtered.length} candidato(s). Verifique CNAE, responsável técnico, NR-10/NR-35, ART, seguro, preço e capacidade antes de contratar. Fontes consultadas em 26/10/2026.</p>
+ ${table(['Empresa / município','Classificação','Serviços','Contato público / fonte','Etapa / acompanhar'],
+ filtered.map(x=>[
+  `<strong>${esc(x.name)}</strong><div class="muted">${esc(x.municipality)} / ${esc(x.uf)}</div>`,
+  esc(RADAR_CLASSIFICATIONS[x.classification]||x.classification),
+  esc((x.services||[]).join(', ')),
+  `<span>${esc(x.phone||'Não divulgado')}</span><div class="muted">${esc(x.email||'')}</div><a href="${esc(x.source_url)}" target="_blank" rel="noopener noreferrer">Verificar fonte ↗</a>`,
+  `<strong>${esc(RADAR_STAGES[x.stage]||x.stage)}</strong><div class="muted">${esc(x.review_note||'Sem análise registrada')}</div><button data-radar-review="${esc(x.id)}">Registrar análise</button>`
+ ]))}<section class="card" style="margin-top:22px"><h2>Etapas para homologar um prestador</h2>
+ <ol><li>Contato humano e consentimento para cadastro.</li><li>Confirmar CNPJ e capacidade de atuação em AC/RO.</li>
+ <li>Receber documentação técnica, responsável e NR-10/NR-35 quando aplicáveis.</li>
+ <li>Conferir qualidade, preço por kWp/serviço, deslocamento, seguro e contrato com SLA.</li>
+ <li>Validar primeiro serviço e registrar evidências; somente depois poderá ser parceiro homologado em cadastro próprio.</li></ol>
+ <p class="muted">Registrar contato na tabela não envia WhatsApp, não confirma contrato e não muda a classificação de concorrente.</p></section>`;
+ const rebind=()=>{
+  $('radar-uf').onchange=()=>{radarFilter.uf=$('radar-uf').value;renderPartnerRadar();};
+  $('radar-stage').onchange=()=>{radarFilter.stage=$('radar-stage').value;renderPartnerRadar();};
+  $('radar-query').oninput=()=>{const val=$('radar-query').value,pos=$('radar-query').selectionStart;
+   radarFilter.query=val;renderPartnerRadar();const inp=$('radar-query');inp.focus();inp.setSelectionRange(pos,pos);};
+  $('content').querySelectorAll('[data-radar-review]').forEach(b=>b.onclick=()=>{
+   const candidate=rows.find(x=>x.id===b.dataset.radarReview);if(!candidate)return;
+   showForm('Revisar candidato · '+candidate.name,[['stage','Etapa (identificado, em_analise, contatado, documentos_pendentes, descartado)','text'],
+     ['reason','Observação factual / quem confirmou / próxima ação','textarea']],
+     {stage:candidate.stage,reason:candidate.review_note},async values=>{
+      const v=reviewInput(values);
+      const r=await db.rpc('capisol_partner_review',{p_workspace:workspace.id,p_candidate:candidate.id,p_stage:v.stage,p_reason:v.reason});
+      if(r.error)throw r.error;await load();render();notice('Análise salva com histórico. A relação comercial continua não homologada.');
+     });
+  });
+ };
+ rebind();
 }
 
 function renderBank(){
