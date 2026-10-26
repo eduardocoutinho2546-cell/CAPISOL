@@ -32,6 +32,7 @@ button.secondary{background:#fff;color:var(--navy);border:1px solid var(--navy);
 </nav>
 <div id="private" class="hide">
 <section class="panel" id="painelRegistroVendas"></section>
+<section class="panel" id="painelRadarMercado"></section>
 <section class="panel"><h2>Funil registrado no CRM</h2><div class="cards" id="metrics"></div>
 <p class="muted">Contagem de registros, não significa contatos válidos ou vendas realizadas. Sem propostas e recebimentos registrados, margem e conversão permanecem SEM DADO.</p></section>
 <section class="panel"><h2>Prioridade dos leads • pré-qualificação</h2>
@@ -105,6 +106,7 @@ async function refresh(){
  el('private').classList.remove('hide');
  import('./cotacoes-panel.mjs').then(m=>m.montarPainel({sb,root:el('painelCotacoesBelEnergy')})).catch(()=>{});
  import('./vendas-panel.mjs').then(m=>m.montarVendas({sb,root:el('painelRegistroVendas')})).catch(e=>message('Falha ao abrir registro de vendas: '+e.message));
+ import('./mercado-painel.mjs').then(m=>m.montarRadar({sb,root:el('painelRadarMercado')})).catch(e=>message('Radar de mercado indisponível: '+e.message));
  try{
   const counts=await Promise.all(fields.slice(0,4).map(getCount));
   const labels=['Leads cadastrados','Propostas registradas','Clientes cadastrados','Recebimentos registrados'];
