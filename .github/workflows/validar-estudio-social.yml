@@ -1,0 +1,36 @@
+name: CAPISOL Estúdio Social — testes
+on:
+  push:
+    branches: [feat/estudio-social-posts-prontos-20261026]
+    paths:
+      - 'posts/studio-social*'
+      - 'posts/posts-ia-ui.js'
+      - 'posts/posts-ia-bridge.js'
+      - '.github/workflows/validar-estudio-social.yml'
+  pull_request:
+    paths:
+      - 'posts/studio-social*'
+      - 'posts/posts-ia-ui.js'
+      - 'posts/posts-ia-bridge.js'
+      - '.github/workflows/validar-estudio-social.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validacao:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - name: Validar sintaxe sem APIs externas
+        run: |
+          node --check posts/studio-social.mjs
+          node --check posts/posts-ia-ui.js
+          node --check posts/posts-ia-bridge.js
+      - name: Testes de regras do Estúdio Social
+        run: node --test posts/studio-social.test.mjs workers/media/clipper.test.mjs
