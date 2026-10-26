@@ -48,3 +48,5 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Testar fluxos do escritório
         run: node tools/test-office-ui.mjs
+      - name: Testar demonstração pública isolada
+        run: node tools/test-office-demo.mjs
