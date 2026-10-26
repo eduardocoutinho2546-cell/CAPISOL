@@ -5,7 +5,7 @@ const fmt=x=>x==null?"—":Number(x).toLocaleString("pt-BR",{style:"currency",cu
 const specs=[
  ["dataVenda","Data do contrato","date","",true],["cliente","Cliente","text","",true],
  ["vendedor","Vendedor responsável","text","",true],["consumoKwh","Geração alvo (kWh/mês)","number","1000",true],
- ["precoTabela","Preço de referência (R$)","number","18900",false],
+ ["precoTabela","Preço de mercado aprovado (R$; opcional)","number","",false],
  ["valorVendido","Valor REAL vendido (R$)","number","",true],
  ["kitReal","Custo REAL do kit + frete (R$)","number","",false],
  ["custosDiretos","Projeto, instalação, insumos, deslocamento (R$)","number","",false],
@@ -22,7 +22,7 @@ export async function montarVendas({sb,root}){
  const {data:member}=await sb.rpc("eh_membro");if(member!==true)return;
  root.dataset.montado="1";
  root.append(h("h2","Registrar venda • preço negociado"));
- root.append(h("p","Referência: R$ 18.900 para 1.000 kWh/mês. Digite quanto realmente vendeu, por exemplo R$ 19.000. Os custos só geram resultado se estiverem completos; despesas fixas continuam no DRE."));
+ root.append(h("p","R$ 18.900 foi referência HISTÓRICA, não preço atual. Consulte Radar de mercado e informe a referência aprovada pelos sócios; registre separadamente quanto realmente vendeu (ex.: R$ 19.000). Os custos só geram resultado se estiverem completos; despesas fixas continuam no DRE."));
  const form=h("form");form.id="capisolRegistroVenda";
  for(const [name,label,type,defaultValue,required] of specs){
   const l=h("label",label),input=h("input","",{name,type,required});
@@ -45,10 +45,6 @@ export async function montarVendas({sb,root}){
  const scroll=h("div","",{className:"scroll"}),table=h("table"),thead=h("thead"),tr=h("tr");
  for(const c of ["Data","Cliente","kWh/mês","Tabela","Valor vendido","Diferença","Contribuição simulada","Conferência"])tr.append(h("th",c));
  thead.append(tr);const tbody=h("tbody");table.append(thead,tbody);scroll.append(table);root.append(scroll);
- form.elements.consumoKwh.addEventListener("change",()=>{
-  if(Number(form.elements.consumoKwh.value)!==1000&&Number(form.elements.precoTabela.value)===18900)form.elements.precoTabela.value="";
-  if(Number(form.elements.consumoKwh.value)===1000&&form.elements.precoTabela.value==="")form.elements.precoTabela.value="18900";
- });
  simulate.addEventListener("click",()=>{
   try{const r=simularVenda(val(form));
    status.textContent="Vendido "+fmt(r.valorVendido)+" | Tabela "+fmt(r.precoTabela)+" | Diferença "+fmt(r.diferenca)+
@@ -78,7 +74,7 @@ export async function montarVendas({sb,root}){
    if(error)throw error;
    status.textContent="Venda registrada: "+fmt(d.valorVendido)+", referência "+fmt(d.precoTabela)+
     ". Resultado financeiro "+d.situacaoFinanceira+". Não emite NF nem baixa pagamentos.";
-   form.reset();form.elements.consumoKwh.value="1000";form.elements.precoTabela.value="18900";cb.checked=false;
+   form.reset();form.elements.consumoKwh.value="1000";form.elements.precoTabela.value="";cb.checked=false;
    await reload();
   }catch(e){status.textContent="Registro NÃO feito: "+(e.message||"erro de acesso");}
   finally{save.disabled=false;}
