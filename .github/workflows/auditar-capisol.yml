@@ -50,3 +50,5 @@ jobs:
         run: node tools/test-office-ui.mjs
       - name: Testar demonstração pública isolada
         run: node tools/test-office-demo.mjs
+      - name: Testar Estúdio Social em navegador real
+        run: node tools/test-social-studio-ui.mjs
