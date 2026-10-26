@@ -13,8 +13,11 @@ export function selecionarMercado(registros,{kwh=1000,cidade="Rio Branco",hoje=n
   if(age<0||age>45||Math.abs(geracao-wanted)/wanted>.12||a.cidade.toLowerCase().trim()!==cidade.toLowerCase().trim())continue;
   if(a.instaladoCompleto!==true||a.onGrid!==true||a.temBateria===true||a.mesmaModalidade!==true)continue;
   const key=a.empresa.trim().toLowerCase();
-  const old=last.get(key);
-  if(!old||old.dt<=dt)last.set(key,{empresa:a.empresa,preco,dt,origem:a.fonte});
+  const old=last.get(key),ts=item.updated_at?new Date(item.updated_at).getTime():null;
+  // Havendo timestamps reais da base, a versão efetivamente mais recente vence.
+  const newer=!old||dt>old.dt||(dt.getTime()===old.dt.getTime()&&
+   (Number.isFinite(ts)&&Number.isFinite(old.ts)?ts>old.ts:old.ts===null));
+  if(newer)last.set(key,{empresa:a.empresa,preco,dt,origem:a.fonte,ts});
  }
  const itens=[...last.values()].sort((a,b)=>a.preco-b.preco);
  const ps=itens.map(x=>x.preco);
