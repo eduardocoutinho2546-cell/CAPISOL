@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><title>CAPISOL · Rede de Criadores</title>
+<meta name="robots" content="noindex,nofollow"><title>CAPISOL · Ecossistema de Mídias Editoriais</title>
 <style>
 :root{font-family:system-ui,Arial,sans-serif;background:#f5f8fc;color:#123252}*{box-sizing:border-box}
 body{margin:0}header{background:#022c5e;color:white;padding:22px}header p{color:#dbeafa}
@@ -24,17 +24,18 @@ dialog{border:1px solid #d3e0ec;border-radius:12px;max-width:min(96vw,570px);max
 dialog::backdrop{background:#152946aa}.hidden{display:none!important}
 details{border-top:1px solid #e1e8ef;padding:9px 0}summary{font-weight:700;cursor:pointer}
 </style></head><body>
-<header><h1>CAPISOL · Rede de Criadores</h1><p>Social Media · 147 posições · públicos reais, conteúdo original e conversão mensurável</p></header>
+<header><h1>CAPISOL · Rede de Mídias Editoriais</h1><p>Social Media · 1 principal + 2 núcleos + 24 editorias + 120 microperfis temáticos</p></header>
 <main><nav><a class="btn secondary" href="../">Gestão</a><a class="btn secondary" href="../operacao/">Auditoria operacional</a>
-<a class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://app.metricool.com/">Metricool</a></nav>
-<section class="notice"><strong>Rede planejada, sem contas fictícias.</strong> Só o perfil principal @capisol_ac está inicialmente conectado. As outras posições são para canais empresariais legítimos e criadores que autorizarem a participação. Não executamos curtidas, comentários, seguidores ou visualizações artificiais.</section>
+<a class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://app.metricool.com/">Metricool</a><a class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://github.com/eduardocoutinho2546-cell/escrit-rio-integrado-agentes-corpora-o-capisol/actions/workflows/capisol-rede147-editorial.yml">Radar diário de fontes editoriais</a></nav>
+<section class="notice"><strong>Rede editorial planejada, com marcas e públicos próprios.</strong> O @capisol_ac é o perfil central. Os demais são futuras mídias temáticas reais — gestão (G4, Trinca e Lásaro como fontes de estudo), IA, programação, negócios e energia solar — cada uma com conteúdo original. A CAPISOL ganha prioridade contextual, não exclusividade. Não há contas fictícias ou engajamento artificial.</section>
 <section><div class="actions"><h2 style="flex:1;margin:0">Situação da rede</h2><button id="refresh" disabled>Atualizar</button></div>
 <p id="message" role="status" aria-live="polite">Validando sessão...</p><div id="metrics" class="counters"></div></section>
 <div id="workspace" class="hidden">
-<section><div class="actions"><h2 style="flex:1;margin:0">Os 2 núcleos e 24 canais</h2>
+<section><div class="actions"><h2 style="flex:1;margin:0">2 núcleos, 24 editorias e 120 microperfis</h2>
 <label>Filtrar núcleo <select id="filter"><option value="all">Todos</option><option value="business">Negócios e parcerias</option><option value="community">Comunidade e educação</option></select></label><button id="plan">+ Criar pauta</button></div>
-<p class="small">Abra um canal para ver 5 posições de colaboradores. Cada participante deve produzir conteúdo próprio e pertinente ao público, com vínculos transparentes. Links têm UTM individual.</p>
+<p class="small">Abra uma editoria para conhecer seus cinco microperfis de nicho. Cada um publica conteúdo útil próprio, com referências atribuídas e conexões adequadas à CAPISOL. A regra editorial padrão reserva até 20–30% à marca e prioriza lançamentos pertinentes; não há obrigação de repostar conteúdos sem contexto.</p>
 <div id="groups" class="grid"></div></section>
+<section><h2>Prioridade para lançamentos CAPISOL</h2><p class="small">Quando uma publicação principal for comprovada e marcada por temas, o sistema prepara automaticamente uma fila de até 24 sugestões de divulgação contextual por nicho. O editor aprova a ideia; cada canal produz sua própria análise e só publica se estiver efetivamente conectado e autorizado.</p><div id="amplification"></div></section>
 <section><h2>Distribuição registrada</h2><p class="small">Pautas ficam como rascunho até revisão. Somente uma URL pública real e sua evidência permitem registrar postagem publicada.</p>
 <div id="tasks"></div></section></div></main>
 <dialog id="accountDialog"><form id="accountForm"><h2>Vincular conta existente</h2><p id="accountContext" class="small"></p>
@@ -50,8 +51,14 @@ details{border-top:1px solid #e1e8ef;padding:9px 0}summary{font-weight:700;curso
 <label>Canal / perfil<select id="briefNode" required></select></label>
 <label>Campanha<input id="campaign" required maxlength="90" pattern="[a-z0-9_-]+" value="rede147_piloto"></label>
 <label>Título<input id="title" required minlength="4" maxlength="180"></label>
-<label>Adaptação específica para o público<textarea id="angle" maxlength="2000" placeholder="Vídeo, história real, educação e chamada para orçamento"></textarea></label>
-<p class="small">Rascunho interno. Publicar exige revisão e conta autorizada.</p>
+<label>Formato editorial<select id="contentKind"><option value="original">Conteúdo próprio</option><option value="sintese">Síntese crítica de fonte pública</option><option value="analise">Análise com exemplo CAPISOL</option><option value="link_comentado">Link comentado (sem reutilizar mídia)</option><option value="clipe_licenciado">Trecho em vídeo/áudio com licença explícita</option></select></label>
+<label>URL da fonte original (se houver)<input id="sourceUrl" type="url" placeholder="https://fonte-oficial..."></label>
+<label>Nome do autor/instituição original<input id="sourceAuthor" maxlength="180" placeholder="Ex.: G4 Educação, A Trinca, Lásaro do Carmo"></label>
+<label>Minha análise e contribuição original<textarea id="analysis" maxlength="4000" placeholder="Explique o aprendizado com palavras próprias e o que mudaria numa pequena empresa."></textarea></label>
+<label>Exemplo real ou ilustrativo CAPISOL<textarea id="capisolCase" maxlength="2000" placeholder="Ex.: aplicando gestão por margem a um orçamento solar, sem inventar resultado ou endosso."></textarea></label>
+<label>Licença de clipe (somente quando possuir autorização)<input id="rightsEvidence" type="url" placeholder="https://comprovante-em-ambiente-restrito"></label>
+<label>Adaptação específica para o público<textarea id="angle" maxlength="2000" placeholder="Formato, público, exemplos e CTA relacionados ao nicho"></textarea></label>
+<p class="small">Sínteses exigem leitura da fonte e análise original. Crédito sozinho não autoriza cortar ou republicar vídeos; clipes só com licença documentada. A relação com G4, Trinca ou Lásaro não implica afiliação nem endosso.</p>
 <div class="actions"><button id="saveBrief" type="submit">Salvar pauta</button><button class="secondary" type="button" data-close="briefDialog">Cancelar</button></div></form></dialog>
 <dialog id="publishDialog"><form id="publishForm"><h2>Comprovar publicação</h2><p id="publishContext" class="small"></p>
 <label>URL real da postagem<input id="publishedUrl" required type="url" placeholder="https://..."></label>
@@ -63,7 +70,7 @@ details{border-top:1px solid #e1e8ef;padding:9px 0}summary{font-weight:700;curso
 <script>
 (function(){
 'use strict';
-const $=id=>document.getElementById(id);let sb,rows=[],tasks=[],currentNode=null,currentTask=null;
+const $=id=>document.getElementById(id);let sb,rows=[],tasks=[],queue=[],currentNode=null,currentTask=null;
 const byCode=new Map(),LABEL={planned:'Planejado',invited:'Convidado',connected:'Conectado',verified:'Validado',active:'Ativo',paused:'Pausado'};
 function e(tag,content,cls){const a=document.createElement(tag);if(content!==undefined)a.textContent=String(content);if(cls)a.className=cls;return a}
 function btn(parent,title,action){const b=e('button',title,'secondary');b.type='button';b.addEventListener('click',action);parent.append(b)}
@@ -92,7 +99,7 @@ function actions(node,container){
 }
 function makeSlot(n){
  const d=e('div',undefined,'slot'),h=e('strong',n.display_name);d.append(h);
- d.append(e('p',(LABEL[n.status]||n.status)+' · '+(n.account_handle||'Nenhuma conta atribuída'),'small'));
+ d.append(e('p',(LABEL[n.status]||n.status)+' · '+(n.account_handle||'Microperfil planejado, sem conta publicada')+' · '+(n.capisol_weight_pct||20)+'% CAPISOL como referência editorial','small'));
  const a=e('div',undefined,'actions');actions(n,a);d.append(a);return d;
 }
 function render(){
@@ -104,7 +111,7 @@ function render(){
  for(const kind of ['business','community']){
   if(selection!=='all'&&selection!==kind)continue;
   const hub=byCode.get('hub_'+kind),box=e('section',undefined,'group');if(!hub)continue;
-  box.append(e('h3',hub.display_name),e('p','12 verticais · 5 posições de colaboradores por vertical','small'));
+  box.append(e('h3',hub.display_name),e('p','12 editorias · 5 microperfis temáticos por editoria','small'));
   box.append(makeSlot(hub));
   for(const v of rows.filter(n=>n.parent_code===hub.node_code)){
    const details=e('details'),summary=e('summary',v.display_name+' · '+(LABEL[v.status]||v.status));details.append(summary);
@@ -113,6 +120,23 @@ function render(){
    box.append(details);
   }
   board.append(box);
+ }
+ const boost=$('amplification');boost.replaceChildren();
+ if(!queue.length)boost.append(e('p','Nenhum lançamento do perfil principal entrou na fila ainda. Quando um post principal com tags for publicado, os nichos pertinentes serão priorizados.','small'));
+ for(const item of queue.slice(0,40)){
+  const target=byCode.get(item.target_node_code);
+  const d=e('article',undefined,'slot');
+  d.append(e('strong',(target?.display_name||item.target_node_code)+' · Prioridade '+item.priority),e('p',item.suggested_angle,'small'));
+  const bar=e('div',undefined,'actions');bar.append(e('span','Situação: '+item.state,'small'));
+  if(item.state==='to_review')btn(bar,'Aprovar pauta (sem postar)',async()=>{
+   try{
+    const r=await sb.from('capisol_social_crosspromo_queue').update({state:'approved',reviewed_at:new Date().toISOString()})
+     .eq('id',item.id).eq('workspace_id',item.workspace_id).select('id');
+    if(r.error||!r.data?.length)throw Error(r.error?.message||'Sem autorização');
+    await refresh();
+   }catch(ex){error(ex)}
+  });
+  d.append(bar);boost.append(d);
  }
  const list=$('tasks');list.replaceChildren();
  if(!tasks.length)list.append(e('p','Nenhuma pauta criada na rede ainda. Use “Criar pauta” para começar.','small'));
@@ -131,12 +155,13 @@ function render(){
 async function refresh(){
  $('refresh').disabled=true;
  try{
-  const [nodes,distribution]=await Promise.all([
+  const [nodes,distribution,promotions]=await Promise.all([
    sb.from('capisol_social_network_nodes').select('*').order('node_code',{ascending:true}).limit(300),
-   sb.from('capisol_social_distribution').select('*').order('created_at',{ascending:false}).limit(300)
+   sb.from('capisol_social_distribution').select('*').order('created_at',{ascending:false}).limit(300),
+   sb.from('capisol_social_crosspromo_queue').select('*').order('priority',{ascending:false}).limit(300)
   ]);
-  if(nodes.error)throw nodes.error;if(distribution.error)throw distribution.error;
-  rows=nodes.data||[];tasks=distribution.data||[];byCode.clear();rows.forEach(n=>byCode.set(n.node_code,n));
+  if(nodes.error)throw nodes.error;if(distribution.error)throw distribution.error;if(promotions.error)throw promotions.error;
+  rows=nodes.data||[];tasks=distribution.data||[];queue=promotions.data||[];byCode.clear();rows.forEach(n=>byCode.set(n.node_code,n));
   if(rows.length!==147)throw Error('Rede incompleta ou acesso ao workspace negado.');
   $('workspace').classList.remove('hidden');render();$('message').textContent='Registros de produção carregados. Nenhuma publicação ou conta fictícia foi criada.';
  }catch(ex){error(ex)}finally{$('refresh').disabled=false}
@@ -167,8 +192,16 @@ $('briefForm').addEventListener('submit',async event=>{
  event.preventDefault();$('saveBrief').disabled=true;
  try{
   const n=byCode.get($('briefNode').value);if(!n)throw Error('Canal não localizado');
+  const kind=$('contentKind').value,src=$('sourceUrl').value;
+  if(kind!=='original'&&!src)throw Error('Informe a fonte primária. Não gere sínteses sem verificar a fonte.');
+  if(kind!=='original'&&$('analysis').value.trim().length<80)throw Error('Escreva pelo menos 80 caracteres de análise própria.');
+  const proof=$('rightsEvidence').value.trim();
+  const rights=kind==='original'?'original':kind==='clipe_licenciado'?(proof?'autorizacao_registrada':'revisao_necessaria'):'apenas_link';
   const data={workspace_id:n.workspace_id,node_code:n.node_code,campaign_code:$('campaign').value,
-   content_title:$('title').value,unique_content_note:$('angle').value,stage:'draft'};
+   content_title:$('title').value,unique_content_note:$('angle').value,stage:'draft',
+   content_kind:kind,source_url:src?url(src):null,source_author:$('sourceAuthor').value.trim()||null,
+   original_analysis:$('analysis').value.trim()||null,capisol_example:$('capisolCase').value.trim()||null,
+   rights_status:rights,rights_evidence_url:proof?url(proof):null,editorial_tags:n.editorial_tags||[]};
   const r=await sb.from('capisol_social_distribution').insert(data).select('id');
   if(r.error||!r.data?.length)throw Error(r.error?.message||'Erro ao salvar');
   $('briefDialog').close();$('briefForm').reset();await refresh()
@@ -182,6 +215,8 @@ $('publishForm').addEventListener('submit',async event=>{
   const reach=$('reach').value===''?null:Number($('reach').value);
   const leads=$('leads').value===''?null:Number($('leads').value);
   if([reach,leads].some(v=>v!==null&&(!Number.isSafeInteger(v)||v<0)))throw Error('Métricas inválidas');
+  if(t.content_kind==='clipe_licenciado'&&(t.rights_status!=='autorizacao_registrada'||!t.rights_evidence_url))throw Error('É necessário comprovar permissão para reutilizar áudio/vídeo de terceiros.');
+  if(['sintese','analise','link_comentado'].includes(t.content_kind)&&String(t.original_analysis||'').trim().length<80)throw Error('Falta análise original substancial.');
   const data={stage:'published',post_url:url($('publishedUrl').value),evidence_url:url($('publishEvidence').value),
     published_at:new Date().toISOString(),actual_reach:reach,inbound_leads:leads,metrics_checked_at:new Date().toISOString()};
   const r=await sb.from('capisol_social_distribution').update(data).eq('id',t.id).eq('workspace_id',t.workspace_id).select('id');

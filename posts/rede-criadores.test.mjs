@@ -32,3 +32,17 @@ test('Social Media principal aponta ao gestor 147',()=>{
  assert.match(ui,/Rede de criadores · 147 posições/);
  assert.match(ui,/CAPISOL\/social-rede\//);
 });
+
+
+test('perfis viram microeditorias e a clipagem exige prova, nao finge filiacao',()=>{
+ assert.match(html,/microperfis/);
+ assert.match(html,/sourceUrl/);
+ assert.match(html,/original_analysis/);
+ assert.match(html,/content_kind:kind/);
+ assert.match(html,/rights_status:rights/);
+ assert.match(html,/clipe_licenciado/);
+ assert.match(html,/Falta análise original substancial/);
+ assert.match(html,/capisol_social_crosspromo_queue/);
+ assert.match(html,/Aprovar pauta \(sem postar\)/);
+ assert.doesNotMatch(html,/automati.*curtidas|seguidores.*falsos/i);
+});
