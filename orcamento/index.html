@@ -225,7 +225,11 @@ footer a{color:var(--azul)}
       .finally(function(){ clearTimeout(timer); })
       .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error((j&&j.message)||'Falha ao enviar'); return j; }); })
       .then(function(){
-        var msg='Olá, CAPISOL! Acabei de pedir pelo site: '+(dados.interesse||'atendimento')+(dados.imovel?' · '+dados.imovel:'')+(dados.conta?' · conta média de R$ '+dados.conta:'')+'. Meu nome é '+nome+'.';
+        var canal=String(dados.utm_source||'').toLowerCase();
+        var prefix=/instagram|^ig$/.test(canal)?'ig_':/google/.test(canal)?'gbp_':'site_';
+        var campanha=String(dados.utm_campaign||dados.utm_content||'formulario').toLowerCase().replace(/[^a-z0-9_]/g,'_').slice(0,30);
+        var identificador=prefix+campanha;
+        var msg='Olá, CAPISOL! Acabei de pedir pelo site: '+(dados.interesse||'atendimento')+(dados.imovel?' · '+dados.imovel:'')+(dados.conta?' · conta média de R$ '+dados.conta:'')+'. Meu nome é '+nome+'. Ref.: ref='+identificador+'.';
         document.querySelectorAll('[data-wa]').forEach(function(a){ a.href='https://wa.me/'+a.getAttribute('data-wa')+'?text='+encodeURIComponent(msg); });
         $('okTxt').textContent='Obrigado, '+nome.split(' ')[0]+'! Um especialista da CAPISOL vai falar com você pelo WhatsApp'+(dados.horario&&dados.horario!=='Qualquer'?' no período da '+dados.horario.toLowerCase():'')+'.';
         vai(4);
