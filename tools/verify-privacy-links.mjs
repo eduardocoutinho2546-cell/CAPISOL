@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const quote=readFileSync(new URL('../orcamento/index.html',import.meta.url),'utf8');
+const privacy=readFileSync(new URL('../politica-de-privacidade/index.html',import.meta.url),'utf8');
+assert.ok(quote.includes('href="../politica-de-privacidade/"'),'link deve apontar para aviso publicado');
+assert.ok(quote.includes('data-wa="5568992490347"'),'fallback deve usar o WhatsApp oficial');
+assert.ok(!quote.includes('capisol.com.br/politica-de-privacidade'),'link externo obsoleto não pode voltar');
+assert.match(privacy,/LGPD/);
+assert.match(privacy,/5568992490347/);
+assert.match(privacy,/Revisão pendente/);
+console.log('OK: privacidade disponível e WhatsApp oficial no formulário.');
