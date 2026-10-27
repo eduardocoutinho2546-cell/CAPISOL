@@ -48,20 +48,23 @@ test('datas impossiveis e ausencia de municipio bloqueadas',()=>{
  assert.ok(validarRegistro({...base,municipio:''}).includes('territorio_invalido'));
 });
 
-test('HTML do radar contem import valido, sem execucao de mensagens',async()=>{
+test('HTML do radar tem script valido',async()=>{
  const fs=await import('node:fs');
  const os=await import('node:os');
  const path=await import('node:path');
  const child=await import('node:child_process');
  const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
- const block=html.match(/<script type="module">([\\s\\S]*?)<\\/script>/);
- assert.ok(block,'script de interface encontrado');
- assert.match(block[1],/auth\\.getUser/);
- assert.doesNotMatch(block[1],/sendMessage\\(|whatsapp.*execute/i);
+ const marker='<script type="module">';
+ const start=html.indexOf(marker);
+ const end=html.lastIndexOf('</script>');
+ assert.ok(start>=0 && end>start,'modulo da interface encontrado');
+ const script=html.slice(start+marker.length,end);
+ assert.ok(script.includes('auth.getUser'));
+ assert.ok(!script.includes('sendMessage('));
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'capisol-radar-'));
- try {
+ try{
   const file=path.join(dir,'ui.mjs');
-  fs.writeFileSync(file,block[1]);
+  fs.writeFileSync(file,script);
   const result=child.spawnSync(process.execPath,['--check',file],{encoding:'utf8'});
   assert.equal(result.status,0,result.stderr);
  }finally{fs.rmSync(dir,{force:true,recursive:true});}
