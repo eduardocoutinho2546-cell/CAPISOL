@@ -34,6 +34,11 @@ button:disabled{opacity:.5;cursor:not-allowed}button.secondary,.btn.secondary{co
 <section id="semAcesso"><h2>Verificando acesso</h2><p id="estado">Conferindo sua sessão de acesso à CAPISOL.</p><a href="../acesso/">Entrar na gestão</a></section>
 <div id="painel" class="hidden">
 <section>
+<h2>Rotinas automáticas configuradas</h2><p class="small">Concorrentes e eventos: todos os dias. Novos clientes: de 15 em 15 dias. Parceiros: todo dia 1 do mês. O relatório da automação é preliminar; Places e redes que requerem autenticação têm verificação separada.</p>
+<div class="actions">
+<a class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://github.com/eduardocoutinho2546-cell/escrit-rio-integrado-agentes-corpora-o-capisol/actions/workflows/capisol-monitor-diario.yml">Executar radar agora no GitHub</a>
+<a class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://github.com/eduardocoutinho2546-cell/escrit-rio-integrado-agentes-corpora-o-capisol/tree/main/radar/relatorios">Consultar relatórios</a>
+</div></section><section>
 <h2>1. Encontrar oportunidades verificáveis</h2>
 <p class="small">Abra as pesquisas públicas abaixo, confira a página oficial da empresa ou fonte autorizada e registre somente informações necessárias à finalidade comercial.</p>
 <div class="actions">
@@ -126,7 +131,7 @@ function desenhar(){
  '<p class="small"><span class="tag">'+escapeHtml(c.tipo)+' | '+escapeHtml(c.prioridade)+' | '+escapeHtml(c.score)+'/100</span> · '+escapeHtml(c.segmento||'Sem segmento')+'</p>'+
  '<p>'+escapeHtml(c.evidencia)+'</p>'+
  '<p class="small">Fonte: '+escapeHtml(c.fonteTipo)+' · '+escapeHtml(c.observadoEm)+' · <a target="_blank" rel="noopener noreferrer" href="'+escapeHtml(c.fonteUrl)+'">Ver evidência</a></p>'+
- (c.tipo==='cliente'?'<button type="button" data-promover="'+escapeHtml(c.id)+'">Encaminhar ao funil (revisão humana)</button>':'<p class="small">Em triagem; não enviar automaticamente.</p>')+'</article>'
+ (c.tipo==='cliente'?(c.duplaValidacao?.completa?'<button type="button" data-promover="'+escapeHtml(c.id)+'">Encaminhar ao funil (revisão humana)</button>':'<a class="btn secondary" href="./verificar.html?id='+encodeURIComponent(c.id)+'">Concluir segunda verificação</a>'):'<p class="small">Em triagem; não enviar automaticamente.</p>')+'</article>'
  ).join(''):'<p class="small">Nenhuma evidência neste filtro.</p>';
 }
 $('tipo').addEventListener('change',mudarTipo);$('filtro').addEventListener('change',desenhar);
