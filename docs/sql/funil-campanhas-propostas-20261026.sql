@@ -50,7 +50,7 @@ begin
   select d.id as lead_id,
    coalesce(nullif(btrim(d.data->>'utm_source'),''),
     case when d.data->>'origem'='Site' then 'site_direto' else 'whatsapp' end) as origem,
-   coalesce(nullif(btrim(d.data->>'utm_campaign'),''),'sem_campanha') as campanha,
+   coalesce(nullif(btrim(d.data->>'utm_campaign'),''),nullif(btrim(d.data->>'utm_content'),''),'sem_campanha') as campanha,
    d.data->>'etapa' etapa
   from public.docs d
   where d.col='leads' and
