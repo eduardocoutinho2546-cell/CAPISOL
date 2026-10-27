@@ -5,7 +5,10 @@ export const PHONE_OFFICIAL = '5568992490347';
 
 export function validInboundPhone(phone) {
  const value=String(phone??'').replace(/\D/g,'');
- return /^55\d{10,11}$/.test(value)?value:null;
+ // O formulário aceita DDD+número, com ou sem prefixo do Brasil.
+ if(/^55\d{10,11}$/.test(value))return value;
+ if(/^\d{10,11}$/.test(value))return '55'+value;
+ return null;
 }
 export function inboundRows(legacy) {
  const records=Array.isArray(legacy?.inbound_site)?legacy.inbound_site:[];
@@ -19,7 +22,7 @@ export function sourceRows(legacy){
 }
 const el=(tag,txt)=>{const x=document.createElement(tag);if(txt!==undefined)x.textContent=String(txt);return x;};
 
-export function renderInboundInbox(root,legacy){
+export function renderInboundInbox(root,legacy,attribution=null){
  if(!root || !legacy)return;
  const origin=root.appendChild(el('section'));
  origin.className='card';
@@ -33,6 +36,24 @@ export function renderInboundInbox(root,legacy){
  const body=originTable.appendChild(el('tbody'));
  for(const [source,n] of sources){const tr=body.appendChild(el('tr'));tr.append(el('td',source),el('td',n));}
  if(!sources.length)origin.append(el('p','Aguardando classificação dos cadastros.'));
+ const campaigns=attribution?.campaigns||[];
+ const block=root.appendChild(el('section'));
+ block.className='card';
+ block.style.marginTop='24px';
+ block.append(el('h2','Campanhas → pedidos → propostas → vendas'),
+   el('p','Somente contatos recebidos com autorização. Receita é de propostas registradas como ganhas, não dinheiro recebido em caixa.'));
+ block.append(el('p','Pedidos recebidos: '+Number(attribution?.inbound_total||0)+' · Propostas vinculadas: '+Number(attribution?.linked_proposals||0)));
+ const at=block.appendChild(el('table'));
+ const ath=at.appendChild(el('thead')).appendChild(el('tr'));
+ for(const t of ['Canal','Campanha','Pedidos','Propostas','Vendas','Receita de propostas ganhas'])ath.append(el('th',t));
+ const atbody=at.appendChild(el('tbody'));
+ for(const x of campaigns){
+  const tr=atbody.appendChild(el('tr'));
+  const brl=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+  for(const v of [x.source,x.campaign,x.leads,x.propostas,x.vendas,brl.format(Number(x.receita_ganha||0))])
+    tr.append(el('td',String(v??'')));
+ }
+ if(!campaigns.length)block.append(el('p','Ainda não há pedidos reais atribuídos. Links com UTMs já estão disponíveis para campanhas.'));
 
  const inbox=root.appendChild(el('section'));
  inbox.className='card';
