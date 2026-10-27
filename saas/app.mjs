@@ -33,7 +33,8 @@ async function load(){
  const invites=await db.rpc('capisol_my_pending_workspace_invites');data.invites=invites.error?[]:(invites.data||[]);
  if(role==='admin'){const g=await db.from('capisol_workspace_scopes').select('user_id,scope,active').eq('workspace_id',workspace.id);data.grants=g.error?[]:(g.data||[]);}
  if(financial()){if(isCapisol()){const insights=await db.rpc('capisol_office_legacy_insights',{p_workspace:workspace.id});data.legacy=insights.error?null:insights.data;
- const attributed=await db.rpc('capisol_attribution_summary',{p_workspace:workspace.id});data.attribution=attributed.error?null:attributed.data;}
+ const attributed=await db.rpc('capisol_attribution_summary',{p_workspace:workspace.id});data.attribution=attributed.error?null:attributed.data;
+ const grid=await db.rpc('capisol_grade_v4_resumo',{p_workspace:workspace.id});data.gradeV4=grid.error?null:grid.data;}
  try{provider=await api('status');}catch(e){provider=null;notice('Cadastros disponíveis; não foi possível verificar as integrações: '+explain(e),true);}}
  if(results.some(([,rows])=>rows.length===500))notice('Exibindo até 500 registros por módulo. Use a gestão original para consultar o histórico completo.');
 }
@@ -80,6 +81,20 @@ function renderQuality(){
  $('content').innerHTML=`<section class="hero"><div><span class="eyebrow" style="color:#f9cb4d">BASE REAL DA GESTÃO</span><h2>Qualidade dos dados e oportunidades</h2><p>Base inclui prospecção pública e leads; nem todo cadastro é uma oportunidade qualificada. Consulta sem alterações. Atualizado em ${esc(new Date(legacy.checked_at).toLocaleString('pt-BR'))}.</p></div><a class="button" href="../">Abrir CRM ↗</a></section><div class="grid">${[['Leads e prospecção',counts.leads||0],['Clientes',counts.clientes||0],['Propostas',n],['Contratos',counts.contratos||0],['Obras',counts.obras||0],['Assinaturas',counts.assinaturas||0]].map(([label,value])=>`<article class="card stat"><span class="label">${label}</span><strong class="value">${value}</strong><span class="muted">Registros históricos</span></article>`).join('')}</div><div class="split"><section class="card"><h2>Prioridades de revisão</h2><ol>${actions.slice(0,3).map(x=>`<li>${esc(x)}</li>`).join('')||'<li>Nenhuma ausência foi encontrada nos campos verificados. Isso não substitui a conferência documental.</li>'}</ol><p class="muted">Revisão de completude, não validação automática de veracidade.</p></section><section class="card"><h2>Propostas aceitas</h2><p>${accepted} de ${n} propostas históricas${n?` (${(accepted/n*100).toFixed(1)}%)`:''}.</p><p class="muted">A proporção considera toda a base e não representa conversão mensal. ${n<30?'Amostra inferior a 30 propostas; evite conclusões fortes.':''}</p></section></div><h2 style="margin-top:24px">Etapas registradas na base de leads e prospecção</h2>${table(['Etapa registrada','Quantidade'],Object.entries(legacy.lead_stages||{}).map(([stage,count])=>[esc(stage),String(count)]))}`;
  renderInboundInbox($('content'),legacy,data.attribution);
  renderWhatsAppReadiness($('content'));
+ renderBelEnergyV4($('content'),data.gradeV4);
+}
+function renderBelEnergyV4(root,grade){
+ const block=document.createElement('section');block.className='card';block.style.marginTop='24px';
+ const title=document.createElement('h2');title.textContent='BelEnergy — grade de 770 cotações';
+ const description=document.createElement('p');description.textContent='22 municípios × (27 on-grid Auxsol + 4 híbridos sem bateria + 4 com bateria de 5,2 kWh). Planejamento ≠ preço de fornecedor aprovado.';
+ block.append(title,description);
+ const status=document.createElement('p');
+ if(!grade){status.textContent='Grade de cotações ainda indisponível para este usuário.';}
+ else {const pairs=[['Planejadas',grade.planejadas],['Em execução',grade.execucao],['PDF pendente de conferência',grade.pendentes_conferencia],['Conferidas',grade.conferidas],['Pausadas ou com erro',grade.pausadas_ou_erros]];
+  status.textContent=pairs.map(([k,v])=>k+': '+(Number(v)||0)).join(' • ');}
+ block.append(status);
+ const note=document.createElement('p');note.textContent='O executor local envia os estados para a base online autenticada. PDF detectado não significa cotação aprovada; totais não são receita ou lucro.';block.append(note);
+ root.append(block);
 }
 function renderWhatsAppReadiness(root){
  const section=document.createElement('section');section.className='card';section.style.marginTop='24px';
