@@ -79,6 +79,34 @@ function renderQuality(){
  if(q.active_subscriptions_missing_price)actions.push(`Revisar ${q.active_subscriptions_missing_price} assinatura(s) ativa(s) sem mensalidade informada.`);
  $('content').innerHTML=`<section class="hero"><div><span class="eyebrow" style="color:#f9cb4d">BASE REAL DA GESTÃO</span><h2>Qualidade dos dados e oportunidades</h2><p>Base inclui prospecção pública e leads; nem todo cadastro é uma oportunidade qualificada. Consulta sem alterações. Atualizado em ${esc(new Date(legacy.checked_at).toLocaleString('pt-BR'))}.</p></div><a class="button" href="../">Abrir CRM ↗</a></section><div class="grid">${[['Leads e prospecção',counts.leads||0],['Clientes',counts.clientes||0],['Propostas',n],['Contratos',counts.contratos||0],['Obras',counts.obras||0],['Assinaturas',counts.assinaturas||0]].map(([label,value])=>`<article class="card stat"><span class="label">${label}</span><strong class="value">${value}</strong><span class="muted">Registros históricos</span></article>`).join('')}</div><div class="split"><section class="card"><h2>Prioridades de revisão</h2><ol>${actions.slice(0,3).map(x=>`<li>${esc(x)}</li>`).join('')||'<li>Nenhuma ausência foi encontrada nos campos verificados. Isso não substitui a conferência documental.</li>'}</ol><p class="muted">Revisão de completude, não validação automática de veracidade.</p></section><section class="card"><h2>Propostas aceitas</h2><p>${accepted} de ${n} propostas históricas${n?` (${(accepted/n*100).toFixed(1)}%)`:''}.</p><p class="muted">A proporção considera toda a base e não representa conversão mensal. ${n<30?'Amostra inferior a 30 propostas; evite conclusões fortes.':''}</p></section></div><h2 style="margin-top:24px">Etapas registradas na base de leads e prospecção</h2>${table(['Etapa registrada','Quantidade'],Object.entries(legacy.lead_stages||{}).map(([stage,count])=>[esc(stage),String(count)]))}`;
  renderInboundInbox($('content'),legacy,data.attribution);
+ renderWhatsAppReadiness($('content'));
+}
+function renderWhatsAppReadiness(root){
+ const section=document.createElement('section');section.className='card';section.style.marginTop='24px';
+ const heading=document.createElement('h2');heading.textContent='Diagnóstico do WhatsApp oficial';
+ const description=document.createElement('p');description.textContent='Consulta somente leitura. Não envia mensagens nem altera contatos. Verifica autenticação da Meta, modelo e números da equipe.';
+ const button=document.createElement('button');button.className='primary';button.textContent='Verificar ligação com a Meta';
+ const output=document.createElement('pre');output.style.whiteSpace='pre-wrap';output.style.overflowWrap='anywhere';
+ section.append(heading,description,button,output);root.append(section);
+ button.addEventListener('click',()=>run(button,async()=>{
+   const {data:{session}}=await db.auth.getSession();
+   if(!session)throw new Error('session_required');
+   const response=await fetch('https://wvgmabqecrlydsranknn.supabase.co/functions/v1/whatsapp-diagnostico',{
+    method:'POST',headers:{Authorization:'Bearer '+session.access_token,
+     apikey:'sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv','content-type':'application/json'},
+    body:'{}',signal:AbortSignal.timeout(16000)});
+   const result=await response.json();
+   if(!response.ok)throw new Error(result.error||'Não foi possível verificar o WhatsApp.');
+   const summary=[
+    'Conexão Meta: '+result.meta_connection,
+    'Integrantes cadastrados: '+result.equipe_total,
+    'Destinatários válidos: '+result.destinatarios_validos,
+    'Modelo aprovado: não comprovado',
+    'Envio real homologado: não',
+    'Pendências: '+(result.blockers||[]).join(', ')
+   ];
+   output.textContent=summary.join('\n');
+ }));
 }
 function integrationSummary(){return `<p>Banco de dados <span class="pill good">Conectado</span></p><p>Pluggy ${pill(provider?.open_finance.configured?'configurada':'aguardando credenciais')}</p><p>Focus NFe ${pill(provider?.fiscal.production_enabled?'produção habilitada':provider?.fiscal.homologation_configured?'homologação configurada':'aguardando configuração')}</p><p>IA dos setores ${pill(provider?.ai.configured?'configurada':'aguardando chave/modelo')}</p><p class="muted">Configuração não comprova homologação. A conexão bancária exige consentimento; a nota só aparece como autorizada após resposta do provedor.</p>`;}
 const definitions={
