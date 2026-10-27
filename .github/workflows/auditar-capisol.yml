@@ -22,6 +22,8 @@ jobs:
           node-version: '22'
       - name: Conferir sintaxe do módulo BelEnergy
         run: node --check inteligencia/cotacoes-panel.mjs
+      - name: Validar rota de privacidade e canal comercial oficial
+        run: node tools/verify-privacy-links.mjs
       - name: Auditar catálogo, regras e integrações
         run: node tools/audit-capisol.mjs
       - name: Auditar runtime, peso, backup e biblioteca
