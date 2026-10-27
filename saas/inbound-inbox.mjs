@@ -4,8 +4,9 @@
 export const PHONE_OFFICIAL = '5568992490347';
 
 export function validInboundPhone(phone) {
- const value=String(phone??'').replace(/\D/g,'');
- return /^55\d{10,11}$/.test(value)?value:null;
+ const input=String(phone??'').replace(/\D/g,'');
+ const value=input.length===10||input.length===11?'55'+input:input;
+ return /^55[1-9][0-9][0-9]{8,9}$/.test(value)?value:null;
 }
 export function inboundRows(legacy) {
  const records=Array.isArray(legacy?.inbound_site)?legacy.inbound_site:[];
