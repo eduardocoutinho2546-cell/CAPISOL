@@ -35,13 +35,14 @@ test('evita duplicidade entre reconsultas e municipios',()=>{
  assert.notEqual(chaveRegistro(base),chaveRegistro({...base,municipio:'Bujari'}));
 });
 test('lead inicia qualificacao com contato bloqueado',()=>{
- const c=montarCartao(base);
+ const c={...montarCartao(base),duplaValidacao:{placesStatus:'nao_encontrado',placeId:'',placesConsultadoEm:'2026-10-26',fonteIndependenteStatus:'confirmado',fonteIndependenteUrl:'https://example.org/contato',fonteConferidaEm:'2026-10-26',tipoEstabelecimento:'sem_sede',imovelDisponivel:false}};
  const lead=leadParaFunil(c);
  assert.equal(lead.etapa,'Qualificar');
  assert.equal(lead.whatsappOptIn,false);
  assert.equal(lead.contatoAutomatizado,false);
  assert.equal(lead.lawfulBasis,null);
  assert.throws(()=>leadParaFunil({...c,tipo:'parceiro'}));
+ assert.throws(()=>leadParaFunil(montarCartao(base)),/segunda_validacao_pendente/);
 });
 test('datas impossiveis e ausencia de municipio bloqueadas',()=>{
  assert.ok(validarRegistro({...base,observadoEm:'2026-02-31'}).includes('data_invalida'));

@@ -30,11 +30,11 @@
       <button id="buscar">Buscar</button>
     </div>
     <div class="linha chips" id="chips" style="margin-top:8px"></div>
-    <div class="msg sub">Dados da API oficial do Google (Places). Só empresas. Ao adicionar, o lead entra no Funil de Prospecção como "Confirmado no Google", sem duplicar. O primeiro contato continua sendo humano, pelo botão do WhatsApp, dentro da cota diária.</div>
+    <div class="msg sub">Dados da API oficial do Google (Places). Só empresas. A consulta mostra resultados temporários. Só o place_id pode ser registrado. Para entrar no CRM, confirme uma segunda fonte empresarial independente e a situação do imóvel no Radar Comercial.</div>
     <div class="msg" id="msg"></div>
   </div>
   <div class="cx" id="res" hidden>
-    <div class="linha" style="justify-content:space-between;margin-bottom:8px"><b id="tot"></b><span class="linha"><button class="sec" id="todos">Adicionar todos</button><button class="sec" id="mais" hidden>Mais resultados</button></span></div>
+    <div class="linha" style="justify-content:space-between;margin-bottom:8px"><b id="tot"></b><span class="linha"><button class="sec" id="todos" hidden aria-hidden="true">Importação em massa desativada</button><button class="sec" id="mais" hidden>Mais resultados</button></span></div>
     <table><thead><tr><th>Empresa</th><th>Telefone</th><th>Nota</th><th></th></tr></thead><tbody id="tb"></tbody></table>
   </div>
 </main>
@@ -69,25 +69,22 @@
     $('tb').innerHTML=LISTA.map(function(p,i){
       return '<tr><td><b>'+esc(p.nome)+'</b><div class="sub">'+esc(p.tipo)+' · '+esc(p.endereco)+'</div>'+(p.site?'<div class="sub">'+esc(p.site)+'</div>':'')+'</td>'+
         '<td>'+esc(p.fone||'—')+'</td><td>'+(p.nota!=null?esc(p.nota)+' ('+esc(p.avaliacoes)+')':'—')+'</td>'+
-        '<td><button class="sec" data-a="'+i+'"'+(p.add?' disabled':'')+'>'+(p.add?'No Funil':'Adicionar ao Funil')+'</button></td></tr>'; }).join('');
+        '<td><button class="sec" data-a="'+i+'"'+(p.add?' disabled':'')+'>'+(p.add?'Ficha registrada':'Guardar Place ID')+'</button></td></tr>'; }).join('');
   }
   function adicionar(p){
     if(p.add) return Promise.resolve();
-    var agora=new Date().toISOString(), id='gm_'+p.placeId;
-    var data={nome:p.nome,fone:fone(p.fone),funil:'prospeccao',etapa:'A contatar',nicho:$('nicho').value,
-      origem:'Google Maps (API oficial)',placeId:p.placeId,confirmadoGoogle:'Confirmado',googleEm:agora.slice(0,10),
-      obs:[p.endereco,p.nota!=null?('nota '+p.nota+' com '+p.avaliacoes+' avaliações'):'',p.site].filter(Boolean).join(' · '),
-      criado:agora.slice(0,10),recebidoEm:agora};
-    return sb.from('docs').select('id').eq('col','leads').eq('id',id).maybeSingle().then(function(r){
+    if(!p.placeId || !/^[A-Za-z0-9_-]{8,300}$/.test(String(p.placeId))) return Promise.reject(new Error('Place ID não disponível para guardar.'));
+    var agora=new Date().toISOString(), id='gm_'+String(p.placeId||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,200);
+    // Somente place_id (excecao de cache permitida no Google Places). Demais dados exibidos nao sao persistidos.
+    var data={placeId:p.placeId,consulta:$('q').value.trim().slice(0,180),consultadoEm:agora,status:'PENDENTE_SEGUNDA_FONTE',fonte:'Google Places API'};
+    return sb.from('docs').select('id').eq('col','places_consultas').eq('id',id).maybeSingle().then(function(r){
       if(r.data){ p.add=true; return; }
-      return sb.from('docs').insert({col:'leads',id:id,data:data}).then(function(w){ if(w.error) throw w.error; p.add=true; });
+      return sb.from('docs').insert({col:'places_consultas',id:id,data:data}).then(function(w){ if(w.error) throw w.error; p.add=true; });
     });
   }
   $('tb').onclick=function(ev){ var b=ev.target.closest('[data-a]'); if(!b) return; b.disabled=true;
-    adicionar(LISTA[+b.dataset.a]).then(function(){ desenhar(); msg('Adicionado ao Funil de Prospecção.','ok'); },function(e){ b.disabled=false; msg(e.message||'erro ao salvar','erro'); }); };
-  $('todos').onclick=function(){ var ps=LISTA.filter(function(p){ return !p.add&&p.fone; });
-    msg('Adicionando '+ps.length+'…'); ps.reduce(function(pr,p){ return pr.then(function(){ return adicionar(p); }); },Promise.resolve())
-      .then(function(){ desenhar(); msg(ps.length+' empresa(s) com telefone adicionadas ao Funil.','ok'); },function(e){ desenhar(); msg(e.message||'erro','erro'); }); };
+    adicionar(LISTA[+b.dataset.a]).then(function(){ desenhar(); msg('Place ID salvo para a verificação independente. Abra o Radar e cadastre a fonte empresarial antes do CRM.','ok'); },function(e){ b.disabled=false; msg(e.message||'erro ao salvar','erro'); }); };
+  $('todos').onclick=function(){ msg('Importação em massa desativada. Valide cada oportunidade em fonte empresarial independente.','erro'); };
   $('buscar').onclick=function(){ buscar(); };
   $('q').onkeydown=function(e){ if(e.key==='Enter') buscar(); };
   $('mais').onclick=function(){ buscar(PROX); };

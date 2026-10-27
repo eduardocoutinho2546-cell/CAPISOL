@@ -1,0 +1,104 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>Dupla verificação de cliente | CAPISOL</title>
+<style>body{font:16px system-ui,Arial,sans-serif;background:#f4f7fa;color:#143052;margin:0}
+header{background:#022c5e;color:#fff;padding:20px}main{max-width:820px;margin:auto;padding:18px}
+section{background:#fff;border:1px solid #d4dfeb;border-radius:12px;padding:20px;margin:14px 0}
+label{display:block;margin:9px 0;font-weight:650}input,select,textarea{width:100%;padding:11px;border:1px solid #859bb1;border-radius:7px;font:inherit;box-sizing:border-box}input[type=checkbox]{width:auto}
+button{padding:11px 16px;background:#022c5e;border:0;color:white;border-radius:7px;cursor:pointer;margin:6px}
+button:disabled{opacity:.5}a{color:#022c5e}.small{font-size:13px;color:#536b81}.warn{border-left:4px solid #FDB803;background:#fff8e4;padding:12px}
+#resultados button{display:block;text-align:left;width:100%;background:#e7effa;color:#022c5e}
+#status{padding:12px;font-weight:bold}.hidden{display:none}:focus-visible{outline:3px solid #FDB803}
+</style></head><body>
+<header><h1>CAPISOL | Segunda verificação do CRM</h1><p>Google Places → Fonte empresarial independente → Triagem técnica</p></header>
+<main><p><a href="./">Voltar ao Radar</a></p><div class="warn">As informações do Google Places aparecem temporariamente para conferência. Somente o identificador de lugar é persistido, nunca a ficha completa. "Sem sede" não significa falta de oportunidade: verificar unidade consumidora, imóvel e autorização do proprietário.</div>
+<section><h2>Cliente sob revisão</h2><p id="cliente">Carregando sessão e registro...</p></section>
+<form id="f" class="hidden">
+<section><h2>Ponte 1: Google Places</h2>
+<p class="small">Pesquise pelo nome e município. Selecione a ficha quando encontrada. Informações temporárias não são transferidas para o CRM.</p>
+<button type="button" id="consultar">Consultar Places agora</button><p id="resumo"></p>
+<div id="resultados"></div>
+<label>Resultado da consulta<select id="placesStatus"><option value="pendente">Não conferido</option><option value="encontrado">Ficha confirmada</option><option value="nao_encontrado">Nenhuma ficha identificada</option></select></label>
+<label>Place ID<input id="placeId" readonly placeholder="Preenchido ao selecionar uma ficha"></label>
+<label>Data da consulta<input id="placesConsultadoEm" type="date" required></label>
+</section>
+<section><h2>Ponte 2: Fonte empresarial independente</h2>
+<p class="small">Verifique site oficial, CNPJ ou outra fonte institucional autorizada. Não repita link do Google Maps. Em caso de dúvida, mantenha pendente.</p>
+<label>Resultado<select id="fonteIndependenteStatus"><option value="pendente">Pendente</option><option value="confirmado">Empresa/atividade confirmada pela fonte independente</option><option value="nao_confirmado">Não foi possível confirmar</option></select></label>
+<label>URL da evidência independente (HTTPS)<input id="fonteIndependenteUrl" type="url" required placeholder="https://empresa.com.br ou fonte oficial"></label>
+<label>Data da verificação<input id="fonteConferidaEm" type="date" required></label>
+<label>Instalação / sede / imóvel<select id="tipoEstabelecimento"><option value="nao_verificado">Não verificado</option><option value="proprio">Imóvel próprio</option><option value="alugado">Imóvel alugado</option><option value="terceiro_autorizado">Imóvel de terceiro com autorização indicada</option><option value="sem_sede">Não possui sede conhecida</option><option value="multiplas_unidades">Possui várias unidades</option></select></label>
+<label><input type="checkbox" id="imovelDisponivel"> Há imóvel e unidade consumidora com possibilidade inicial verificada (ainda exige visita)</label>
+</section>
+<button id="salvar" type="submit">Salvar dupla verificação no CRM</button></form><p role="status" id="status"></p>
+</main><script src="../vendor/supabase-2.45.4.min.js"></script>
+<script type="module">
+import {avaliarDuplaValidacao,normalizarDuplaValidacao} from './dupla-validacao.mjs';
+const $=id=>document.getElementById(id);
+const sb=window.supabase?.createClient('https://wvgmabqecrlydsranknn.supabase.co','sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv',{auth:{persistSession:true,autoRefreshToken:true}});
+const id=new URLSearchParams(location.search).get('id');
+let card=null, consultouNestaSessao=false;
+function status(s){$('status').textContent=s;}
+function today(){return new Date().toISOString().slice(0,10)}
+for (const k of ['placesConsultadoEm','fonteConferidaEm'])$(k).value=today();
+$('placesStatus').addEventListener('change',()=>{
+ if($('placesStatus').value==='nao_encontrado'&&!consultouNestaSessao&&!card?.duplaValidacao?.placesConsultadoEm){
+  $('placesStatus').value='pendente';status('Faça primeiro uma consulta Places para registrar ausência de ficha.');
+ }
+});
+$('consultar').addEventListener('click',async()=>{
+ if(!card)return;
+ $('consultar').disabled=true;$('resultados').replaceChildren();$('resumo').textContent='Consultando...';
+ try{
+  const busca=card.nome+' em '+card.municipio+' '+card.uf;
+  const r=await sb.functions.invoke('google-places',{body:{busca,pagina:null}});
+  if(r.error||r.data?.erro)throw new Error(r.data?.erro||r.error?.message||'API indisponível');
+  const lista=Array.isArray(r.data?.lista)?r.data.lista:[];
+  consultouNestaSessao=true;
+  $('resumo').textContent=lista.length+' resultados temporários. Confirme cuidadosamente o nome e endereço; não use apenas semelhança de nomes.';
+  for(const p of lista.slice(0,20)){
+   const b=document.createElement('button');b.type='button';
+   b.textContent=(p.nome||'Sem nome')+' · '+(p.endereco||'sem endereço')+' (selecionar)';
+   b.addEventListener('click',()=>{
+    if(!p.placeId||!/^[A-Za-z0-9_-]{8,300}$/.test(p.placeId)){status('Identificador inválido.');return}
+    $('placeId').value=p.placeId;$('placesStatus').value='encontrado';
+    $('placesConsultadoEm').value=today();status('Place ID selecionado. Complete a fonte empresarial independente.');
+   });
+   $('resultados').append(b);
+  }
+  if(!lista.length){$('placesStatus').value='nao_encontrado';$('placeId').value='';$('placesConsultadoEm').value=today()}
+ }catch(e){status('Falha na consulta. Não concluir ausência de estabelecimento: '+e.message)}
+ finally{$('consultar').disabled=false}
+});
+$('f').addEventListener('submit',async ev=>{
+ ev.preventDefault();
+ const values={};
+ for(const x of ['placesStatus','placeId','placesConsultadoEm','fonteIndependenteStatus','fonteIndependenteUrl','fonteConferidaEm','tipoEstabelecimento'])
+  values[x]=$(x).value;
+ values.imovelDisponivel=$('imovelDisponivel').checked;
+ const decision=avaliarDuplaValidacao(values);
+ if(!decision.completa){status('Ainda não é possível concluir: '+decision.pendencias.join(', '));return}
+ $('salvar').disabled=true;
+ try{
+  const data={...card,duplaValidacao:normalizarDuplaValidacao(values),status:'pesquisa_pendente_de_qualificacao_humana'};
+  const r=await sb.from('docs').update({data}).eq('col','radar_comercial').eq('id',id).select('id');
+  if(r.error)throw r.error;if(!r.data?.length)throw new Error('A política de acesso não permitiu atualizar este cartão');
+  status('Dupla verificação salva. '+decision.alertaImovel+' Volte ao radar e encaminhe para qualificação humana.');
+  card=data;
+ }catch(e){status('Falha ao atualizar: '+e.message)}
+ finally{$('salvar').disabled=false}
+});
+(async()=>{
+ try{
+  if(!sb)throw Error('Biblioteca de acesso indisponível');
+  if(!/^radar_[a-f0-9]{8}$/.test(id||''))throw Error('Identificador inválido');
+  const u=await sb.auth.getUser();if(u.error||!u.data?.user)throw Error('É necessário entrar na gestão');
+  const r=await sb.from('docs').select('data').eq('col','radar_comercial').eq('id',id).maybeSingle();
+  if(r.error||!r.data)throw Error('Cartão inexistente ou acesso não autorizado');
+  card=r.data.data;if(card.tipo!=='cliente')throw Error('Dupla verificação é apenas para clientes');
+  $('cliente').textContent=card.nome+' · '+card.municipio+'/'+card.uf+' · '+(card.segmento||'Segmento a qualificar');
+  for(const [k,v] of Object.entries(card.duplaValidacao||{}))if($(k)&&typeof v!=='object')$(k).type==='checkbox'?$(k).checked=Boolean(v):$(k).value=String(v);
+  $('f').classList.remove('hidden');status('Reveja as duas fontes. Nenhuma mensagem será enviada.');
+ }catch(e){status(e.message)}
+})();
+</script></body></html>
