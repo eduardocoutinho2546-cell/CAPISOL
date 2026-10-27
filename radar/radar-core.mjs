@@ -1,3 +1,4 @@
+import {avaliarDuplaValidacao} from './dupla-validacao.mjs';
 // CAPISOL | Radar comercial por evidências — sem scraping, disparos ou métricas inventadas.
 export const TIPOS = Object.freeze(['parceiro','cliente','concorrente']);
 export const FONTES = Object.freeze([
@@ -105,7 +106,14 @@ export function montarCartao(x) {
 export function leadParaFunil(c) {
   if(c?.tipo!=='cliente' || c?.status!=='pesquisa_pendente_de_qualificacao_humana')
     throw new Error('somente_cliente_verificado');
+  const duasFontes=avaliarDuplaValidacao(c.duplaValidacao);
+  if(!duasFontes.completa)throw new Error('segunda_validacao_pendente:'+duasFontes.pendencias.join(','));
   return {
+    verificacaoPlaces:c.duplaValidacao.placesStatus,
+    placeId:c.duplaValidacao.placeId || '',
+    verificacaoIndependente:c.duplaValidacao.fonteIndependenteUrl,
+    localParaInstalacaoConfirmado:duasFontes.localParaInstalacaoConfirmado,
+    situacaoImovel:c.duplaValidacao.tipoEstabelecimento,
     nome:c.nome, fone:c.telefoneComercial || '', funil:'prospeccao', etapa:'Qualificar',
     nicho:c.segmento || 'Outro', origem:'Radar comercial | fonte empresarial verificada',
     criado:c.observadoEm, recebidoEm:new Date().toISOString(),
