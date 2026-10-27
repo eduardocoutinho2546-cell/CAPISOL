@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Radar Comercial | CAPISOL Energia Solar</title>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;color:#12243c;background:#f5f8fc;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0}header{background:#022c5e;color:#fff;padding:18px 20px}
+header a{color:#fff}main{max-width:1100px;margin:auto;padding:18px}
+h1{font-size:25px;margin:0 0 6px}h2{font-size:19px;margin:0 0 14px}
+p{line-height:1.5}header p{margin:0;color:#dce9fa}
+section{background:white;border:1px solid #d8e1ec;border-radius:14px;padding:18px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+label{display:block;font-size:13px;font-weight:650;line-height:1.5}
+input,select,textarea{width:100%;border:1px solid #9aaac0;border-radius:7px;padding:10px;font:inherit;background:#fff;color:#12243c}
+textarea{min-height:74px}button,.btn{display:inline-block;padding:11px 15px;border:none;border-radius:8px;color:#fff;background:#022c5e;cursor:pointer;text-decoration:none;font-weight:700;margin:5px 4px 5px 0}
+button:disabled{opacity:.5;cursor:not-allowed}button.secondary,.btn.secondary{color:#022c5e;background:#e8eff9}
+.small{font-size:13px;color:#4d5e73}.notice{background:#fff9e7;border-left:4px solid #fdb803;padding:12px;margin:12px 0}
+.err{color:#9c1624}.ok{color:#176938}.hidden{display:none!important}
+#sinais label{display:inline-flex;align-items:center;gap:6px;margin:4px 12px 4px 0}
+#sinais input,#validarFonte{width:auto}
+.card{padding:12px;border:1px solid #d7e1eb;border-radius:10px;margin:10px 0}
+.card b{display:block}.card .tag{font-weight:750;color:#022c5e}
+.card a{word-break:break-word}.actions{display:flex;flex-wrap:wrap;align-items:center}
+:focus-visible{outline:3px solid #fdb803;outline-offset:2px}
+</style>
+</head>
+<body>
+<header><h1>Radar Comercial CAPISOL</h1><p>Parceiros · Clientes · Concorrentes — informação com fonte, evidência e revisão</p></header>
+<main>
+<p><a href="../">Voltar à gestão</a> · <a href="../prospectar/">Pesquisa no Google Places (consulta independente)</a> · <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR">Biblioteca pública de anúncios</a></p>
+<div class="notice">A pesquisa no Maps não autoriza coletar e armazenar sua base de listagens. Registre apenas informação de fontes permitidas e verificadas independentemente. Nenhum registro autoriza WhatsApp automático; toda negociação e preço exigem revisão humana.</div>
+<section id="semAcesso"><h2>Verificando acesso</h2><p id="estado">Conferindo sua sessão de acesso à CAPISOL.</p><a href="../acesso/">Entrar na gestão</a></section>
+<div id="painel" class="hidden">
+<section>
+<h2>1. Encontrar oportunidades verificáveis</h2>
+<p class="small">Abra as pesquisas públicas abaixo, confira a página oficial da empresa ou fonte autorizada e registre somente informações necessárias à finalidade comercial.</p>
+<div class="actions">
+<a class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://www.google.com/search?q=eletricista+energia+solar+Rio+Branco+AC">Parceiros AC</a>
+<a class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://www.google.com/search?q=engenharia+eletrica+Porto+Velho+RO">Parceiros RO</a>
+<a class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://www.google.com/search?q=supermercado+hotel+igreja+Rio+Branco+AC">Segmentos potenciais</a>
+<a class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=energia%20solar">Ofertas públicas</a>
+</div>
+</section>
+<section>
+<h2>2. Registrar evidência</h2>
+<form id="frm">
+<div class="grid">
+<label>Fluxo<select name="tipo" id="tipo"><option value="cliente">Cliente potencial</option><option value="parceiro">Parceiro</option><option value="concorrente">Concorrente / anúncio</option></select></label>
+<label>Empresa / anunciante<input name="nome" maxlength="160" required placeholder="Razão social ou nome empresarial"></label>
+<label>Município<input name="municipio" maxlength="100" value="Rio Branco" required></label>
+<label>UF<select name="uf"><option value="AC">Acre (AC)</option><option value="RO">Rondônia (RO)</option></select></label>
+<label>Segmento<input name="segmento" maxlength="100" placeholder="Supermercado, eletricista, solar..."></label>
+<label>Site oficial (opcional)<input name="site" type="url" maxlength="300" placeholder="https://..."></label>
+<label>Contato empresarial publicado (opcional)<input name="telefoneComercial" maxlength="40" placeholder="Somente contato corporativo"></label>
+<label>Origem<select name="fonteTipo" id="fonteTipo">
+<option value="site_empresarial">Site empresarial oficial</option>
+<option value="cnpj_dados_abertos">CNPJ — dados abertos</option>
+<option value="indicacao_verificada">Indicação documentada</option>
+<option value="contato_direto">Contato direto registrado</option>
+<option value="diretorio_autorizado">Diretório com uso permitido</option>
+<option value="edital_publico">Edital público</option>
+<option value="biblioteca_anuncios">Biblioteca de anúncios pública</option>
+</select></label>
+<label>URL da fonte pública (HTTPS)<input name="fonteUrl" type="url" required placeholder="https://..."></label>
+<label>Observado em<input name="observadoEm" id="observadoEm" type="date" required></label>
+<label id="campoId" class="hidden">ID do anúncio público<input name="identificador" maxlength="100" placeholder="Identificador verificável"></label>
+</div>
+<label>O que a fonte realmente comprova?<textarea name="evidencia" maxlength="500" required placeholder="Descrição literal e objetiva da oferta, atividade ou serviço. Não deduzir vendas, lucro nem demanda real."></textarea></label>
+<div id="sinais"></div>
+<label style="margin:13px 0;font-size:14px;font-weight:normal"><input id="validarFonte" type="checkbox" required> Confirmei a fonte, o uso permitido e a necessidade dos dados. Não se trata de lista extraída do Google Maps.</label>
+<button type="submit" id="salvar">Registrar no radar</button>
+</form><p id="mensagem" role="status" aria-live="polite"></p>
+</section>
+<section>
+<h2>3. Carteira priorizada</h2><p id="totais" class="small">Carregando...</p>
+<label>Exibir<select id="filtro"><option value="todos">Todos</option><option value="cliente">Clientes</option><option value="parceiro">Parceiros</option><option value="concorrente">Concorrentes</option></select></label>
+<div id="lista"></div>
+</section>
+</div>
+</main>
+<script src="../vendor/supabase-2.45.4.min.js"></script>
+<script type="module">
+import {montarCartao,validarRegistro,leadParaFunil} from './radar-core.mjs';
+const SB_URL='https://wvgmabqecrlydsranknn.supabase.co';
+const SB_KEY='sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv';
+const $=id=>document.getElementById(id);
+const sb=window.supabase?.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+let cards=[];
+const SIGNALS={
+ cliente:[['consumo_diurno','Consumo diurno comprovado'],['conta_elevada','Conta elevada declarada'],['estrutura_apta','Estrutura preliminarmente apta'],['interesse_confirmado','Interesse confirmado pela empresa']],
+ parceiro:[['servico_complementar','Serviço complementar'],['cobertura_local','Atende a região'],['certificacoes_verificadas','Certificação comprovada'],['interesse_confirmado','Interesse em parceria confirmado']],
+ concorrente:[['oferta_completa','Oferta detalhada'],['preco_com_escopo','Preço e escopo completos'],['condicoes_financeiras','Condições de financiamento publicadas']]
+};
+const escapeHtml=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function aviso(t,error=false){$('mensagem').textContent=t;$('mensagem').className=error?'err':'ok';}
+function mudarTipo(){
+ const tipo=$('tipo').value;
+ $('campoId').classList.toggle('hidden',tipo!=='concorrente');
+ if(tipo==='concorrente')$('fonteTipo').value='biblioteca_anuncios';
+ else if($('fonteTipo').value==='biblioteca_anuncios')$('fonteTipo').value='site_empresarial';
+ $('sinais').innerHTML='<p><strong>Sinais verificáveis (opcionais)</strong></p>'+SIGNALS[tipo].map(([v,t])=>
+ '<label><input type="checkbox" name="sinais" value="'+v+'"> '+escapeHtml(t)+'</label>').join('');
+}
+function pegarDados(){
+ const f=new FormData($('frm'));
+ return {tipo:f.get('tipo'),nome:f.get('nome'),municipio:f.get('municipio'),uf:f.get('uf'),
+ segmento:f.get('segmento'),site:f.get('site'),telefoneComercial:f.get('telefoneComercial'),
+ fonteTipo:f.get('fonteTipo'),fonteUrl:f.get('fonteUrl'),observadoEm:f.get('observadoEm'),
+ evidencia:f.get('evidencia'),identificador:f.get('identificador'),sinais:f.getAll('sinais'),verificado:$('validarFonte').checked};
+}
+async function carregar(){
+ const r=await sb.from('docs').select('id,data').eq('col','radar_comercial').order('id',{ascending:true}).limit(500);
+ if(r.error)throw r.error;
+ cards=(r.data||[]).map(x=>x.data).filter(x=>x&&x.id);
+ desenhar();
+}
+function desenhar(){
+ const tipos=['cliente','parceiro','concorrente'];
+ $('totais').textContent=cards.length+' registros verificados: '+tipos.map(t=>cards.filter(c=>c.tipo===t).length+' '+t+'(s)').join(' · ')+'. Priorização não significa interesse ou venda.';
+ const tipo=$('filtro').value;
+ const visible=cards.filter(c=>tipo==='todos'||c.tipo===tipo).sort((a,b)=>(b.score||0)-(a.score||0));
+ $('lista').innerHTML=visible.length?visible.map(c=>
+ '<article class="card"><b>'+escapeHtml(c.nome)+' · '+escapeHtml(c.municipio)+'/'+escapeHtml(c.uf)+'</b>'+
+ '<p class="small"><span class="tag">'+escapeHtml(c.tipo)+' | '+escapeHtml(c.prioridade)+' | '+escapeHtml(c.score)+'/100</span> · '+escapeHtml(c.segmento||'Sem segmento')+'</p>'+
+ '<p>'+escapeHtml(c.evidencia)+'</p>'+
+ '<p class="small">Fonte: '+escapeHtml(c.fonteTipo)+' · '+escapeHtml(c.observadoEm)+' · <a target="_blank" rel="noopener noreferrer" href="'+escapeHtml(c.fonteUrl)+'">Ver evidência</a></p>'+
+ (c.tipo==='cliente'?'<button type="button" data-promover="'+escapeHtml(c.id)+'">Encaminhar ao funil (revisão humana)</button>':'<p class="small">Em triagem; não enviar automaticamente.</p>')+'</article>'
+ ).join(''):'<p class="small">Nenhuma evidência neste filtro.</p>';
+}
+$('tipo').addEventListener('change',mudarTipo);$('filtro').addEventListener('change',desenhar);
+$('observadoEm').value=new Date().toLocaleDateString('en-CA');
+mudarTipo();
+$('frm').addEventListener('submit',async ev=>{
+ ev.preventDefault();
+ const x=pegarDados(), erros=validarRegistro(x);
+ if(erros.length){aviso('Corrija: '+erros.join(', '),true);return;}
+ const card=montarCartao(x), btn=$('salvar');btn.disabled=true;
+ try {
+  const exist=await sb.from('docs').select('id').eq('col','radar_comercial').eq('id',card.id).maybeSingle();
+  if(exist.error)throw exist.error;
+  if(exist.data)throw new Error('Já existe pesquisa desta empresa e município. Atualize o registro existente no CRM após revisão.');
+  const r=await sb.from('docs').insert({col:'radar_comercial',id:card.id,data:card});
+  if(r.error)throw r.error;
+  aviso('Registrado. Nenhum contato enviado.');$('frm').reset();$('observadoEm').value=new Date().toLocaleDateString('en-CA');mudarTipo();await carregar();
+ }catch(e){aviso(e.message||'Falha ao salvar',true)}finally{btn.disabled=false}
+});
+$('lista').addEventListener('click',async ev=>{
+ const b=ev.target.closest('button[data-promover]');if(!b)return;
+ const c=cards.find(x=>x.id===b.dataset.promover);
+ if(!c||c.tipo!=='cliente')return;
+ if(!window.confirm('Enviar este cliente para QUALIFICAÇÃO no funil? Isso NÃO libera disparos, preços ou abordagens automáticas.'))return;
+ b.disabled=true;
+ try{
+  const data=leadParaFunil(c),id='lead_'+c.id;
+  const e=await sb.from('docs').select('id').eq('col','leads').eq('id',id).maybeSingle();
+  if(e.error)throw e.error;
+  if(e.data){aviso('Cliente já foi encaminhado ao funil.');return;}
+  const r=await sb.from('docs').insert({col:'leads',id,data});
+  if(r.error)throw r.error;
+  aviso('Lead criado em Qualificar, com contato bloqueado até avaliação da base legal.');
+ }catch(e){aviso(e.message||'Não foi possível encaminhar',true)}finally{b.disabled=false}
+});
+(async()=>{
+ try{
+  if(!sb)throw new Error('Biblioteca de acesso não carregada');
+  const u=await sb.auth.getUser();
+  if(u.error||!u.data?.user)throw new Error('Acesso autenticado necessário. Entre na gestão.');
+  $('semAcesso').classList.add('hidden');$('painel').classList.remove('hidden');await carregar();
+ }catch(e){$('estado').textContent=e.message||'Acesso indisponível';}
+})();
+</script>
+</body></html>
