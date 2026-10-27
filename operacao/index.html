@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Operação real | CAPISOL Energia Solar</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:#19334f;background:#f5f7fa}
+*{box-sizing:border-box}body{margin:0}header{background:#022c5e;color:white;padding:22px 18px}
+header h1{margin:0;font-size:clamp(24px,4vw,32px)}header p{margin:6px 0 0;color:#dbe9ff}
+main{max-width:1150px;margin:auto;padding:18px}.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+a,button{font:inherit}a{color:#022c5e}button,.link{display:inline-block;border:1px solid #022c5e;background:#022c5e;color:white;padding:10px 14px;text-decoration:none;border-radius:8px;cursor:pointer;font-weight:600}
+button:focus-visible,a:focus-visible{outline:3px solid #fdb803;outline-offset:3px}
+button:disabled{opacity:.5}.link.secondary{background:white;color:#022c5e}
+.panel{background:white;border:1px solid #d9e2ec;border-radius:14px;padding:18px;margin:15px 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.metric{border:1px solid #e1e6ef;border-radius:10px;padding:14px}
+.metric strong{display:block;font-size:30px;font-variant-numeric:tabular-nums;margin-top:5px}
+.metric small{color:#56677a}.small{color:#56677a;font-size:13px;line-height:1.5}
+table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid #e4e9f0;text-align:left;padding:12px 9px;vertical-align:top;font-size:14px}th{font-size:12px;color:#3f556c;text-transform:uppercase;letter-spacing:.03em}
+.tag{display:inline-block;padding:4px 9px;border-radius:20px;font-weight:700;background:#e4e8ec;color:#253b52;font-size:12px}
+.tag.blocked{background:#fde7e7;color:#992a2a}.tag.attention{background:#fff2d3;color:#775208}.tag.ok{background:#e0f5e7;color:#156437}
+.hide{display:none!important}.scroll{overflow:auto}.hint{border-left:4px solid #fdb803;background:#fff9e8;padding:12px}
+@media(max-width:720px){table,thead,tbody,tr,td{display:block}thead{display:none}tr{padding:12px 0;border-bottom:1px solid #d9e2ec}td{border:0;padding:4px}td:first-child{font-weight:700}}
+</style></head>
+<body>
+<header><h1>CAPISOL | Central de operação real</h1><p>O que está comprovado, o que falta e o próximo responsável — sem indicadores inventados</p></header>
+<main>
+<div class="row"><a class="link secondary" href="../">Gestão</a><a class="link secondary" href="../radar/">Radar comercial</a><a class="link secondary" href="../prospectar/">Google Places</a>
+<a class="link secondary" href="https://github.com/eduardocoutinho2546-cell/escrit-rio-integrado-agentes-corpora-o-capisol/issues/52" target="_blank" rel="noopener noreferrer">Plano de primeira venda</a></div>
+<section class="panel"><div class="hint"><strong>O painel lê o banco de produção; não executa vendas.</strong> A rotina de auditoria consulta processos a cada 15 minutos. Testes de software aprovados, perfis de agentes e registro de lead não equivalem a execução, receita ou entrega de WhatsApp.</div><p id="estado" role="status" aria-live="polite">Conferindo sessão...</p><div class="row"><button id="atualizar" disabled>Atualizar evidências</button><span id="ultima" class="small"></span></div></section>
+<section id="painel" class="hide">
+<div class="cards">
+<div class="metric"><small>Fluxos comprovados</small><strong id="ok">—</strong></div>
+<div class="metric"><small>Atenção / homologação</small><strong id="attention">—</strong></div>
+<div class="metric"><small>Bloqueados</small><strong id="blocked">—</strong></div>
+<div class="metric"><small>Fluxos auditados</small><strong id="total">—</strong></div>
+</div>
+<section class="panel"><h2>Fila de desbloqueio</h2><p class="small">Em primeiro lugar vêm receita, contato comercial autorizado e atendimento. Alterações em preços e mensagens externas continuam exigindo as alçadas aprovadas.</p>
+<div class="scroll"><table><thead><tr><th>Processo</th><th>Status</th><th>Bloqueio e próxima ação</th><th>Responsável por função</th><th>Verificado</th></tr></thead><tbody id="linhas"></tbody></table></div>
+</section>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+let sb=null;
+const LABEL={ok:'Com evidência',attention:'Validar',blocked:'Bloqueado'};
+function cell(row, txt){const td=document.createElement('td');td.textContent=String(txt??'');row.append(td);return td}
+function moment(t){if(!t)return 'sem verificação';try{return new Date(t).toLocaleString('pt-BR',{timeZone:'America/Rio_Branco',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}catch{return 'data inválida'}}
+async function carregar(){
+ $('atualizar').disabled=true;$('estado').textContent='Consultando auditoria no banco...';
+ try{
+  const r=await sb.from('capisol_flow_audit_state').select('workflow_id,status,blocker,action_required,owner_role,checked_at').order('workflow_id',{ascending:true}).limit(100);
+  if(r.error)throw r.error;
+  if(!r.data||!r.data.length)throw Error('Não foi possível ler os indicadores. Confira vínculo administrativo e políticas RLS do workspace.');
+  const data=r.data.sort((a,b)=>({blocked:0,attention:1,ok:2}[a.status]??3)-({blocked:0,attention:1,ok:2}[b.status]??3));
+  for(const status of ['ok','attention','blocked'])$(status).textContent=data.filter(x=>x.status===status).length;
+  $('total').textContent=data.length;
+  $('linhas').replaceChildren();
+  for(const x of data){
+   const tr=document.createElement('tr');
+   cell(tr,String(x.workflow_id||'').replace(/_/g,' '));
+   const td=document.createElement('td');
+   const span=document.createElement('span');span.className='tag '+(LABEL[x.status]?x.status:'');span.textContent=LABEL[x.status]||'Não classificado';td.append(span);tr.append(td);
+   cell(tr,[x.blocker,x.action_required].filter(Boolean).join(' — ') || 'Processo com evidência, manter auditoria');
+   cell(tr,x.owner_role||'não atribuído');
+   cell(tr,moment(x.checked_at));
+   $('linhas').append(tr);
+  }
+  $('ultima').textContent='Última evidência: '+moment(data.map(x=>x.checked_at).sort().at(-1));
+  $('estado').textContent='Leitura concluída. Ações pendentes aparecem primeiro.';
+  $('painel').classList.remove('hide');
+ }catch(e){$('estado').textContent='Não foi possível obter dados autorizados: '+(e?.message||String(e))}
+ finally{$('atualizar').disabled=false}
+}
+$('atualizar').addEventListener('click',carregar);
+(async()=>{
+ try{
+  if(!window.supabase)throw Error('Biblioteca de autenticação indisponível');
+  sb=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co','sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv',{auth:{persistSession:true,autoRefreshToken:true}});
+  const u=await sb.auth.getUser();if(u.error||!u.data?.user)throw Error('Entre na Gestão CAPISOL primeiro, usando a mesma sessão do navegador.');
+  await carregar();
+ }catch(e){$('estado').textContent=e.message||'Acesso indisponível';$('atualizar').disabled=true}
+})();
+})();
+</script></body></html>
