@@ -53,7 +53,7 @@ jobs:
       - name: Verificar versões de posts e estúdio local
         run: |
           node --check posts/posts-ia-ui.js
-          node --test posts/canais.test.mjs posts/studio-social.test.mjs posts/rede-criadores.test.mjs
+          node --test posts/canais.test.mjs posts/studio-social.test.mjs posts/rede-criadores.test.mjs posts/organic-sales-ui.test.mjs
       - name: Testar fluxos do escritório
         run: node tools/test-office-ui.mjs
       - name: Testar demonstração pública isolada

@@ -1,0 +1,146 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>CAPISOL | Meta 10 vendas orgânicas</title><style>
+:root{font:16px system-ui,Arial,sans-serif;background:#f5f8fc;color:#133453}*{box-sizing:border-box}
+body{margin:0}header{background:#022c5e;color:white;padding:22px}header h1{margin:0 0 8px;font-size:clamp(24px,4vw,34px)}header p{margin:0;color:#e6edfb}
+main{max-width:1160px;margin:auto;padding:18px}section{background:white;border:1px solid #d8e2ed;border-radius:14px;padding:18px;margin:14px 0}
+h2{margin:0 0 12px;font-size:20px}h3{margin:0 0 8px;font-size:17px}p{line-height:1.5}
+nav,.actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+button,.btn{background:#022c5e;color:white;font:inherit;font-weight:650;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;text-decoration:none}
+button.secondary,.btn.secondary{background:#e9f0fa;color:#022c5e}button:disabled{opacity:.5;cursor:default}
+a{color:#022c5e}:focus-visible{outline:3px solid #fdb803;outline-offset:2px}
+.small{font-size:13px;color:#526a80}.notice{border-left:4px solid #fdb803;background:#fff9e8;padding:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:12px}
+.channel{border:1px solid #d9e1ea;border-radius:10px;padding:15px}.channel strong{font-size:27px}
+.tag{display:inline-block;padding:4px 8px;border-radius:7px;background:#ecf0f5;font-size:12px;color:#294562}
+.tag.ready{background:#e3f5e5;color:#21662a}.tag.pending{background:#fff1db;color:#754b13}
+.goal{height:9px;border-radius:20px;background:#e5edf5;overflow:hidden;margin-top:10px}
+.bar{height:100%;background:#fdb803;width:0}
+.tasks{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.task{border:1px solid #d9e1ea;border-radius:10px;padding:13px}
+label{display:block;margin:10px 0 5px;font-size:13px;font-weight:700}
+input,select,textarea{font:inherit;color:#183451;width:100%;border:1px solid #9bacc0;padding:10px;border-radius:8px}
+textarea{min-height:65px}dialog{border-radius:12px;border:1px solid #d8e2ed;max-width:min(94vw,550px);max-height:91vh;overflow:auto}
+dialog::backdrop{background:#122848bb}.hide{display:none!important}
+</style></head><body>
+<header><h1>CAPISOL · Meta 10 vendas orgânicas</h1><p>Instagram · Facebook · TikTok · WhatsApp · Google · YouTube</p></header>
+<main>
+<nav><a class="btn secondary" href="../">Gestão</a><a class="btn secondary" href="../social-rede/">Rede editorial 147</a><a class="btn secondary" href="../operacao/">Auditoria</a><a class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://app.metricool.com/">Metricool</a></nav>
+<section class="notice"><strong>Uma venda, um canal principal.</strong> Meta mensal orgânica, sem promessa de viralização. Só contam propostas ganhas com lead real, prova de aceite e verificação humana. A coluna de vendas não equivale a recebimento conciliado. WhatsApp usa atendimento voluntário/consentido; sem disparos em massa.</section>
+<section><div class="actions"><h2 style="flex:1;margin:0">Placar comercial</h2>
+<label style="margin:0">Mês <input id="month" type="month"></label><button id="reload" disabled>Atualizar</button></div>
+<p role="status" id="state">Conferindo seu acesso administrativo...</p><div id="summary"></div>
+<div id="score" class="grid"></div></section>
+<div id="private" class="hide">
+<section><h2>Executores de conteúdo por canal</h2><p class="small">Fila criada automaticamente às 7h45 (Acre). Todas as publicações dependem de conta autorizada, material original, revisão e comprovante. O executor não envia mensagens.</p>
+<div id="tasks" class="tasks"></div></section>
+<section><h2>Comprovação de venda</h2><p class="small">Para atribuir uma venda, a proposta precisa estar marcada como aceita no CRM, vinculada a um lead real e acompanhada de comprovação. O sistema impede contabilizar a mesma proposta duas vezes.</p>
+<button id="register">Registrar venda real com evidência</button></section>
+<section><h2>Roteiro de ativação das plataformas</h2><div id="readiness" class="grid"></div></section>
+</div></main>
+<dialog id="saleDialog"><form id="saleForm"><h2>Registrar venda confirmada</h2>
+<label>Proposta aceita (UUID)<input id="proposal" required placeholder="UUID da proposta ganha" pattern="[0-9a-fA-F-]{36}" maxlength="36"></label>
+<label>Canal principal de descoberta<select id="saleChannel" required><option value="instagram">Instagram</option><option value="facebook">Facebook</option><option value="tiktok">TikTok</option><option value="whatsapp">WhatsApp</option><option value="google">Google</option><option value="youtube">YouTube</option></select></label>
+<label>Comprovação de aceite / contrato (URL HTTPS sob acesso controlado)<input id="proof" type="url" required placeholder="https://..."></label>
+<label>Por que esse foi o canal principal?<textarea id="note" minlength="12" maxlength="1000" required placeholder="Ex.: Lead originado pelo link identificado na bio; comprovado no CRM."></textarea></label>
+<p class="small">Não registre vendas hipotéticas. O registro não envia mensagens nem recebe pagamentos.</p>
+<div class="actions"><button id="saveSale" type="submit">Validar no CRM</button><button type="button" class="secondary" data-close="saleDialog">Cancelar</button></div></form></dialog>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){'use strict';
+const $=id=>document.getElementById(id),NAMES={instagram:'Instagram',facebook:'Facebook',tiktok:'TikTok',whatsapp:'WhatsApp',google:'Google',youtube:'YouTube'};
+const CONNECT={instagram:'Conectado ao Metricool',google:'Conectado ao Metricool',whatsapp:'WhatsApp API ainda não homologada',facebook:'Vincular Página/Metricool',tiktok:'OAuth TikTok + aprovação da API',youtube:'OAuth YouTube + canal autorizado'};
+let sb,workspace=null,channels=[],queue=[];
+function elem(tag,text,cls){const x=document.createElement(tag);if(text!==undefined)x.textContent=String(text);if(cls)x.className=cls;return x}
+function safeUrl(text){const u=new URL(text);if(u.protocol!=='https:'||!u.hostname.includes('.')||u.username||u.password)throw Error('Use HTTPS sem login/senha no endereço.');return u.href}
+function msg(x){$('state').textContent=x}
+function up(n){return String(n??0)}
+function dateMonth(){return ($('month').value||new Date().toISOString().slice(0,7))+'-01'}
+function tracked(channel){const url=new URL('https://eduardocoutinho2546-cell.github.io/CAPISOL/orcamento/');url.searchParams.set('utm_source',channel);url.searchParams.set('utm_medium','organico');url.searchParams.set('utm_campaign','organico_10_vendas');return url.href}
+function button(parent,title,fn){const b=elem('button',title,'secondary');b.type='button';b.addEventListener('click',fn);parent.append(b);return b}
+function renderGoals(data){
+ const x=$('score');x.replaceChildren();
+ $('summary').textContent='Confirmadas: '+up(data.confirmed)+' / meta: '+up(data.goal)+' · Faltam '+up(data.gap)+' · mês '+data.month+'. Nenhuma venda duplicada.';
+ for(const v of data.channels||[]){
+  const box=elem('article',undefined,'channel');
+  box.append(elem('h3',NAMES[v.channel]||v.channel),elem('strong',up(v.confirmed_sales)+' / '+up(v.monthly_goal)));
+  const span=elem('span',CONNECT[v.channel]||v.readiness,'tag '+(v.readiness==='connected_metricool'?'ready':'pending'));box.append(elem('div',''),span);
+  const progress=elem('div',undefined,'goal'),bar=elem('div',undefined,'bar');
+  bar.style.width=(100*Math.min(1,v.monthly_goal?v.confirmed_sales/v.monthly_goal:0))+'%';progress.append(bar);box.append(progress);
+  const a=elem('div',undefined,'actions');
+  button(a,'Copiar link rastreável',async()=>{try{await navigator.clipboard.writeText(tracked(v.channel));msg('Link com origem '+v.channel+' copiado.');}catch(e){msg(e.message)}});
+  box.append(a);x.append(box);
+ }
+}
+function renderTasks(){
+ $('tasks').replaceChildren();
+ if(!queue.length)$('tasks').append(elem('p','Fila ainda vazia. Consulte a auditoria do executor.','small'));
+ for(const q of queue.slice(0,30)){
+  const box=elem('article',undefined,'task');
+  box.append(elem('h3',NAMES[q.channel]+' · '+q.title),elem('span',q.status,'tag'));
+  box.append(elem('p',q.hook),elem('p',q.editorial_guidance,'small'),elem('p','CTA: '+q.cta,'small'));
+  const wrap=elem('div',undefined,'actions');
+  if(q.status==='draft'||q.status==='review') button(wrap,'Marcar revisado',async()=>{
+   try{
+    const v=await sb.from('capisol_organic_content_queue').update({status:'approved',rights_status:'original_approved',reviewed_at:new Date().toISOString(),reviewed_by:(await sb.auth.getUser()).data.user.id})
+      .eq('id',q.id).eq('workspace_id',workspace).select('id');
+    if(v.error||!v.data?.length)throw Error(v.error?.message||'Acesso negado');
+    msg('Pauta aprovada para produção; NÃO foi publicada.');await refresh();
+   }catch(e){msg(e.message)}
+  });
+  if(q.status==='approved')wrap.append(elem('span','Aprovada para produção. Publique somente via plataforma autorizada e registre comprovante.','small'));
+  box.append(wrap);$('tasks').append(box);
+ }
+}
+function renderReadiness(){
+ $('readiness').replaceChildren();
+ for(const c of channels){
+  const item=elem('article',undefined,'channel');item.append(elem('h3',NAMES[c.channel]));
+  item.append(elem('p',CONNECT[c.channel],'small'));
+  item.append(elem('p','Responsável: '+c.responsible_role+'. Cadência editorial apenas após revisão.','small'));
+  $('readiness').append(item);
+ }
+}
+async function refresh(){
+ $('reload').disabled=true;
+ try{
+  const [goals,tasks]=await Promise.all([
+   sb.rpc('capisol_organic_goals',{p_workspace:workspace,p_month:dateMonth()}),
+   sb.from('capisol_organic_content_queue').select('id,channel,planned_date,title,hook,format,cta,editorial_guidance,status').eq('workspace_id',workspace).order('planned_date',{ascending:false}).limit(40)
+  ]);
+  if(goals.error)throw goals.error;if(tasks.error)throw tasks.error;
+  queue=tasks.data||[];renderGoals(goals.data);renderTasks();renderReadiness();
+  $('private').classList.remove('hide');msg('Metas e rascunhos carregados do Supabase. Sem publicações ou vendas simuladas.');
+ }catch(e){msg('Não foi possível validar resultados: '+e.message)}
+ finally{$('reload').disabled=false}
+}
+document.querySelectorAll('[data-close]').forEach(e=>e.addEventListener('click',()=>$(e.dataset.close).close()));
+$('reload').addEventListener('click',refresh);
+$('month').addEventListener('change',refresh);
+$('register').addEventListener('click',()=>$('saleDialog').showModal());
+$('saleForm').addEventListener('submit',async e=>{
+ e.preventDefault();$('saveSale').disabled=true;
+ try{
+  const proposal=$('proposal').value.trim();
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(proposal))throw Error('UUID inválido');
+  const payload={workspace_id:workspace,proposal_id:proposal,primary_channel:$('saleChannel').value,
+     proof_url:safeUrl($('proof').value),attribution_note:$('note').value.trim()};
+  const r=await sb.from('capisol_organic_sales').insert(payload).select('id');
+  if(r.error||!r.data?.length)throw Error(r.error?.message||'Registro não autorizado');
+  $('saleDialog').close();$('saleForm').reset();msg('Venda real registrada com comprovação.');await refresh();
+ }catch(e){msg('Venda não contabilizada: '+e.message)}finally{$('saveSale').disabled=false}
+});
+(async()=>{
+ try{
+  $('month').value=new Date().toLocaleDateString('en-CA',{timeZone:'America/Rio_Branco'}).slice(0,7);
+  if(!window.supabase)throw Error('Biblioteca de autenticação não carregou');
+  sb=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co','sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv',{auth:{persistSession:true,autoRefreshToken:true}});
+  const auth=await sb.auth.getUser();if(auth.error||!auth.data?.user)throw Error('Entre na gestão CAPISOL primeiro.');
+  const r=await sb.from('capisol_organic_channels').select('workspace_id,channel,monthly_goal,readiness,responsible_role').limit(10);
+  if(r.error||!r.data?.length)throw Error(r.error?.message||'Acesso negado ao workspace');
+  channels=r.data;workspace=channels[0].workspace_id;
+  if(channels.length!==6||channels.some(x=>x.workspace_id!==workspace))throw Error('Configuração de canais incompleta');
+  await refresh();
+ }catch(e){msg(e.message)}
+})();
+})();
+</script></body></html>
