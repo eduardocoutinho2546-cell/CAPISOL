@@ -57,13 +57,14 @@ function up(n){return String(n??0)}
 function dateMonth(){return ($('month').value||new Date().toISOString().slice(0,7))+'-01'}
 function tracked(channel){const url=new URL('https://eduardocoutinho2546-cell.github.io/CAPISOL/orcamento/');url.searchParams.set('utm_source',channel);url.searchParams.set('utm_medium','organico');url.searchParams.set('utm_campaign','organico_10_vendas');return url.href}
 function button(parent,title,fn){const b=elem('button',title,'secondary');b.type='button';b.addEventListener('click',fn);parent.append(b);return b}
+function connectionText(v){return v.readiness==='connected_metricool'?'Conectado ao Metricool':(CONNECT[v.channel]||v.readiness)}
 function renderGoals(data){
  const x=$('score');x.replaceChildren();
  $('summary').textContent='Confirmadas: '+up(data.confirmed)+' / meta: '+up(data.goal)+' · Faltam '+up(data.gap)+' · mês '+data.month+'. Nenhuma venda duplicada.';
  for(const v of data.channels||[]){
   const box=elem('article',undefined,'channel');
   box.append(elem('h3',NAMES[v.channel]||v.channel),elem('strong',up(v.confirmed_sales)+' / '+up(v.monthly_goal)));
-  const span=elem('span',CONNECT[v.channel]||v.readiness,'tag '+(v.readiness==='connected_metricool'?'ready':'pending'));box.append(elem('div',''),span);
+  const span=elem('span',connectionText(v),'tag '+(v.readiness==='connected_metricool'?'ready':'pending'));box.append(elem('div',''),span);
   const progress=elem('div',undefined,'goal'),bar=elem('div',undefined,'bar');
   bar.style.width=(100*Math.min(1,v.monthly_goal?v.confirmed_sales/v.monthly_goal:0))+'%';progress.append(bar);box.append(progress);
   const a=elem('div',undefined,'actions');
@@ -95,7 +96,7 @@ function renderReadiness(){
  $('readiness').replaceChildren();
  for(const c of channels){
   const item=elem('article',undefined,'channel');item.append(elem('h3',NAMES[c.channel]));
-  item.append(elem('p',CONNECT[c.channel],'small'));
+  item.append(elem('p',connectionText(c),'small'));
   item.append(elem('p','Responsável: '+c.responsible_role+'. Cadência editorial apenas após revisão.','small'));
   $('readiness').append(item);
  }
