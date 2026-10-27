@@ -20,7 +20,7 @@ test('bloqueia importacao do Google Maps e origem sem verificacao',()=>{
  assert.ok(validarRegistro({...base,fonteTipo:'google_maps_scraper'}).includes('origem_invalida'));
 });
 test('competidor exige anuncio identificado e nao aceita ROAS inventado',()=>{
- const ok={...base,tipo:'concorrente',fonteTipo:'biblioteca_anuncios',identificador:'AD-111',evidencia:'Oferta visivel no anuncio'};
+ const ok={...base,tipo:'concorrente',fonteTipo:'biblioteca_anuncios',fonteUrl:'https://www.facebook.com/ads/library/?id=111',identificador:'AD-111',evidencia:'Oferta visivel no anuncio'};
  assert.deepEqual(validarRegistro(ok),[]);
  assert.ok(validarRegistro({...ok,roas:4}).includes('metricas_de_terceiros_nao_comprovadas'));
  assert.ok(validarRegistro({...ok,identificador:''}).includes('anuncio_identificado_na_biblioteca_obrigatorio'));
