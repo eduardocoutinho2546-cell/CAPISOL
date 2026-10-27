@@ -12,6 +12,6 @@ test('formulário transfere referência da campanha quando o cliente inicia o Wh
  const form=readFileSync(new URL('../../orcamento/index.html',import.meta.url),'utf8');
  assert.match(form,/dados\.utm_source/);
  assert.match(form,/dados\.utm_campaign/);
- assert.match(form,/ref='\+identificador/);
+ assert.match(form,/ref='\+canal/);
  assert.match(form,/encodeURIComponent\(msg\)/);
 });
