@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>CAPISOL · Rede de Criadores</title>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;background:#f5f8fc;color:#123252}*{box-sizing:border-box}
+body{margin:0}header{background:#022c5e;color:white;padding:22px}header p{color:#dbeafa}
+main{max-width:1100px;margin:auto;padding:18px}a{color:#022c5e}
+section{background:white;border:1px solid #dae3ed;border-radius:14px;padding:17px;margin:14px 0}
+h1{font-size:clamp(24px,4vw,33px);margin:0}h2{font-size:20px;margin:0 0 12px}h3{margin:0 0 7px}
+p{line-height:1.5}.small{font-size:13px;color:#4e657e}
+nav,.actions{display:flex;flex-wrap:wrap;align-items:center;gap:9px}
+.btn,button{padding:10px 13px;border:0;border-radius:8px;background:#022c5e;color:#fff;font:inherit;font-weight:650;cursor:pointer;text-decoration:none}
+.btn.secondary,button.secondary{background:#e9f0fa;color:#022c5e}
+button:disabled{opacity:.5;cursor:not-allowed}:focus-visible{outline:3px solid #fdb803;outline-offset:2px}
+.counters{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px}
+.metric{border:1px solid #dbe3ec;border-radius:10px;padding:12px}.metric b{display:block;font-size:28px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.group{border-top:4px solid #FDB803}.slot{border-top:1px solid #e1e8f1;padding:9px 0}
+.notice{background:#fff9e9;border-left:4px solid #FDB803;padding:14px}
+label{display:block;font-size:13px;font-weight:700;margin:10px 0 5px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #97a9bc;border-radius:8px;font:inherit}
+input[type=checkbox]{width:auto}textarea{min-height:75px}
+dialog{border:1px solid #d3e0ec;border-radius:12px;max-width:min(96vw,570px);max-height:90vh;overflow:auto}
+dialog::backdrop{background:#152946aa}.hidden{display:none!important}
+details{border-top:1px solid #e1e8ef;padding:9px 0}summary{font-weight:700;cursor:pointer}
+</style></head><body>
+<header><h1>CAPISOL · Rede de Criadores</h1><p>Social Media · 147 posições · públicos reais, conteúdo original e conversão mensurável</p></header>
+<main><nav><a class="btn secondary" href="../">Gestão</a><a class="btn secondary" href="../operacao/">Auditoria operacional</a>
+<a class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://app.metricool.com/">Metricool</a></nav>
+<section class="notice"><strong>Rede planejada, sem contas fictícias.</strong> Só o perfil principal @capisol_ac está inicialmente conectado. As outras posições são para canais empresariais legítimos e criadores que autorizarem a participação. Não executamos curtidas, comentários, seguidores ou visualizações artificiais.</section>
+<section><div class="actions"><h2 style="flex:1;margin:0">Situação da rede</h2><button id="refresh" disabled>Atualizar</button></div>
+<p id="message" role="status" aria-live="polite">Validando sessão...</p><div id="metrics" class="counters"></div></section>
+<div id="workspace" class="hidden">
+<section><div class="actions"><h2 style="flex:1;margin:0">Os 2 núcleos e 24 canais</h2>
+<label>Filtrar núcleo <select id="filter"><option value="all">Todos</option><option value="business">Negócios e parcerias</option><option value="community">Comunidade e educação</option></select></label><button id="plan">+ Criar pauta</button></div>
+<p class="small">Abra um canal para ver 5 posições de colaboradores. Cada participante deve produzir conteúdo próprio e pertinente ao público, com vínculos transparentes. Links têm UTM individual.</p>
+<div id="groups" class="grid"></div></section>
+<section><h2>Distribuição registrada</h2><p class="small">Pautas ficam como rascunho até revisão. Somente uma URL pública real e sua evidência permitem registrar postagem publicada.</p>
+<div id="tasks"></div></section></div></main>
+<dialog id="accountDialog"><form id="accountForm"><h2>Vincular conta existente</h2><p id="accountContext" class="small"></p>
+<label>Plataforma<select id="platform"><option>instagram</option><option>facebook</option><option>tiktok</option><option>youtube</option><option>linkedin</option><option>google</option><option>telegram</option><option>other</option></select></label>
+<label>Nome do perfil verdadeiro<input id="handle" required maxlength="90" placeholder="@usuario_real"></label>
+<label>Endereço público da conta<input id="profileUrl" required type="url" placeholder="https://..."></label>
+<label>Responsável autorizado<input id="operator" required maxlength="120"></label>
+<label>URL do comprovante de autorização em local restrito<input id="evidence" required type="url" placeholder="https://..."></label>
+<label><input type="checkbox" id="consent" required> Confirmo que o perfil é real, que há autorização de uso e que seguimos as regras da rede social.</label>
+<p class="small">Isso não abre uma conta nem pede senha. Mantenha comprovantes e dados pessoais em ambiente protegido.</p>
+<div class="actions"><button id="saveAccount" type="submit">Registrar validação</button><button class="secondary" type="button" data-close="accountDialog">Cancelar</button></div></form></dialog>
+<dialog id="briefDialog"><form id="briefForm"><h2>Criar pauta original</h2>
+<label>Canal / perfil<select id="briefNode" required></select></label>
+<label>Campanha<input id="campaign" required maxlength="90" pattern="[a-z0-9_-]+" value="rede147_piloto"></label>
+<label>Título<input id="title" required minlength="4" maxlength="180"></label>
+<label>Adaptação específica para o público<textarea id="angle" maxlength="2000" placeholder="Vídeo, história real, educação e chamada para orçamento"></textarea></label>
+<p class="small">Rascunho interno. Publicar exige revisão e conta autorizada.</p>
+<div class="actions"><button id="saveBrief" type="submit">Salvar pauta</button><button class="secondary" type="button" data-close="briefDialog">Cancelar</button></div></form></dialog>
+<dialog id="publishDialog"><form id="publishForm"><h2>Comprovar publicação</h2><p id="publishContext" class="small"></p>
+<label>URL real da postagem<input id="publishedUrl" required type="url" placeholder="https://..."></label>
+<label>URL do registro de evidência<input id="publishEvidence" required type="url" placeholder="https://..."></label>
+<label>Alcance comprovado (opcional)<input id="reach" type="number" step="1" min="0"></label>
+<label>Leads registrados (opcional)<input id="leads" type="number" step="1" min="0"></label>
+<div class="actions"><button id="savePublish" type="submit">Registrar</button><button class="secondary" type="button" data-close="publishDialog">Cancelar</button></div></form></dialog>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);let sb,rows=[],tasks=[],currentNode=null,currentTask=null;
+const byCode=new Map(),LABEL={planned:'Planejado',invited:'Convidado',connected:'Conectado',verified:'Validado',active:'Ativo',paused:'Pausado'};
+function e(tag,content,cls){const a=document.createElement(tag);if(content!==undefined)a.textContent=String(content);if(cls)a.className=cls;return a}
+function btn(parent,title,action){const b=e('button',title,'secondary');b.type='button';b.addEventListener('click',action);parent.append(b)}
+function error(exc){$('message').textContent='Falha: '+(exc?.message||String(exc))}
+function url(v){const u=new URL(v);if(u.protocol!=='https:'||!u.hostname.includes('.')||u.username||u.password||u.port)throw Error('Use link HTTPS sem credenciais');return u.href}
+function count(name,value){const c=e('div',undefined,'metric');c.append(e('span',name,'small'),e('b',value));$('metrics').append(c)}
+function utm(n){const u=new URL('https://eduardocoutinho2546-cell.github.io/CAPISOL/orcamento/');
+ u.searchParams.set('utm_source','rede_criadores');u.searchParams.set('utm_medium','organic');
+ u.searchParams.set('utm_campaign','rede147_piloto');u.searchParams.set('utm_content',n.utm_code);return u.href}
+function actions(node,container){
+ btn(container,'Copiar link com origem',async()=>{try{await navigator.clipboard.writeText(utm(node));$('message').textContent='Link rastreável copiado.'}catch(ex){error(ex)}});
+ if(node.node_type!=='principal'){
+  btn(container,'Vincular perfil real',()=>{currentNode=node;$('accountContext').textContent=node.display_name;
+   $('handle').value=node.account_handle||'';$('profileUrl').value=node.profile_url||'';
+   $('operator').value=node.operator_label||'';$('evidence').value=node.evidence_url||'';
+   $('platform').value=node.platform||'instagram';$('consent').checked=Boolean(node.permission_attested);
+   $('accountDialog').showModal()});
+  if(node.status==='verified')btn(container,'Ativar',async()=>{
+   if(!confirm('Confirma que esse perfil real está autorizado e apto a receber conteúdo original? Não será feito nenhum engajamento automático.'))return;
+   try{const d=await sb.from('capisol_social_network_nodes').update({status:'active'})
+     .eq('workspace_id',node.workspace_id).eq('node_code',node.node_code).select('node_code');
+    if(d.error||!d.data?.length)throw Error(d.error?.message||'Acesso negado');await refresh()
+   }catch(ex){error(ex)}
+  });
+ }
+}
+function makeSlot(n){
+ const d=e('div',undefined,'slot'),h=e('strong',n.display_name);d.append(h);
+ d.append(e('p',(LABEL[n.status]||n.status)+' · '+(n.account_handle||'Nenhuma conta atribuída'),'small'));
+ const a=e('div',undefined,'actions');actions(n,a);d.append(a);return d;
+}
+function render(){
+ $('metrics').replaceChildren();
+ count('Posições previstas',rows.length);count('Perfis vinculados',rows.filter(n=>n.account_handle).length);
+ count('Operacionais',rows.filter(n=>['connected','active'].includes(n.status)).length);
+ count('Rascunhos e registros',tasks.length);count('Posts comprovados',tasks.filter(t=>t.stage==='published').length);
+ const board=$('groups');board.replaceChildren();const selection=$('filter').value;
+ for(const kind of ['business','community']){
+  if(selection!=='all'&&selection!==kind)continue;
+  const hub=byCode.get('hub_'+kind),box=e('section',undefined,'group');if(!hub)continue;
+  box.append(e('h3',hub.display_name),e('p','12 verticais · 5 posições de colaboradores por vertical','small'));
+  box.append(makeSlot(hub));
+  for(const v of rows.filter(n=>n.parent_code===hub.node_code)){
+   const details=e('details'),summary=e('summary',v.display_name+' · '+(LABEL[v.status]||v.status));details.append(summary);
+   details.append(makeSlot(v));
+   for(const c of rows.filter(n=>n.parent_code===v.node_code))details.append(makeSlot(c));
+   box.append(details);
+  }
+  board.append(box);
+ }
+ const list=$('tasks');list.replaceChildren();
+ if(!tasks.length)list.append(e('p','Nenhuma pauta criada na rede ainda. Use “Criar pauta” para começar.','small'));
+ for(const t of tasks.slice(0,100)){
+  const a=e('article',undefined,'slot'),n=byCode.get(t.node_code);
+  a.append(e('strong',t.content_title),e('p',(n?.display_name||t.node_code)+' · '+t.stage,'small'));
+  if(t.unique_content_note)a.append(e('p',t.unique_content_note));
+  const actionsWrap=e('div',undefined,'actions');
+  if(t.stage==='published'){
+   const link=e('a','Ver publicação');link.href=t.post_url;link.target='_blank';link.rel='noopener noreferrer';actionsWrap.append(link);
+   actionsWrap.append(e('span','Alcance informado: '+(t.actual_reach??'não aferido')+' · Leads: '+(t.inbound_leads??'não aferidos'),'small'));
+  }else btn(actionsWrap,'Registrar publicação comprovada',()=>{currentTask=t;$('publishContext').textContent=t.content_title;$('publishForm').reset();$('publishDialog').showModal()});
+  a.append(actionsWrap);list.append(a);
+ }
+}
+async function refresh(){
+ $('refresh').disabled=true;
+ try{
+  const [nodes,distribution]=await Promise.all([
+   sb.from('capisol_social_network_nodes').select('*').order('node_code',{ascending:true}).limit(300),
+   sb.from('capisol_social_distribution').select('*').order('created_at',{ascending:false}).limit(300)
+  ]);
+  if(nodes.error)throw nodes.error;if(distribution.error)throw distribution.error;
+  rows=nodes.data||[];tasks=distribution.data||[];byCode.clear();rows.forEach(n=>byCode.set(n.node_code,n));
+  if(rows.length!==147)throw Error('Rede incompleta ou acesso ao workspace negado.');
+  $('workspace').classList.remove('hidden');render();$('message').textContent='Registros de produção carregados. Nenhuma publicação ou conta fictícia foi criada.';
+ }catch(ex){error(ex)}finally{$('refresh').disabled=false}
+}
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.close).close()));
+$('refresh').addEventListener('click',refresh);$('filter').addEventListener('change',render);
+$('accountForm').addEventListener('submit',async event=>{
+ event.preventDefault();$('saveAccount').disabled=true;
+ try{
+  if(!currentNode||currentNode.node_type==='principal'||!$('consent').checked)throw Error('Perfil/consentimento inválido');
+  const data={platform:$('platform').value,account_handle:$('handle').value.trim(),
+   profile_url:url($('profileUrl').value),operator_label:$('operator').value.trim(),
+   evidence_url:url($('evidence').value),permission_attested:true,status:'verified'};
+  const r=await sb.from('capisol_social_network_nodes').update(data)
+   .eq('workspace_id',currentNode.workspace_id).eq('node_code',currentNode.node_code).select('node_code');
+  if(r.error||!r.data?.length)throw Error(r.error?.message||'Permissão negada');
+  $('accountDialog').close();await refresh()
+ }catch(ex){error(ex)}finally{$('saveAccount').disabled=false}
+});
+$('plan').addEventListener('click',()=>{
+ const select=$('briefNode');select.replaceChildren();
+ for(const n of rows.filter(n=>n.node_type!=='colaborador'||n.status==='active')){
+  const o=e('option',n.display_name+' · '+(LABEL[n.status]||n.status));o.value=n.node_code;select.append(o);
+ }
+ $('briefDialog').showModal()
+});
+$('briefForm').addEventListener('submit',async event=>{
+ event.preventDefault();$('saveBrief').disabled=true;
+ try{
+  const n=byCode.get($('briefNode').value);if(!n)throw Error('Canal não localizado');
+  const data={workspace_id:n.workspace_id,node_code:n.node_code,campaign_code:$('campaign').value,
+   content_title:$('title').value,unique_content_note:$('angle').value,stage:'draft'};
+  const r=await sb.from('capisol_social_distribution').insert(data).select('id');
+  if(r.error||!r.data?.length)throw Error(r.error?.message||'Erro ao salvar');
+  $('briefDialog').close();$('briefForm').reset();await refresh()
+ }catch(ex){error(ex)}finally{$('saveBrief').disabled=false}
+});
+$('publishForm').addEventListener('submit',async event=>{
+ event.preventDefault();$('savePublish').disabled=true;
+ try{
+  const t=currentTask,n=byCode.get(t?.node_code);
+  if(!n||!['active','connected'].includes(n.status))throw Error('Só perfis reais ativos e autorizados podem publicar.');
+  const reach=$('reach').value===''?null:Number($('reach').value);
+  const leads=$('leads').value===''?null:Number($('leads').value);
+  if([reach,leads].some(v=>v!==null&&(!Number.isSafeInteger(v)||v<0)))throw Error('Métricas inválidas');
+  const data={stage:'published',post_url:url($('publishedUrl').value),evidence_url:url($('publishEvidence').value),
+    published_at:new Date().toISOString(),actual_reach:reach,inbound_leads:leads,metrics_checked_at:new Date().toISOString()};
+  const r=await sb.from('capisol_social_distribution').update(data).eq('id',t.id).eq('workspace_id',t.workspace_id).select('id');
+  if(r.error||!r.data?.length)throw Error(r.error?.message||'Registro de publicação recusado.');
+  $('publishDialog').close();await refresh()
+ }catch(ex){error(ex)}finally{$('savePublish').disabled=false}
+});
+(async()=>{
+ try{
+  if(!window.supabase)throw Error('Biblioteca Supabase indisponível');
+  sb=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co',
+   'sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv',{auth:{persistSession:true,autoRefreshToken:true}});
+  const auth=await sb.auth.getUser();
+  if(auth.error||!auth.data?.user)throw Error('Entre na gestão CAPISOL antes de acessar a rede privada.');
+  await refresh();
+ }catch(ex){error(ex)}
+})();
+})();
+</script>
+</body></html>

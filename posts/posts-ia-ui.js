@@ -90,7 +90,7 @@
   latest={el:el,ctx:ctx};styles();
   var posts=(ctx.posts||[]).slice().sort(function(a,b){return String(b.criado||'').localeCompare(String(a.criado||''));});
   var count=function(s){return posts.filter(function(p){return(p.status||'Para aprovar')===s;}).length;};
-  var h='<section class="poia"><header class="poia-head"><div><h1>Posts prontos</h1><p class="poia-note">Crie imagens, revise e prepare a publicação da CAPISOL.</p><p><a class="b b-sec" href="conteudo/" target="_blank" rel="noopener">Biblioteca de templates por rede</a></p></div>'+(ctx.isOwner?'<button class="b b-pri" data-poia-studio>+ Estúdio Social · Vídeo/Motion</button><button class="b b-sec" data-poia-new>+ Gerar imagem com IA</button>':'')+'</header>';
+  var h='<section class="poia"><header class="poia-head"><div><h1>Posts prontos</h1><p class="poia-note">Crie imagens, revise e prepare a publicação da CAPISOL.</p><p><a class="b b-sec" href="conteudo/" target="_blank" rel="noopener">Biblioteca de templates por rede</a> <a class="b b-sec" href="https://eduardocoutinho2546-cell.github.io/CAPISOL/social-rede/" target="_blank" rel="noopener">Rede de criadores · 147 posições</a></p></div>'+(ctx.isOwner?'<button class="b b-pri" data-poia-studio>+ Estúdio Social · Vídeo/Motion</button><button class="b b-sec" data-poia-new>+ Gerar imagem com IA</button>':'')+'</header>';
   h+='<div class="poia-counts">'+[['Para aprovar','Para aprovar'],['Aprovados','Aprovado'],['Postados','Postado']].map(function(s){return '<div>'+s[0]+'<strong>'+count(s[1])+'</strong></div>';}).join('')+'</div>';
   if(notice)h+='<p role="status" class="poia-note">'+esc(notice)+'</p>';
   if(ctx.isOwner){
