@@ -1,5 +1,6 @@
 import {money,statuses,summarize,reviewSector,validateFiscal} from './domain.mjs';
 import {renderInboundInbox} from './inbound-inbox.mjs';
+import {renderCampaignAttribution} from './campaign-attribution.mjs';
 import {tenantMode,validateRural,generateEditorialTracks,CONTENT_PILLARS,sectorApplicability} from './verticals.mjs';
 import {MODULES,MODULE_FAMILIES,SCALE_LEVELS,CATALOG_SUMMARY,scaleCheck,listForIndustry} from './module-registry.mjs';
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -32,7 +33,9 @@ async function load(){
  const members=await db.rpc('capisol_office_members',{p_workspace:workspace.id});if(members.error)throw members.error;data.members=members.data;
  const invites=await db.rpc('capisol_my_pending_workspace_invites');data.invites=invites.error?[]:(invites.data||[]);
  if(role==='admin'){const g=await db.from('capisol_workspace_scopes').select('user_id,scope,active').eq('workspace_id',workspace.id);data.grants=g.error?[]:(g.data||[]);}
- if(financial()){if(isCapisol()){const insights=await db.rpc('capisol_office_legacy_insights',{p_workspace:workspace.id});data.legacy=insights.error?null:insights.data;}
+ if(financial()){if(isCapisol()){const insights=await db.rpc('capisol_office_legacy_insights',{p_workspace:workspace.id});data.legacy=insights.error?null:insights.data;
+ const campanhas=await db.rpc('capisol_funil_campanhas',{p_workspace:workspace.id});
+ data.campanhas=campanhas.error?null:campanhas.data;}
  try{provider=await api('status');}catch(e){provider=null;notice('Cadastros disponíveis; não foi possível verificar as integrações: '+explain(e),true);}}
  if(results.some(([,rows])=>rows.length===500))notice('Exibindo até 500 registros por módulo. Use a gestão original para consultar o histórico completo.');
 }
@@ -78,6 +81,11 @@ function renderQuality(){
  if(q.active_subscriptions_missing_price)actions.push(`Revisar ${q.active_subscriptions_missing_price} assinatura(s) ativa(s) sem mensalidade informada.`);
  $('content').innerHTML=`<section class="hero"><div><span class="eyebrow" style="color:#f9cb4d">BASE REAL DA GESTÃO</span><h2>Qualidade dos dados e oportunidades</h2><p>Base inclui prospecção pública e leads; nem todo cadastro é uma oportunidade qualificada. Consulta sem alterações. Atualizado em ${esc(new Date(legacy.checked_at).toLocaleString('pt-BR'))}.</p></div><a class="button" href="../">Abrir CRM ↗</a></section><div class="grid">${[['Leads e prospecção',counts.leads||0],['Clientes',counts.clientes||0],['Propostas',n],['Contratos',counts.contratos||0],['Obras',counts.obras||0],['Assinaturas',counts.assinaturas||0]].map(([label,value])=>`<article class="card stat"><span class="label">${label}</span><strong class="value">${value}</strong><span class="muted">Registros históricos</span></article>`).join('')}</div><div class="split"><section class="card"><h2>Prioridades de revisão</h2><ol>${actions.slice(0,3).map(x=>`<li>${esc(x)}</li>`).join('')||'<li>Nenhuma ausência foi encontrada nos campos verificados. Isso não substitui a conferência documental.</li>'}</ol><p class="muted">Revisão de completude, não validação automática de veracidade.</p></section><section class="card"><h2>Propostas aceitas</h2><p>${accepted} de ${n} propostas históricas${n?` (${(accepted/n*100).toFixed(1)}%)`:''}.</p><p class="muted">A proporção considera toda a base e não representa conversão mensal. ${n<30?'Amostra inferior a 30 propostas; evite conclusões fortes.':''}</p></section></div><h2 style="margin-top:24px">Etapas registradas na base de leads e prospecção</h2>${table(['Etapa registrada','Quantidade'],Object.entries(legacy.lead_stages||{}).map(([stage,count])=>[esc(stage),String(count)]))}`;
  renderInboundInbox($('content'),legacy);
+ renderCampaignAttribution($('content'),data.campanhas,data.proposals,legacy.inbound_site,async link=>{
+  const {error}=await db.from('capisol_atribuicao_propostas').insert({workspace_id:workspace.id,lead_id:link.lead_id,proposta_id:link.proposta_id,vinculado_por:user.id});
+  if(error)throw error;
+  await load();render();
+ });
 }
 function integrationSummary(){return `<p>Banco de dados <span class="pill good">Conectado</span></p><p>Pluggy ${pill(provider?.open_finance.configured?'configurada':'aguardando credenciais')}</p><p>Focus NFe ${pill(provider?.fiscal.production_enabled?'produção habilitada':provider?.fiscal.homologation_configured?'homologação configurada':'aguardando configuração')}</p><p>IA dos setores ${pill(provider?.ai.configured?'configurada':'aguardando chave/modelo')}</p><p class="muted">Configuração não comprova homologação. A conexão bancária exige consentimento; a nota só aparece como autorizada após resposta do provedor.</p>`;}
 const definitions={
