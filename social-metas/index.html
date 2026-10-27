@@ -55,7 +55,7 @@ function safeUrl(text){const u=new URL(text);if(u.protocol!=='https:'||!u.hostna
 function msg(x){$('state').textContent=x}
 function up(n){return String(n??0)}
 function dateMonth(){return ($('month').value||new Date().toISOString().slice(0,7))+'-01'}
-function tracked(channel){const url=new URL('https://capisol.com.br/');url.searchParams.set('utm_source',channel);url.searchParams.set('utm_medium','organico');url.searchParams.set('utm_campaign','organico_10_vendas');return url.href}
+function tracked(channel){const url=new URL('https://eduardocoutinho2546-cell.github.io/CAPISOL/orcamento/');url.searchParams.set('utm_source',channel);url.searchParams.set('utm_medium','organico');url.searchParams.set('utm_campaign','organico_10_vendas');return url.href}
 function button(parent,title,fn){const b=elem('button',title,'secondary');b.type='button';b.addEventListener('click',fn);parent.append(b);return b}
 function renderGoals(data){
  const x=$('score');x.replaceChildren();
