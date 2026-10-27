@@ -40,7 +40,7 @@ export function validarRegistro(x) {
   if (!texto(x.evidencia,500)) erros.push('evidencia_literal_obrigatoria');
   if (x.verificado !== true) erros.push('fonte_nao_conferida');
   if (x.tipo==='concorrente' && x.fonteTipo==='biblioteca_anuncios' &&
-      !/^(www\\.)?(facebook\\.com|transparency\\.google\\.com|adstransparency\\.google\\.com)$/i.test((()=>{try{return new URL(x.fonteUrl).hostname}catch{return ''}})()))
+      !/^(www\.)?(facebook\.com|transparency\.google\.com|adstransparency\.google\.com)$/i.test((()=>{try{return new URL(x.fonteUrl).hostname}catch{return ''}})()))
     erros.push('url_de_biblioteca_de_anuncios_nao_reconhecida');
   if (x.tipo==='concorrente' && (!texto(x.identificador) || x.fonteTipo!=='biblioteca_anuncios'))
     erros.push('anuncio_identificado_na_biblioteca_obrigatorio');
