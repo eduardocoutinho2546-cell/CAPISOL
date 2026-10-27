@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-const source=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const source=p=>readFileSync(new URL('../../'+p,import.meta.url),'utf8');
 test('qualificação: proposta exige lead consentido, sem usar prospecção importada',()=>{
  const sql=source('docs/sql/capisol_atribuicao_lead_proposta_20261026.sql');
  assert.match(sql,/capisol_check_proposal_lead/);
