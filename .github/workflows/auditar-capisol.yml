@@ -29,7 +29,7 @@ jobs:
       - name: Auditar runtime, peso, backup e biblioteca
         run: node tools/audit-production.mjs
       - name: Testar fila, setores e cálculos
-        run: node --test gateway/test/*.test.mjs saas/test/*.test.mjs workers/media/*.test.mjs
+        run: node --test gateway/test/*.test.mjs saas/test/*.test.mjs workers/media/*.test.mjs radar/*.test.mjs
       - name: Conferir blog e scripts da redação
         run: node tools/test-blog-syntax.mjs
       - name: Procurar segredos proibidos
