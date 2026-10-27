@@ -130,7 +130,7 @@ function desenhar(){
  ).join(''):'<p class="small">Nenhuma evidência neste filtro.</p>';
 }
 $('tipo').addEventListener('change',mudarTipo);$('filtro').addEventListener('change',desenhar);
-$('observadoEm').value=new Date().toLocaleDateString('en-CA');
+$('observadoEm').value=new Date().toISOString().slice(0,10);
 mudarTipo();
 $('frm').addEventListener('submit',async ev=>{
  ev.preventDefault();
@@ -143,7 +143,7 @@ $('frm').addEventListener('submit',async ev=>{
   if(exist.data)throw new Error('Já existe pesquisa desta empresa e município. Atualize o registro existente no CRM após revisão.');
   const r=await sb.from('docs').insert({col:'radar_comercial',id:card.id,data:card});
   if(r.error)throw r.error;
-  aviso('Registrado. Nenhum contato enviado.');$('frm').reset();$('observadoEm').value=new Date().toLocaleDateString('en-CA');mudarTipo();await carregar();
+  aviso('Registrado. Nenhum contato enviado.');$('frm').reset();$('observadoEm').value=new Date().toISOString().slice(0,10);mudarTipo();await carregar();
  }catch(e){aviso(e.message||'Falha ao salvar',true)}finally{btn.disabled=false}
 });
 $('lista').addEventListener('click',async ev=>{
