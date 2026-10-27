@@ -73,6 +73,7 @@
   }
   function adicionar(p){
     if(p.add) return Promise.resolve();
+    if(!p.placeId || !/^[A-Za-z0-9_-]{8,300}$/.test(String(p.placeId))) return Promise.reject(new Error('Place ID não disponível para guardar.'));
     var agora=new Date().toISOString(), id='gm_'+String(p.placeId||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,200);
     // Somente place_id (excecao de cache permitida no Google Places). Demais dados exibidos nao sao persistidos.
     var data={placeId:p.placeId,consulta:$('q').value.trim().slice(0,180),consultadoEm:agora,status:'PENDENTE_SEGUNDA_FONTE',fonte:'Google Places API'};
@@ -83,9 +84,7 @@
   }
   $('tb').onclick=function(ev){ var b=ev.target.closest('[data-a]'); if(!b) return; b.disabled=true;
     adicionar(LISTA[+b.dataset.a]).then(function(){ desenhar(); msg('Place ID salvo para a verificação independente. Abra o Radar e cadastre a fonte empresarial antes do CRM.','ok'); },function(e){ b.disabled=false; msg(e.message||'erro ao salvar','erro'); }); };
-  $('todos').onclick=function(){ msg('Importação em massa bloqueada: cada ficha exige segunda verificação independente.','erro'); return; var ps=LISTA.filter(function(p){ return !p.add&&p.fone; });
-    msg('Adicionando '+ps.length+'…'); ps.reduce(function(pr,p){ return pr.then(function(){ return adicionar(p); }); },Promise.resolve())
-      .then(function(){ desenhar(); msg(ps.length+' empresa(s) com telefone adicionadas ao Funil.','ok'); },function(e){ desenhar(); msg(e.message||'erro','erro'); }); };
+  $('todos').onclick=function(){ msg('Importação em massa desativada. Valide cada oportunidade em fonte empresarial independente.','erro'); };
   $('buscar').onclick=function(){ buscar(); };
   $('q').onkeydown=function(e){ if(e.key==='Enter') buscar(); };
   $('mais').onclick=function(){ buscar(PROX); };
