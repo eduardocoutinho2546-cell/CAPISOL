@@ -23,7 +23,9 @@ export function validarPrevia1166(linhas){
 }
 export async function solicitarRevisaoParametro(client,pedido,previsualizacao){
  // Prévia obrigatória na UI. Backend deverá recalcular antes da aprovação.
- const resumo=validarPrevia1166(previsualizacao);
+ const operational=new Set(["belenergy.intervalo_horas","belenergy.baixar_pdf","pdf.retencao_dias","proposta.validade_max_dias"]);
+ const isOperational=operational.has(pedido?.p_chave);
+ const resumo=isOperational?{total:0,semDado:0,abaixoPiso:0}:validarPrevia1166(previsualizacao);
  if(resumo.semDado>0)throw Error("PREVIA_INCOMPLETA_SEM_COTACOES");
  if(!client||typeof client.rpc!=="function")throw Error("CLIENTE_AUTENTICADO_AUSENTE");
  if(!pedido||!pedido.p_motivo||!pedido.p_fonte)throw Error("JUSTIFICATIVA_OBRIGATORIA");
