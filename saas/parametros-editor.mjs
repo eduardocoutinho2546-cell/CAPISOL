@@ -3,13 +3,21 @@
 export function validarPrevia1166(linhas){
  if(!Array.isArray(linhas)||linhas.length!==1166)throw Error("PREVIA_1166_OBRIGATORIA");
  const chaves=new Set();
+ const municipios=new Map();
  for(const x of linhas){
   const id=String(x.ibge)+":"+String(x.kwh);
   if(chaves.has(id))throw Error("PREVIA_DUPLICADA");
   chaves.add(id);
+  const faixa=Number(x.kwh);
+  if(!/^12\d{5}$/.test(String(x.ibge))||!Number.isInteger(faixa)||faixa<400||faixa>3000||(faixa-400)%50!==0)
+   throw Error("MUNICIPIO_OU_FAIXA_INVALIDA");
+  if(!municipios.has(String(x.ibge)))municipios.set(String(x.ibge),new Set());
+  municipios.get(String(x.ibge)).add(faixa);
   if(!["preco_novo","preco_vigente","margem_6","margem_efetiva"].every(k=>k in x))
    throw Error("PREVIA_CAMPOS_FALTANDO");
  }
+ if(municipios.size!==22||[...municipios.values()].some(v=>v.size!==53))
+  throw Error("MATRIZ_22x53_INCOMPLETA");
  return {total:linhas.length,semDado:linhas.filter(x=>x.preco_novo==="sem dado").length,
   abaixoPiso:linhas.filter(x=>x.abaixo_piso===true).length};
 }
@@ -28,4 +36,14 @@ export async function aprovarSegundoSocio(client,id){
  const {data,error}=await client.rpc("capisol_parametro_aprovar",{p_parametro:id});
  if(error||data!==true)throw Error("APROVACAO_NAO_CONCLUIDA");
  return "VIGENTE";
+}
+
+export function copiarDoMesAnterior(registros,mesDestino){
+ // Cria cópia RASCUNHO, sem aprovado_por, sem escrever no servidor.
+ if(!Array.isArray(registros)||!/^[0-9]{4}-[0-9]{2}$/.test(mesDestino))
+  throw Error("MES_INVALIDO");
+ return registros.filter(x=>x.estado==="VIGENTE").map(x=>({
+  ...x,id:undefined,versao:undefined,aprovado_por:null,estado:"RASCUNHO",
+  mes_referencia:mesDestino+"-01",motivo:"Cópia para revisão "+mesDestino
+ }));
 }
