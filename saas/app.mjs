@@ -1,5 +1,5 @@
 import {renderizarEmpresaHoje} from './empresa-hoje.mjs';
-import {validarPrevia1166,solicitarRevisaoParametro,copiarDoMesAnterior} from './parametros-editor.mjs';
+import {validarPrevia1166,solicitarRevisaoParametro,aprovarSegundoSocio,copiarDoMesAnterior} from './parametros-editor.mjs';
 import {money,statuses,summarize,reviewSector,validateFiscal} from './domain.mjs';
 import {renderInboundInbox} from './inbound-inbox.mjs';
 import {tenantMode,validateRural,generateEditorialTracks,CONTENT_PILLARS,sectorApplicability} from './verticals.mjs';
@@ -121,6 +121,15 @@ function renderParametrosMensais(){
  for(const r of data.parametrosVigentes||[]){
   const row=document.createElement('p');
   row.textContent=r.chave+' · '+r.valor+' '+r.unidade+' · '+r.estado+' · versão '+r.versao;
+  if(r.estado==='PENDENTE_SEGUNDO_SOCIO'){
+   const approve=document.createElement('button');approve.type='button';approve.textContent='Aprovar como segundo sócio';
+   approve.onclick=async()=>{
+    approve.disabled=true;
+    try{await aprovarSegundoSocio(db,r.id);await load();render();notice('Parâmetro aprovado e vigente.');}
+    catch(err){approve.disabled=false;notice('Aprovação não autorizada ou sem prévia completa: '+String(err.message),true);}
+   };
+   row.appendChild(approve);
+  }
   section.appendChild(row);
  }
  const form=document.createElement('form');form.className='card';
@@ -128,6 +137,13 @@ function renderParametrosMensais(){
  let lines=[];
  const today=new Date().toLocaleDateString('sv-SE',{timeZone:'America/Rio_Branco'});
  const preview=document.createElement('p');preview.className='muted';preview.textContent='Prévia não executada.';form.appendChild(preview);
+ const operational=new Set(['belenergy.intervalo_horas','belenergy.baixar_pdf','pdf.retencao_dias','proposta.validade_max_dias']);
+ const keyInput=form.querySelector('[name="chave"]');
+ keyInput.addEventListener('input',()=>{
+  const isOperational=operational.has(keyInput.value);
+  btnSave.disabled=!isOperational;
+  preview.textContent=isOperational?'Parâmetro operacional: prévia de preços não necessária. Segundo sócio deve aprovar.':'Prévia 22 × 53 obrigatória.';
+ });
  const btnPrev=form.querySelector('#preview-cerebro'),btnSave=form.querySelector('#salvar-cerebro');
  btnPrev.onclick=()=>{
   const rows=data.gradeCerebro||[];
