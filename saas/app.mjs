@@ -1,3 +1,5 @@
+import {renderizarEmpresaHoje} from './empresa-hoje.mjs';
+import {validarPrevia1166,solicitarRevisaoParametro,aprovarSegundoSocio,copiarDoMesAnterior} from './parametros-editor.mjs';
 import {money,statuses,summarize,reviewSector,validateFiscal} from './domain.mjs';
 import {renderInboundInbox} from './inbound-inbox.mjs';
 import {tenantMode,validateRural,generateEditorialTracks,CONTENT_PILLARS,sectorApplicability} from './verticals.mjs';
@@ -5,7 +7,7 @@ import {MODULES,MODULE_FAMILIES,SCALE_LEVELS,CATALOG_SUMMARY,scaleCheck,listForI
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const db=window.supabase.createClient('https://wvgmabqecrlydsranknn.supabase.co','sb_publishable_yY2ciEDXntw2cvZJAcF6DQ_bwQUGEMv');
 let user,workspace,workspaces=[],role,tab='overview',sectors=[],data={},provider=null,accessScopes=[];
-const nav=[['overview','Visão geral'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos'],['rural','Produtores rurais'],['content','Estúdio de conteúdo'],['media','Vídeos e cortes'],['modules','Catálogo de módulos'],['workbench','Operações multissetoriais']];
+const nav=[['overview','Visão geral'],['empresaHoje','Empresa hoje'],['parametrosVigentes','Parâmetros mensais'],['quality','Dados e crescimento'],['tasks','Tarefas e execução'],['sectors','72 setores'],['suppliers','Fornecedores'],['proposals','Propostas'],['subscriptions','CAPISOL+'],['bank','Open Finance'],['fiscal','Notas fiscais'],['audit','Auditoria'],['access','Equipe e acessos'],['rural','Produtores rurais'],['content','Estúdio de conteúdo'],['media','Vídeos e cortes'],['modules','Catálogo de módulos'],['workbench','Operações multissetoriais']];
 const financial=()=>['admin','manager'].includes(role);
 const isCapisol=()=>workspace?.cnpj==='66360677000149';
 const menuLabel=(id,label)=>id==='subscriptions'&&!isCapisol()?'Assinaturas':label;
@@ -36,6 +38,18 @@ async function load(){
  const attributed=await db.rpc('capisol_attribution_summary',{p_workspace:workspace.id});data.attribution=attributed.error?null:attributed.data;
  const grid=await db.rpc('capisol_grade_v4_resumo',{p_workspace:workspace.id});data.gradeV4=grid.error?null:grid.data;}
  try{provider=await api('status');}catch(e){provider=null;notice('Cadastros disponíveis; não foi possível verificar as integrações: '+explain(e),true);}}
+ if(isCapisol()&&financial()){
+  const rel=await db.rpc('capisol_empresa_hoje',{p_workspace:workspace.id});
+  data.empresaHoje=rel.error?[]:Array.isArray(rel.data)?rel.data:[];
+  const queue=await db.rpc('capisol_avisos_titular_listar',{p_workspace:workspace.id});
+  data.filaDono=queue.error?[]:Array.isArray(queue.data)?queue.data:[];
+  const financialRows=await db.from('capisol_parametros').select('*').eq('workspace_id',workspace.id).order('chave');
+  data.parametrosVigentes=financialRows.error?[]:(financialRows.data||[]);
+  const grades=await db.from('capisol_fretes_municipio_faixa')
+    .select('municipio_ibge,template_id,frete_fornecedor,cotacao_validade,documento_auditado')
+    .limit(1166);
+  data.gradeCerebro=grades.error?[]:(grades.data||[]);
+ }
  if(results.some(([,rows])=>rows.length===500))notice('Exibindo até 500 registros por módulo. Use a gestão original para consultar o histórico completo.');
 }
 function pill(status){return `<span class="pill ${['done','active','authorized','synced','won','completed'].includes(status)?'good':['uncertain','rejected','blocked','failed'].includes(status)?'bad':'warn'}">${esc(statuses[status]||status)}</span>`;}
@@ -45,11 +59,13 @@ function memberName(id){if(!id)return 'Sem responsável';if(id===user.id)return 
 function navigate(next){tab=next;render();}
 function render(){
  $('title').textContent=menuLabel(tab,nav.find(x=>x[0]===tab)?.[1]||'Escritório');
- $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):id==='modules'?true:id==='workbench'?financial():['quality','bank','fiscal'].includes(id)?isCapisol()&&financial():financial()||['overview','tasks','sectors'].includes(id))
+ $('nav').innerHTML=nav.filter(([id])=>id==='rural'?tenantMode(workspace).rural&&moduleAllowed('rural'):id==='content'||id==='media'?moduleAllowed('media'):id==='modules'?true:id==='workbench'?financial():['quality','bank','fiscal','empresaHoje','parametrosVigentes'].includes(id)?isCapisol()&&financial():financial()||['overview','tasks','sectors'].includes(id))
  .map(([id,label])=>`<button data-nav="${id}" class="${id===tab?'active':''}">${esc(menuLabel(id,label))}</button>`).join('');
  $('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
  const content=$('content');content.innerHTML='';
- if(tab==='overview')renderOverview();
+ if(tab==='empresaHoje')renderEmpresaHoje();
+ else if(tab==='parametrosVigentes')renderParametrosMensais();
+ else if(tab==='overview')renderOverview();
  else if(tab==='quality')renderQuality();
  else if(tab==='sectors')renderSectors();
  else if(tab==='bank')renderBank();
@@ -62,6 +78,102 @@ function render(){
  else if(tab==='access')renderAccess();
  else renderRecords();
 }
+
+function renderEmpresaHoje(){
+ if(!user||!financial()||!isCapisol()){navigate('overview');return;}
+ const root=$('content');
+ renderizarEmpresaHoje(root,data.empresaHoje||[]);
+ const sec=document.createElement('section');sec.className='card';
+ const heading=document.createElement('h2');heading.textContent='Fila do titular';sec.appendChild(heading);
+ const itens=(data.filaDono||[]);
+ if(!itens.length){const p=document.createElement('p');p.textContent='Nenhum cartão disponível ou sem dado autorizado.';sec.appendChild(p);}
+ for(const item of itens){
+  const div=document.createElement('div');div.className='card';
+  const p=document.createElement('p');
+  p.textContent='['+(item.prioridade||'HOJE')+'] '+(item.setor||'setor')+' — '+(item.acao||'sem dado')+' | prazo: '+(item.prazo||'sem dado');
+  div.appendChild(p);
+  for(const [action,label] of [['FEITO','Feito'],['ADIAR','Adiar'],['NAO_VOU_FAZER','Não vou fazer']]){
+   const btn=document.createElement('button');btn.textContent=label;btn.dataset.ownerAction=action;
+   btn.onclick=async()=>{
+    if(!user||!financial()||!isCapisol())return;
+    const motivo=action==='NAO_VOU_FAZER'?window.prompt('Motivo (sem dados pessoais/senhas):',''):null;
+    if(action==='NAO_VOU_FAZER'&&!motivo)return;
+    btn.disabled=true;
+    const result=await db.rpc('capisol_avisos_titular_responder',{
+     p_workspace:workspace.id,p_evento:item.id,p_acao:action,p_motivo:motivo});
+    if(result.error){btn.disabled=false;notice('Não foi possível registrar a decisão: '+explain(result.error),true);return;}
+    await load();render();notice('Resposta registrada no barramento.');
+   };
+   div.appendChild(btn);
+  }
+  sec.appendChild(div);
+ }
+ root.appendChild(sec);
+}
+function renderParametrosMensais(){
+ if(!user||!financial()||!isCapisol()){navigate('overview');return;}
+ const root=$('content');root.replaceChildren();
+ const section=document.createElement('section');section.className='card';
+ const heading=document.createElement('h2');heading.textContent='Parâmetros mensais — aprovação por dois sócios';section.appendChild(heading);
+ const state=document.createElement('p');state.className='muted';
+ state.textContent='Somente VIGENTE entra no preço. Sem kit ou frete: sem dado. Nenhum parâmetro é alterado pela IA.';
+ section.appendChild(state);
+ for(const r of data.parametrosVigentes||[]){
+  const row=document.createElement('p');
+  row.textContent=r.chave+' · '+r.valor+' '+r.unidade+' · '+r.estado+' · versão '+r.versao;
+  if(r.estado==='PENDENTE_SEGUNDO_SOCIO'){
+   const approve=document.createElement('button');approve.type='button';approve.textContent='Aprovar como segundo sócio';
+   approve.onclick=async()=>{
+    approve.disabled=true;
+    try{await aprovarSegundoSocio(db,r.id);await load();render();notice('Parâmetro aprovado e vigente.');}
+    catch(err){approve.disabled=false;notice('Aprovação não autorizada ou sem prévia completa: '+String(err.message),true);}
+   };
+   row.appendChild(approve);
+  }
+  section.appendChild(row);
+ }
+ const form=document.createElement('form');form.className='card';
+ form.innerHTML='<h3>Solicitar alteração</h3><label>Chave <input name="chave" required pattern="[a-z][a-z0-9_.]{2,79}"></label> <label>Novo valor <input name="valor" type="number" step="any" required></label> <label>Motivo <input name="motivo" required minlength="3"></label> <button type="button" id="preview-cerebro">Prévia 22 × 53</button> <button type="submit" disabled id="salvar-cerebro">Pedir revisão do outro sócio</button>';
+ let lines=[];
+ const today=new Date().toLocaleDateString('sv-SE',{timeZone:'America/Rio_Branco'});
+ const preview=document.createElement('p');preview.className='muted';preview.textContent='Prévia não executada.';form.appendChild(preview);
+ const operational=new Set(['belenergy.intervalo_horas','belenergy.baixar_pdf','pdf.retencao_dias','proposta.validade_max_dias']);
+ const keyInput=form.querySelector('[name="chave"]');
+ keyInput.addEventListener('input',()=>{
+  const isOperational=operational.has(keyInput.value);
+  btnSave.disabled=!isOperational;
+  preview.textContent=isOperational?'Parâmetro operacional: prévia de preços não necessária. Segundo sócio deve aprovar.':'Prévia 22 × 53 obrigatória.';
+ });
+ const btnPrev=form.querySelector('#preview-cerebro'),btnSave=form.querySelector('#salvar-cerebro');
+ btnPrev.onclick=()=>{
+  const rows=data.gradeCerebro||[];
+  const byKey=new Map(rows.map(x=>[x.municipio_ibge+'|'+x.template_id,x]));
+  const ibges=[...new Set(rows.map(x=>x.municipio_ibge))];
+  lines=ibges.flatMap(ibge=>Array.from({length:53},(_,i)=>{
+   const source=byKey.get(ibge+'|p'+String(i+1).padStart(2,'0'));
+   return {ibge,kwh:400+i*50,preco_novo:'sem dado',preco_vigente:'sem dado',
+    margem_6:'sem dado',margem_efetiva:'sem dado',fonte:source?.documento_auditado?'frete_auditado':'sem dado'};
+  }));
+  try{
+   const result=validarPrevia1166(lines);
+   preview.textContent='Prévia gerada: '+result.total+' células, '+result.semDado+' sem dados completos. '+(result.semDado?'Alteração bloqueada até cotejar kit+frete+instalação reais.':'Aguardando segundo sócio.');
+   btnSave.disabled=result.semDado!==0;
+  }catch(err){btnSave.disabled=true;preview.textContent='Prévia incompleta: '+String(err.message);}
+ };
+ form.onsubmit=async event=>{
+  event.preventDefault();if(btnSave.disabled)return;
+  const fd=new FormData(form),base=(data.parametrosVigentes||[]).find(x=>x.chave===fd.get('chave'));
+  if(!base){notice('Chave ainda não cadastrada ou não vigente.',true);return;}
+  const month=today.slice(0,7)+'-01';
+  const pedido={p_workspace:workspace.id,p_chave:base.chave,p_valor:Number(fd.get('valor')),
+   p_unidade:base.unidade,p_mes:month,p_inicio:month,p_fim:null,
+   p_motivo:String(fd.get('motivo')),p_fonte:'Edição autenticada PWA; base '+base.fonte};
+  try{await solicitarRevisaoParametro(db,pedido,lines);await load();render();notice('Pendente de aprovação do segundo sócio.');}
+  catch(err){notice('Revisão não registrada: '+String(err.message),true);}
+ };
+ section.appendChild(form);root.appendChild(section);
+}
+
 function renderOverview(){
  const m=summarize(data);
  $('content').innerHTML=`<section class="hero"><div><span class="eyebrow" style="color:#f9cb4d">ROTINA • EVIDÊNCIA • RESULTADO</span><h2>Um lugar para acompanhar a execução.</h2><p>${esc(workspace.name)} · tarefas, propostas, recorrência e integrações com o mesmo acesso.</p></div><button class="gold" id="hero-task">Criar tarefa</button></section>

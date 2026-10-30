@@ -1,0 +1,10 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {verificarRascunho} from "./cerebro-v1-guard.mjs";
+const ok={texto:"Olá, obrigado pelo contato.",consentimento:true,telefoneConfirmado:true,modoSombra:false,aprovacao:true,canalHabilitado:true};
+test("bloqueia antes da homologação",()=>assert.equal(verificarRascunho({texto:"Oi"}).liberado,false));
+test("libera apenas com todos os portões",()=>assert.equal(verificarRascunho(ok).liberado,true));
+test("bloqueia opt-out",()=>assert.equal(verificarRascunho({...ok,optOut:true}).liberado,false));
+test("bloqueia promessa",()=>assert.ok(verificarRascunho({...ok,texto:"Conta zerada"}).motivos.includes("PROMESSA_VEDADA")));
+test("bloqueia dois emojis",()=>assert.ok(verificarRascunho({...ok,texto:"Olá ☀️😀"}).motivos.includes("MAIS_DE_UM_EMOJI")));
+test("bloqueia números sem fonte",()=>assert.ok(verificarRascunho({...ok,texto:"Valor R$ 1000"}).motivos.includes("NUMEROS_SEM_FONTE")));
