@@ -1,0 +1,21 @@
+name: Fluxo Comercial-Administrativo
+on:
+  pull_request:
+    paths:
+      - "inteligencia/fluxo-*.mjs"
+      - "inteligencia/index.html"
+      - "tests/fluxo-core.test.mjs"
+      - ".github/workflows/fluxo-comercial-adm.yml"
+jobs:
+  testar-fluxo:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node --check inteligencia/fluxo-core.mjs
+      - run: node --check inteligencia/fluxo-panel.mjs
+      - run: node --test tests/fluxo-core.test.mjs
