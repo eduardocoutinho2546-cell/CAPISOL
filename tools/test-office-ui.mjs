@@ -7,8 +7,13 @@ await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.
 const browser=await chromium.launch({headless:true,...(process.env.CAPISOL_CHROMIUM_PATH?{executablePath:process.env.CAPISOL_CHROMIUM_PATH}:{})});
 const fixture=`
 let loggedIn=false;const owner='11111111-1111-4111-8111-111111111111', wid='22222222-2222-4222-8222-222222222222';
-const tables={capisol_workspaces:[{id:wid,name:'CAPISOL Energia Solar',cnpj:'66360677000149',kind:'company',industry_code:'solar'}],capisol_tasks:[],capisol_suppliers:[],capisol_proposals:[],capisol_subscriptions:[],capisol_fiscal_documents:[],capisol_bank_connections:[],capisol_bank_transactions:[],capisol_agent_runs:[],capisol_office_audit:[],capisol_workspace_scopes:[],capisol_rural_producers:[],capisol_rural_properties:[],capisol_media_jobs:[],capisol_content_tracks:[],capisol_org_units:[],capisol_stock_items:[],capisol_stock_moves:[],capisol_crop_cycles:[],capisol_crop_observations:[],capisol_work_orders:[],capisol_newsroom_stories:[],capisol_community_events:[]};
+const tables={capisol_workspaces:[{id:wid,name:'CAPISOL Energia Solar',cnpj:'66360677000149',kind:'company',industry_code:'solar'}],capisol_tasks:[],capisol_suppliers:[],capisol_proposals:[],capisol_subscriptions:[],capisol_fiscal_documents:[],capisol_bank_connections:[],capisol_bank_transactions:[],capisol_agent_runs:[],capisol_office_audit:[],capisol_workspace_scopes:[],capisol_rural_producers:[],capisol_rural_properties:[],capisol_media_jobs:[],capisol_content_tracks:[],capisol_org_units:[],capisol_stock_items:[],capisol_stock_moves:[],capisol_crop_cycles:[],capisol_crop_observations:[],capisol_work_orders:[],capisol_newsroom_stories:[],capisol_community_events:[],capisol_partner_radar:[{id:'88888888-8888-4888-8888-888888888888',workspace_id:wid,external_key:'ac-dluz',name:"D'Luz Engenharia",uf:'AC',municipality:'Rio Branco',category:'engenharia',classification:'prestador_potencial',phone:'(68) 99981-9209',services:['engenharia','fotovoltaico'],stage:'identificado',qualified:false,relationship_confirmed:false,source_url:'https://www.dluzengenharia.com.br/',review_note:''}]};
 window.__tables=tables;window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:loggedIn?{user:{id:owner},access_token:'test-token'}:null}}),signInWithPassword:async()=>{loggedIn=true;return {};},signOut:async()=>{loggedIn=false;return {};}},rpc:async(name,args)=>{
+ if(name==='capisol_partner_review'){
+  const row=tables.capisol_partner_radar.find(x=>x.id===args.p_candidate&&x.workspace_id===args.p_workspace);
+  if(!row)return {error:{message:'candidate_not_found_in_workspace'}};
+  row.stage=args.p_stage;row.review_note=args.p_reason;return {data:row.stage};
+ }
  if(name==='capisol_stock_move'){
   const item=tables.capisol_stock_items.find(x=>x.id===args.p_item&&x.workspace_id===args.p_workspace);
   if(!item)return {error:{message:'stock_item_not_found'}};
@@ -32,7 +37,14 @@ try{
  await page.getByRole('button',{name:'Editar',exact:true}).click();await page.getByLabel('Estado',{exact:true}).selectOption('done');await page.getByRole('button',{name:'Salvar',exact:true}).click();await page.getByText('Descreva a evidência da conclusão (mínimo 10 caracteres).').waitFor();await page.getByLabel('Evidências e resultado').fill('Conferência concluída com comprovantes anexados no CRM');await page.getByRole('button',{name:'Salvar',exact:true}).click();await page.locator('dialog').waitFor({state:'hidden'});await page.locator('#records').getByText('Concluída',{exact:true}).waitFor();
  await page.getByRole('button',{name:'72 setores',exact:true}).click();assert.equal(await page.locator('[data-sector]').count(),72);await page.getByLabel('Buscar setor').fill('Financeiro');await page.getByRole('button',{name:'Iniciar revisão'}).first().click();await page.locator('#fields textarea').evaluateAll(nodes=>nodes.forEach(n=>n.value='Evidência de teste do período'));await page.getByRole('button',{name:'Salvar',exact:true}).click();await page.getByRole('button',{name:'Transformar em tarefa'}).waitFor();await page.getByRole('button',{name:'Transformar em tarefa'}).click();assert.match(await page.getByLabel('Título',{exact:true}).inputValue(),/Caixa e margem/);await page.getByRole('button',{name:'Fechar formulário'}).click();
  for(const label of ['Dados e crescimento','Fornecedores','Propostas','CAPISOL+','Open Finance','Notas fiscais','Auditoria','Equipe e acessos']){await page.getByRole('button',{name:label,exact:true}).click();await page.getByRole('heading',{name:label,exact:true}).waitFor();}
- await page.getByRole('button',{name:'Produtores rurais',exact:true}).click();
+ await page.getByRole('button',{name:'Radar de prestadores AC/RO',exact:true}).click();
+ await page.getByText("D'Luz Engenharia",{exact:true}).waitFor();
+ await page.locator('[data-radar-review]').first().click();
+ await page.getByLabel('Etapa (identificado, em_analise, contatado, documentos_pendentes, descartado)').fill('em_analise');
+ await page.getByLabel('Observação factual / quem confirmou / próxima ação').fill('Solicitar ART e NR10, ainda sem contato.');
+ await page.getByRole('button',{name:'Salvar',exact:true}).click();await page.locator('dialog').waitFor({state:'hidden'});
+ await page.getByText('Em análise interna').first().waitFor();
+  await page.getByRole('button',{name:'Produtores rurais',exact:true}).click();
  await page.getByRole('button',{name:'Cadastrar produtor',exact:true}).click();
  await page.getByLabel('Nome ou razão social').fill('Produtora de teste');
  await page.getByLabel('Município',{exact:true}).fill('Rio Branco');
